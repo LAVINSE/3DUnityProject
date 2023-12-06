@@ -29,16 +29,21 @@ public class Enemy : MonoBehaviour
 
     [Space]
     [Header("=====> 적 공통 <=====")]
-    [SerializeField] private Transform Target;
+    [SerializeField] protected Transform Target;
     [SerializeField] private bool IsTracking;
     [SerializeField] private bool IsAttack;
 
-    private Rigidbody EnemyRigid;
-    private BoxCollider EnemyBoxCollider;
-    private MeshRenderer[] EnemyMeshArray;
-    private NavMeshAgent EnemyNavMeshAgent;
-    private Animator EnemyAnimator;
+    protected Rigidbody EnemyRigid;
+    protected BoxCollider EnemyBoxCollider;
+    protected MeshRenderer[] EnemyMeshArray;
+    protected NavMeshAgent EnemyNavMeshAgent;
+    protected Animator EnemyAnimator;
+
+    protected bool IsEnemyDead;
     #endregion // 변수
+
+    #region 프로퍼티
+    #endregion // 프로퍼티
 
     #region 함수
     /** 초기화 */
@@ -149,7 +154,8 @@ public class Enemy : MonoBehaviour
             // 충돌X
             // 레이어 변경 > EnemyDead
             gameObject.layer = 12;
-
+            // 사망처리
+            IsEnemyDead = true; 
             // 추적 종료
             IsTracking = false;
             EnemyNavMeshAgent.enabled = false;
@@ -191,7 +197,7 @@ public class Enemy : MonoBehaviour
     /** 플레이어를 타겟한다 */
     private void Targeting()
     {
-        if(Type != EnemyType.D)
+        if(!IsEnemyDead && Type != EnemyType.D)
         {
             float TargetRadius = 0;
             float TargetRange = 0;

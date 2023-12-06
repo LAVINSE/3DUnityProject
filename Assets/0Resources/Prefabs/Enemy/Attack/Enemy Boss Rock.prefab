@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5795745227209732230}
   - component: {fileID: 5795745227209732229}
   m_Layer: 13
-  m_Name: Boss Rock
+  m_Name: Enemy Boss Rock
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

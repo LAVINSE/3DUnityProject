@@ -11,6 +11,14 @@ public class EnemyBossMissile : EnemyAttack
     private NavMeshAgent EnemyBossMissileNavMeshAgent;
     #endregion // 변수
 
+    #region 프로퍼티
+    public Transform oTarget
+    {
+        get => Target;
+        set => Target = value;
+    }
+    #endregion // 프로퍼티
+
     #region 함수
     /** 초기화 */
     private void Awake()
