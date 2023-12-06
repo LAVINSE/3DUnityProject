@@ -22,7 +22,7 @@ public class EnemyAttack : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // Bullet
-        if (IsMelee && other.gameObject.CompareTag("Wall"))
+        if (!IsMelee && other.gameObject.CompareTag("Wall"))
         {
             Destroy(gameObject);
         }

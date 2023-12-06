@@ -174,15 +174,16 @@ public partial class PlayerAction : MonoBehaviour
                 Health -= EnemyAttackComponent.oAttackDamage;
                 Debug.Log($"적 공격 체력 : {Health}");
 
-                // 근접공격은 RigidBody가 없다, 원거리공격만 Null이 아니다
-                if(other.GetComponent<Rigidbody>() != null)
-                {
-                    // 원거리 공격 삭제
-                    Destroy(other.gameObject);
-                }
-
+                bool IsBossTaunt = other.gameObject.name == "MeleeTauntArea";
                 // 1초 무적판정
-                StartCoroutine(OnHit());
+                StartCoroutine(OnHit(IsBossTaunt));
+            }
+
+            // 근접공격은 RigidBody가 없다, 원거리공격만 Null이 아니다
+            if (other.GetComponent<Rigidbody>() != null)
+            {
+                // 원거리 공격 삭제
+                Destroy(other.gameObject);
             }
         }
     }
@@ -481,7 +482,7 @@ public partial class PlayerAction : MonoBehaviour
     }
 
     /** 플레이어 피격 */
-    private IEnumerator OnHit()
+    private IEnumerator OnHit(bool IsBossTaunt)
     {
         IsDamage = true;
 
@@ -491,16 +492,25 @@ public partial class PlayerAction : MonoBehaviour
             Mesh.material.color = Color.yellow;
         }
 
+        if (IsBossTaunt)
+        {
+            PlayerRigid.AddForce(transform.forward * -25, ForceMode.Impulse); 
+        }
+
         // 피격 후 1초 무적
         yield return new WaitForSeconds(1);
 
+        IsDamage = false;
         // 피격 색상 복구
         foreach (MeshRenderer Mesh in PlayerMeshRenderArray)
         {
             Mesh.material.color = Color.white;
         }
 
-        IsDamage = false;
+        if (IsBossTaunt)
+        {
+            PlayerRigid.velocity = Vector3.zero;
+        }
     }
 
     /** 쿨타임 적용 */
