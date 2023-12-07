@@ -231,7 +231,7 @@ public partial class PlayerAction : MonoBehaviour
         // 재장전
         IsReloadDown = Input.GetKeyDown(KeyCode.R);
         // 수류탄
-        IsGrenadeDown = Input.GetKeyDown(KeyCode.G);
+        IsGrenadeDown = Input.GetKeyDown(KeyCode.Mouse1);
 
         // 무기 교체 단축키
         IsSwapWeapon_0 = Input.GetKeyDown(KeyCode.Alpha1);
