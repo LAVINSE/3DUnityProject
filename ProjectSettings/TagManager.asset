@@ -12,6 +12,7 @@ TagManager:
   - Bullet
   - Enemy
   - EnemyAttack
+  - Shop
   layers:
   - Default
   - TransparentFX
