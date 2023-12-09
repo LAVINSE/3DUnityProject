@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 3733971860872919298}
   - component: {fileID: 3733971860872919299}
   - component: {fileID: 3733971860872919297}
-  - component: {fileID: 3733971860872919356}
+  - component: {fileID: 5666914351228687039}
   m_Layer: 11
   m_Name: Enemy A
   m_TagString: Enemy
@@ -148,7 +148,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &3733971860872919356
+--- !u!114 &5666914351228687039
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -157,17 +157,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 3989913478870399293}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74608192be14c16448d3693e0bf6ce01, type: 3}
+  m_Script: {fileID: 11500000, guid: 21f6607132139c9448326a28a9590dcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 50
-  CurrentHealth: 50
-  Type: 0
+  MaxHealth: 100
+  CurrentHealth: 100
   Target: {fileID: 0}
-  EnemyAttackMeleeBoxCollider: {fileID: 3733971861356054134}
-  EnemyBullet: {fileID: 0}
   IsTracking: 0
   IsAttack: 0
+  EnemyAttackMeleeBoxCollider: {fileID: 3733971861356054134}
+  TargetRadius: 1.5
+  TargetRange: 3
 --- !u!1001 &8132219438153037886
 PrefabInstance:
   m_ObjectHideFlags: 0

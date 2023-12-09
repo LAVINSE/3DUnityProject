@@ -5,6 +5,10 @@ using UnityEngine;
 public partial class PlayerAction : MonoBehaviour
 {
     #region 변수
+    private bool IsMove;
+
+    private Vector3 MoveVector;
+    private Vector3 JumpVector;
     #endregion // 변수
 
     #region 함수
@@ -14,7 +18,7 @@ public partial class PlayerAction : MonoBehaviour
         Vector2 MoveInput = new Vector2(HorizonAxis, VerticalAxis).normalized;
 
         // 움직임 입력이 들어왔는지 확인
-        bool IsMove = MoveInput.magnitude != 0;
+        IsMove = MoveInput.magnitude != 0;
 
         // 입력이 들어왔을경우
         if (IsMove)
@@ -31,6 +35,10 @@ public partial class PlayerAction : MonoBehaviour
             MoveVector = new Vector3(MoveDirect.x, MoveDirect.y + JumpVector.y, MoveDirect.z);
             // 캐릭터 방향
             this.transform.forward = MoveDirect;
+        }
+        else
+        {
+            MoveVector = new Vector3(0, JumpVector.y, 0);
         }
 
         // 움직임 제한
@@ -62,6 +70,7 @@ public partial class PlayerAction : MonoBehaviour
         {
             MoveVector *= PlayerWalkSpeed * Time.deltaTime;
         }
+        
     }
 
     /** 플레이어 움직임 애니메이션 */
@@ -75,8 +84,8 @@ public partial class PlayerAction : MonoBehaviour
         }
 
         // 애니메이션
-        PlayerAnimator.SetBool("IsWalk", MoveVector != Vector3.zero);
-        PlayerAnimator.SetBool("IsRun", IsRunDown && MoveVector != Vector3.zero);
+        PlayerAnimator.SetBool("IsWalk", IsMove);
+        PlayerAnimator.SetBool("IsRun", IsRunDown && IsMove);
     }
 
     /** 플레이어가 점프한다 */

@@ -5,34 +5,17 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public enum EnemyType
-    {
-        A,
-        B,
-        C,
-        D,
-    }
-
     #region 변수
     [Header("=====> 적 정보 <=====")]
     [SerializeField] private int MaxHealth;
     [SerializeField] private int CurrentHealth;
-    [SerializeField] private EnemyType Type;
-
-    [Space]
-    [Header("=====> 적 근접 <=====")]
-    [SerializeField] private BoxCollider EnemyAttackMeleeBoxCollider;
-
-    [Space]
-    [Header("=====> 적 원거리 <=====")]
-    [SerializeField] private GameObject EnemyBullet;
 
     [Space]
     [Header("=====> 적 공통 <=====")]
     [SerializeField] protected Transform Target;
-    [SerializeField] private bool IsTracking;
-    [SerializeField] private bool IsAttack;
-
+    [SerializeField] protected bool IsTracking;
+    [SerializeField] protected bool IsAttack;  
+    
     protected Rigidbody EnemyRigid;
     protected BoxCollider EnemyBoxCollider;
     protected MeshRenderer[] EnemyMeshArray;
@@ -47,7 +30,7 @@ public class Enemy : MonoBehaviour
 
     #region 함수
     /** 초기화 */
-    private void Awake()
+    protected virtual void Awake()
     {
         EnemyRigid = GetComponent<Rigidbody>();
         EnemyBoxCollider = GetComponent<BoxCollider>();
@@ -55,32 +38,12 @@ public class Enemy : MonoBehaviour
         EnemyNavMeshAgent = GetComponent<NavMeshAgent>();
         EnemyAnimator = GetComponentInChildren<Animator>();
 
-        // D 타입X
-        if (Type != EnemyType.D)
-        {
-            Invoke("TrackingStart", 2);
-        }
+        Invoke("TrackingStart", 2);
     }
 
     /** 초기화 => 상태를 갱신한다 */
-    private void Update()
+    protected virtual void FixedUpdate()
     {
-        // 추적상태일 경우, D 타입X
-        if (EnemyNavMeshAgent.enabled && Type != EnemyType.D)
-        {
-            // 도착할 목표 지정
-            EnemyNavMeshAgent.SetDestination(Target.position);
-
-            // 추적중일 경우 >> 추적, 아닐경우 >> 멈춤
-            EnemyNavMeshAgent.isStopped = !IsTracking;
-        } 
-    }
-
-    /** 초기화 => 상태를 갱신한다 */
-    private void FixedUpdate()
-    {
-        Targeting();
-        // 물리속도, 회전을 0으로 한다
         FreezeVelocity();
     }
 
@@ -192,86 +155,6 @@ public class Enemy : MonoBehaviour
     {
         IsTracking = true;
         EnemyAnimator.SetBool("IsWalk", true);
-    }
-
-    /** 플레이어를 타겟한다 */
-    private void Targeting()
-    {
-        if(!IsEnemyDead && Type != EnemyType.D)
-        {
-            float TargetRadius = 0;
-            float TargetRange = 0;
-
-            // 적 타입에 따라 수치 바뀜
-            switch (Type)
-            {
-                case EnemyType.A:
-                    TargetRadius = 1.5f;
-                    TargetRange = 3f;
-                    break;
-                case EnemyType.B:
-                    TargetRadius = 1f;
-                    TargetRange = 12f;
-                    break;
-                case EnemyType.C:
-                    TargetRadius = 0.5f;
-                    TargetRange = 25f;
-                    break;
-            }
-
-            // 구체모양의 레이캐스트 (모든오브젝트)
-            RaycastHit[] RayHitArray = Physics.SphereCastAll(this.transform.position, TargetRadius, transform.forward, TargetRange,
-               LayerMask.GetMask("Player"));
-
-            // 플레이어가 있을 경우, 공격중 X
-            if (RayHitArray.Length > 0 && !IsAttack)
-            {
-                StartCoroutine(EnemyAttack());
-            }
-        } 
-    }
-
-    /** 적 공격 */
-    private IEnumerator EnemyAttack()
-    {
-        IsTracking = false;
-        IsAttack = true;
-        EnemyAnimator.SetBool("IsAttack", true);
-
-        switch (Type)
-        {
-            case EnemyType.A:
-                yield return new WaitForSeconds(0.2f);
-                EnemyAttackMeleeBoxCollider.enabled = true;
-
-                yield return new WaitForSeconds(1f);
-                EnemyAttackMeleeBoxCollider.enabled = false;
-                yield return new WaitForSeconds(1f);
-                break;
-            case EnemyType.B:
-                yield return new WaitForSeconds(0.1f);
-                EnemyRigid.AddForce(transform.forward *20, ForceMode.Impulse);
-                EnemyAttackMeleeBoxCollider.enabled = true;
-
-                yield return new WaitForSeconds(0.5f);
-                EnemyRigid.velocity = Vector3.zero;
-                EnemyAttackMeleeBoxCollider.enabled = false;
-                yield return new WaitForSeconds(2f);
-                break;
-            case EnemyType.C:
-                yield return new WaitForSeconds(0.5f);
-                GameObject EnemyBulletObject = Instantiate(EnemyBullet, transform.position, transform.rotation);
-                Rigidbody EnemyBulletRigid = EnemyBulletObject.GetComponent<Rigidbody>();
-                EnemyBulletRigid.velocity = transform.forward * 20;
-                yield return new WaitForSeconds(2f);
-                break;
-        }
-
-        
-
-        IsTracking = true;
-        IsAttack = false;
-        EnemyAnimator.SetBool("IsAttack", false);
     }
 
     /** 물리속도, 회전을 0으로 한다 */

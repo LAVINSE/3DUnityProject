@@ -19,17 +19,13 @@ public class EnemyBoss : Enemy
 
     #region 함수
     /** 초기화 */
-    private void Awake()
+    protected override void Awake()
     {
-        EnemyRigid = GetComponent<Rigidbody>();
-        EnemyBoxCollider = GetComponent<BoxCollider>();
-        EnemyMeshArray = GetComponentsInChildren<MeshRenderer>();
-        EnemyNavMeshAgent = GetComponent<NavMeshAgent>();
-        EnemyAnimator = GetComponentInChildren<Animator>();
+        base.Awake();
 
         EnemyNavMeshAgent.isStopped = true;
-
         IsLook = true;
+
         StartCoroutine(Select());
     }
 

@@ -91,9 +91,6 @@ public partial class PlayerAction : MonoBehaviour
     private GameObject NearObject;
     private Weapon EquipWeapon;
 
-    private Vector3 MoveVector;
-    private Vector3 JumpVector;
-
     private Rigidbody PlayerRigid;
     private Animator PlayerAnimator;
     private CharacterController PlayerController;
@@ -147,16 +144,6 @@ public partial class PlayerAction : MonoBehaviour
         PlayerReload();
         // 플레이어 수류탄 던지기
         PlayerThrowGrenade();
-    }
-
-    /** 초기화 => 접촉했을 경우 */
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-            PlayerAnimator.SetBool("IsJump", false);
-            IsJump = false;
-        }
     }
 
     /** 초기화 => 접촉했을 경우 (트리거) */
@@ -415,12 +402,11 @@ public partial class PlayerAction : MonoBehaviour
             {
                 PlayerAnimator.SetTrigger("TriggerSwing");
             }
-            else if(EquipWeapon.oType == Weapon.WeaponType.Range)
+            else if(EquipWeapon.oType == Weapon.WeaponType.Range && EquipWeapon.oCurrentAmmo != 0)
             {
                 PlayerAnimator.SetTrigger("TriggerShot");
             }
             
-
             // 공격 딜레이 초기화
             AttackDelay = 0;
         }

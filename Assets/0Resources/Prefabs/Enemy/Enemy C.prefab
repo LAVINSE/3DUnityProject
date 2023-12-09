@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 695141140139138179}
   - component: {fileID: 695141140139138180}
   - component: {fileID: 695141140139138178}
-  - component: {fileID: 695141140139138177}
+  - component: {fileID: 8100312916644815251}
   m_Layer: 11
   m_Name: Enemy C
   m_TagString: Enemy
@@ -87,7 +87,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &695141140139138177
+--- !u!114 &8100312916644815251
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,17 +96,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 2859997369615576257}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74608192be14c16448d3693e0bf6ce01, type: 3}
+  m_Script: {fileID: 11500000, guid: 2190fa05cee20284bb2211328eb65116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHealth: 200
   CurrentHealth: 200
-  Type: 2
   Target: {fileID: 0}
-  EnemyAttackMeleeBoxCollider: {fileID: 0}
-  EnemyBullet: {fileID: 2574547400055179989, guid: 663c68c100259f546a5576335c60782f, type: 3}
   IsTracking: 0
   IsAttack: 0
+  EnemyBullet: {fileID: 2574547400055179989, guid: c4d0a8c88b8bfe74b8ff03dc48259c63, type: 3}
+  TargetRadius: 0.5
+  TargetRange: 25
 --- !u!1001 &6454711238704359310
 PrefabInstance:
   m_ObjectHideFlags: 0
