@@ -191,7 +191,7 @@ MonoBehaviour:
   PlayerDodgeMagnification: 2
   PlayerDodgeSpeedRestoreTime: 0.4
   Ammo: 999
-  Coin: 0
+  Coin: 10000
   Health: 100
   HasGrenades: 0
   MaxAmmo: 999

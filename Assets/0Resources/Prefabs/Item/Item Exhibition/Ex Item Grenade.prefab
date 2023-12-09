@@ -5003,7 +5003,7 @@ GameObject:
   - component: {fileID: 1254816636015269674}
   - component: {fileID: 1254816636015269671}
   m_Layer: 0
-  m_Name: Ex Weapon Grenade
+  m_Name: Ex Item Grenade
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

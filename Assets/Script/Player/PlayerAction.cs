@@ -84,6 +84,7 @@ public partial class PlayerAction : MonoBehaviour
     private bool IsSwap;
     private bool IsReloadReady;
     private bool IsDamage;
+    private bool IsShop;
 
     // 쿨타임
     private bool IsDodgeCoolTime;
@@ -103,6 +104,11 @@ public partial class PlayerAction : MonoBehaviour
 
     #region 프로퍼티 
     public Item oItem { get; set; }
+    public int oCoin
+    {
+        get => Coin;
+        set => Coin = value;
+    }
     #endregion // 프로퍼티 
 
     #region 함수
@@ -178,8 +184,8 @@ public partial class PlayerAction : MonoBehaviour
     /** 초기화 => 접촉중일 경우 (트리거) */
     private void OnTriggerStay(Collider other)
     {
-        // Weapon일 경우
-        if (other.gameObject.CompareTag("Weapon"))
+        // Weapon일 경우, Shop일 경우
+        if (other.gameObject.CompareTag("Weapon") || other.gameObject.CompareTag("Shop"))
         {
             // NearObject 변수에 접촉중인 오브젝트 저장
             NearObject = other.gameObject;
@@ -191,6 +197,16 @@ public partial class PlayerAction : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Weapon"))
         {
+            // 오브젝트 null
+            NearObject = null;
+        }
+        else if (other.gameObject.CompareTag("Shop"))
+        {
+            Shop NpcShop = NearObject.GetComponent<Shop>();
+
+            // 상점 나가기
+            NpcShop.Exit();
+            IsShop = false;
             // 오브젝트 null
             NearObject = null;
         }
@@ -230,7 +246,7 @@ public partial class PlayerAction : MonoBehaviour
     private void PlayerDodge()
     {
         // 회피를 눌렀을 경우, 점프중X, 회피중X, 무기교체중X, 재장전X
-        if (IsDodgeDown && !IsJump && !IsDodge && !IsSwap && !IsDodgeCoolTime && !IsReloadReady)
+        if (IsDodgeDown && !IsJump && !IsDodge && !IsSwap && !IsDodgeCoolTime && !IsReloadReady && !IsShop)
         {
             // 속도 변화
             PlayerWalkSpeed *= PlayerDodgeMagnification;
@@ -271,6 +287,7 @@ public partial class PlayerAction : MonoBehaviour
         // 상호작용키를 눌렀을 경우, 가까운곳에 오브젝트가 있을경우, 점프중X, 회피중X
         if (IsInteractionDown && NearObject != null && !IsJump && !IsDodge)
         {
+            // 무기일 경우
             if (NearObject.CompareTag("Weapon"))
             {
                 Item ItemComponent = NearObject.GetComponent<Item>();
@@ -280,6 +297,15 @@ public partial class PlayerAction : MonoBehaviour
                 HasWeaponArray[WeaponIndex] = true;
 
                 Destroy(NearObject);
+            }
+            // 상점일 경우
+            else if (NearObject.CompareTag("Shop"))
+            {
+                Shop NpcShop = NearObject.GetComponent<Shop>();
+
+                // 상점 입장
+                NpcShop.Enter(this);
+                IsShop = true;
             }
         }
     }
@@ -299,7 +325,7 @@ public partial class PlayerAction : MonoBehaviour
         if(IsSwapWeapon_2) { WeaponIndex = 2; } // 3번
 
         // 교체키를 눌렀을 경우, 점프중X, 회피중X, 무기교체중X
-        if((IsSwapWeapon_0 || IsSwapWeapon_1 || IsSwapWeapon_2) && !IsJump & !IsDodge && !IsSwap)
+        if((IsSwapWeapon_0 || IsSwapWeapon_1 || IsSwapWeapon_2) && !IsJump & !IsDodge && !IsSwap && !IsShop)
         {
             // 장착한 무기가 있을 경우
             if(EquipWeapon != null)
@@ -392,7 +418,7 @@ public partial class PlayerAction : MonoBehaviour
         IsAttackReady = EquipWeapon.oWeaponRate < AttackDelay;
 
         // 마우스 왼쪽클릭일 경우, 공격준비가능, 회피X, 무기교체X, 재장전X
-        if(IsAttackDown && IsAttackReady && !IsDodge && !IsSwap && !IsReloadReady)
+        if(IsAttackDown && IsAttackReady && !IsDodge && !IsSwap && !IsReloadReady && !IsShop)
         {
             // 무기 사용
             EquipWeapon.WeaponUse();
@@ -421,7 +447,7 @@ public partial class PlayerAction : MonoBehaviour
         if(Ammo == 0) { return; }
 
         // 리로드키를 눌렀을경우, 회피X, 무기교체X, 점프X, 공격가능한상태일때, 재장전중이 아닐때
-        if(IsReloadDown && !IsJump && !IsDodge && !IsSwap && IsAttackReady && !IsReloadReady)
+        if(IsReloadDown && !IsJump && !IsDodge && !IsSwap && IsAttackReady && !IsReloadReady & !IsShop)
         {
             Debug.Log("asdf");
             PlayerAnimator.SetTrigger("TriggerReload");
@@ -452,7 +478,7 @@ public partial class PlayerAction : MonoBehaviour
         if(HasGrenades == 0) { return; }
 
         // 수류탄키를 눌렀을 경우, 재장전X, 무기교체X, 회피X
-        if(IsGrenadeDown && !IsReloadReady && !IsSwap && !IsDodge)
+        if(IsGrenadeDown && !IsReloadReady && !IsSwap && !IsDodge && !IsShop)
         {
             // 수류탄 생성
             GameObject GrenadeObj = Instantiate(GrenadePrefab, transform.position, transform.rotation);

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : CSingleton<GameManager>
 {
     #region 변수
     private bool IsEscDown;
@@ -11,8 +11,10 @@ public class GameManager : MonoBehaviour
 
     #region 함수
     /** 초기화 */
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
+
         CursorOn();
     }
 
@@ -37,14 +39,14 @@ public class GameManager : MonoBehaviour
     }
 
     // 커서 잠금
-    private void CursorOn()
+    public void CursorOn()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     // 커서 잠금해제
-    private void CursorOff()
+    public void CursorOff()
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
