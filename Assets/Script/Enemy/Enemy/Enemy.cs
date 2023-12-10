@@ -9,6 +9,8 @@ public class Enemy : MonoBehaviour
     [Header("=====> 적 정보 <=====")]
     [SerializeField] private int MaxHealth;
     [SerializeField] private int CurrentHealth;
+    [SerializeField] private int Score;
+    [SerializeField] private GameObject[] CoinArray;
 
     [Space]
     [Header("=====> 적 공통 <=====")]
@@ -102,27 +104,19 @@ public class Enemy : MonoBehaviour
     /** 적 피격효과 */
     private IEnumerator OnHit(Vector3 ReactVector, bool IsGrenade)
     {
-        foreach(MeshRenderer Mesh in EnemyMeshArray)
-        {
-            Mesh.material.color = Color.red;
-        }
-        
+        ChageColor(Color.red);
+
         yield return new WaitForSeconds(0.1f);
 
         // 살아있을 경우
         if(CurrentHealth > 0)
         {
-            foreach (MeshRenderer Mesh in EnemyMeshArray)
-            {
-                Mesh.material.color = Color.white;
-            }
+            ChageColor(Color.white);
         }
         else
         {
-            foreach (MeshRenderer Mesh in EnemyMeshArray)
-            {
-                Mesh.material.color = Color.grey;
-            }
+            // 색상 변경
+            ChageColor(Color.grey);
 
             // 충돌X
             // 레이어 변경 > EnemyDead
@@ -135,6 +129,13 @@ public class Enemy : MonoBehaviour
 
             // 애니메이션
             EnemyAnimator.SetTrigger("TriggerDie");
+            PlayerAction Player = Target.GetComponent<PlayerAction>();
+            Player.oScroe += Score;
+
+            // 코인 3개중 랜덤
+            int RanCoin = Random.Range(0, 3);
+            // 가중치 랜덤 함수 추가예정
+            Instantiate(CoinArray[RanCoin], transform.position, Quaternion.identity);
 
             // 수류탄일 경우
             if(IsGrenade )
@@ -176,6 +177,15 @@ public class Enemy : MonoBehaviour
             EnemyRigid.velocity = Vector3.zero;
             EnemyRigid.angularVelocity = Vector3.zero;
         }   
+    }
+
+    /** 색상을 변경한다 */
+    private void ChageColor(Color Color)
+    {
+        foreach (MeshRenderer Mesh in EnemyMeshArray)
+        {
+            Mesh.material.color = Color;
+        }
     }
     #endregion // 함수
 }

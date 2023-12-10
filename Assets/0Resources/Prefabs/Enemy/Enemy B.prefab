@@ -102,6 +102,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 120
   CurrentHealth: 120
+  Score: 250
+  CoinArray:
+  - {fileID: 3965216735015063618, guid: 46ba57b04d85b0a4c98a5343e0b8edb4, type: 3}
+  - {fileID: 7371405321460240163, guid: 6ad4e1358daeee44cbcc0316d23694b2, type: 3}
+  - {fileID: 7209039954682850086, guid: 0d7bebf16c527a34ca847c463887a5f9, type: 3}
   Target: {fileID: 0}
   IsTracking: 0
   IsAttack: 0
