@@ -26,6 +26,16 @@ public class Enemy : MonoBehaviour
     #endregion // 변수
 
     #region 프로퍼티
+    public int oMaxHealth
+    {
+        get => MaxHealth;
+        set => MaxHealth = value;
+    }
+    public int oCurrentHealth
+    {
+        get => CurrentHealth;
+        set => CurrentHealth = value;
+    }
     #endregion // 프로퍼티
 
     #region 함수

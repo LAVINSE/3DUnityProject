@@ -27,6 +27,7 @@ public class CameraManager : MonoBehaviour
         Vector3 camAngle = this.transform.rotation.eulerAngles;
         float x = camAngle.x - mouseDelta.y;
 
+        // 마우스 회전 시 카메라 각도 제한
         if (x < 180f)
         {
             x = Mathf.Clamp(x, -1f, 70f);
@@ -39,9 +40,11 @@ public class CameraManager : MonoBehaviour
         this.transform.rotation = Quaternion.Euler(x, camAngle.y + mouseDelta.x, camAngle.z);
     }
 
+    /** 타겟을 추적한다 */
     private void FollowCam()
     {
-        transform.position = Vector3.MoveTowards(transform.position, FollowTarget.position, Speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, FollowTarget.position,
+            Speed * Time.deltaTime);
     }
     #endregion // 함수
 }

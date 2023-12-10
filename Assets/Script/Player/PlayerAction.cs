@@ -90,7 +90,6 @@ public partial class PlayerAction : MonoBehaviour
     private bool IsDodgeCoolTime;
 
     private GameObject NearObject;
-    private Weapon EquipWeapon;
 
     private Rigidbody PlayerRigid;
     private Animator PlayerAnimator;
@@ -109,6 +108,48 @@ public partial class PlayerAction : MonoBehaviour
         get => Coin;
         set => Coin = value;
     }
+    public int oScroe { get; set; }
+    public int oHealth
+    {
+        get => Health;
+        set => Health = value;
+    }
+    public int oAmmo
+    {
+        get => Ammo;
+        set => Ammo = value;
+    }
+    public int oHasGrenades
+    {
+        get => HasGrenades;
+        set => HasGrenades = value;
+    }
+    public int oMaxHealth
+    {
+        get => MaxHealth;
+        set => MaxHealth = value;
+    }
+    public int oMaxCoin
+    {
+        get => MaxCoin;
+        set => MaxCoin = value;
+    }
+    public int oMaxAmmo
+    {
+        get => MaxAmmo;
+        set => MaxAmmo = value;
+    }
+    public int oMaxHasGrenades
+    {
+        get => MaxHasGrenades;
+        set => MaxHasGrenades = value;
+    }
+    public Weapon oEquipWeapon { get; set; }
+    public bool[] oHasWeaponArray
+    {
+        get => HasWeaponArray;
+        set => HasWeaponArray = value;
+    }
     #endregion // 프로퍼티 
 
     #region 함수
@@ -123,6 +164,8 @@ public partial class PlayerAction : MonoBehaviour
         // Callback 등록
         DodgeCallback += CoolTimePlayerDodge;
         SwapCallback += CoolTimePlayerSwap;
+
+        PlayerPrefs.SetInt("MaxScore", 112500);
     }
 
     /** 초기화 => 상태를 갱신한다 */
@@ -328,15 +371,15 @@ public partial class PlayerAction : MonoBehaviour
         if((IsSwapWeapon_0 || IsSwapWeapon_1 || IsSwapWeapon_2) && !IsJump & !IsDodge && !IsSwap && !IsShop)
         {
             // 장착한 무기가 있을 경우
-            if(EquipWeapon != null)
+            if(oEquipWeapon != null)
             {
-                EquipWeapon.gameObject.SetActive(false);
+                oEquipWeapon.gameObject.SetActive(false);
             }
 
             // 단축키 번호에 맞게 무기 활성화
             EquipWeaponIndex = WeaponIndex;
-            EquipWeapon = HandWeaponArray[WeaponIndex].GetComponent<Weapon>();
-            EquipWeapon.gameObject.SetActive(true);
+            oEquipWeapon = HandWeaponArray[WeaponIndex].GetComponent<Weapon>();
+            oEquipWeapon.gameObject.SetActive(true);
 
             // 애니메이션
             PlayerAnimator.SetTrigger("TriggerSwap");
@@ -409,26 +452,26 @@ public partial class PlayerAction : MonoBehaviour
     /** 플레이어 공격 */
     private void PlayerAttack()
     {
-        if (EquipWeapon == null) { return; }
+        if (oEquipWeapon == null) { return; }
 
         // 공격 딜레이 적용
         AttackDelay += Time.deltaTime;
 
         // 공격 딜레이가 공격속도보다 클 경우, 공격가능
-        IsAttackReady = EquipWeapon.oWeaponRate < AttackDelay;
+        IsAttackReady = oEquipWeapon.oWeaponRate < AttackDelay;
 
         // 마우스 왼쪽클릭일 경우, 공격준비가능, 회피X, 무기교체X, 재장전X
         if(IsAttackDown && IsAttackReady && !IsDodge && !IsSwap && !IsReloadReady && !IsShop)
         {
             // 무기 사용
-            EquipWeapon.WeaponUse();
+            oEquipWeapon.WeaponUse();
 
             // 애니메이션
-            if(EquipWeapon.oType == Weapon.WeaponType.Melee)
+            if(oEquipWeapon.oType == Weapon.WeaponType.Melee)
             {
                 PlayerAnimator.SetTrigger("TriggerSwing");
             }
-            else if(EquipWeapon.oType == Weapon.WeaponType.Range && EquipWeapon.oCurrentAmmo != 0)
+            else if(oEquipWeapon.oType == Weapon.WeaponType.Range && oEquipWeapon.oCurrentAmmo != 0)
             {
                 PlayerAnimator.SetTrigger("TriggerShot");
             }
@@ -442,8 +485,8 @@ public partial class PlayerAction : MonoBehaviour
     private void PlayerReload()
     {
         // 무기가없거나, 근접무기거나, 총알이 없으면 실행X
-        if(EquipWeapon == null) { return; }
-        if(EquipWeapon.oType == Weapon.WeaponType.Melee) { return; }
+        if(oEquipWeapon == null) { return; }
+        if(oEquipWeapon.oType == Weapon.WeaponType.Melee) { return; }
         if(Ammo == 0) { return; }
 
         // 리로드키를 눌렀을경우, 회피X, 무기교체X, 점프X, 공격가능한상태일때, 재장전중이 아닐때
@@ -461,10 +504,10 @@ public partial class PlayerAction : MonoBehaviour
     private void DonePlayerReload()
     {
         // 총알 장전
-        int ReloadAmmo = Ammo + EquipWeapon.oCurrentAmmo < EquipWeapon.oMaxAmmo ?
-            Ammo : EquipWeapon.oMaxAmmo - EquipWeapon.oCurrentAmmo;
+        int ReloadAmmo = Ammo + oEquipWeapon.oCurrentAmmo < oEquipWeapon.oMaxAmmo ?
+            Ammo : oEquipWeapon.oMaxAmmo - oEquipWeapon.oCurrentAmmo;
 
-        EquipWeapon.oCurrentAmmo += ReloadAmmo;
+        oEquipWeapon.oCurrentAmmo += ReloadAmmo;
         Ammo -= ReloadAmmo;
 
         // 장전 완료
