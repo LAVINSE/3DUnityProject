@@ -11,15 +11,19 @@ public class MainSceneManager : SceneManager
     [SerializeField] private GameObject PlayerCamera;
     [SerializeField] private PlayerAction Player;
     [SerializeField] private EnemyBoss Boss;
-    [SerializeField] private int Statge;
+    [SerializeField] private GameObject ItemShopObject;
+    [SerializeField] private GameObject WeaponShopObject;
+    [SerializeField] private GameObject StartZoneObject;
+    [SerializeField] private Transform SpawnPoint;
+    [SerializeField] private int StatgeCount;
     [SerializeField] private float PlayTime;
     [SerializeField] private bool IsBattle;
     [SerializeField] private int EnemyCountA;
     [SerializeField] private int EnemyCountB;
     [SerializeField] private int EnemyCountC;
 
-    [SerializeField] private GameObject MenuPanel;
-    [SerializeField] private GameObject GamePanel;
+    [SerializeField] private GameObject MenuPanelObject;
+    [SerializeField] private GameObject GamePanelObject;
     [SerializeField] private TMP_Text MaxScoreText;
 
     [SerializeField] private TMP_Text ScoreText;
@@ -46,12 +50,14 @@ public class MainSceneManager : SceneManager
     /** 초기화 */
     private void Awake()
     {
+        Player.transform.position = SpawnPoint.position;
         MaxScoreText.text = string.Format("{0:n0}", PlayerPrefs.GetInt("MaxScore"));
     }
 
     /** 초기화 => 상태를 갱신한다 */
     private void Update()
     {
+        // 전투가 시작될 경우
         if (IsBattle)
         {
             PlayTime += Time.deltaTime;
@@ -68,7 +74,7 @@ public class MainSceneManager : SceneManager
         // 텍스트 설정
         PlayTimeText.text = string.Format("{0:00}", Hour) + ":" + string.Format("{0:00}", Min) 
             + ":" + string.Format("{0:00}", Second);
-        StageText.text = "STAGE" + Statge;
+        StageText.text = "STAGE" + StatgeCount;
         ScoreText.text = string.Format("{0:n0}", Player.oScroe);
 
         // 플레이어 UI
@@ -109,10 +115,42 @@ public class MainSceneManager : SceneManager
         MenuCamera.SetActive(false);
         PlayerCamera.SetActive(true);
 
-        MenuPanel.SetActive(false);
-        GamePanel.SetActive(true);
+        MenuPanelObject.SetActive(false);
+        GamePanelObject.SetActive(true);
 
         Player.gameObject.SetActive(true);
+    }
+
+    /** 스테이지 시작 */
+    public void StageStart()
+    {
+        ItemShopObject.SetActive(false);
+        WeaponShopObject.SetActive(false);
+        StartZoneObject.SetActive(false);
+
+        IsBattle = true;
+        StartCoroutine(StartBattel());
+    }
+
+    /** 스테이지 종료 */
+    public void StageEnd()
+    {
+        // TODO : 안되는 이유 찾아야함;
+        Player.transform.position = SpawnPoint.position;
+
+        ItemShopObject.SetActive(true);
+        WeaponShopObject.SetActive(true);
+        StartZoneObject.SetActive(true);
+
+        IsBattle = false;
+        StatgeCount++;
+    }
+
+    // 전투 시작
+    private IEnumerator StartBattel()
+    {
+        yield return new WaitForSeconds(5f);
+        StageEnd();
     }
     #endregion // 함수
 }
