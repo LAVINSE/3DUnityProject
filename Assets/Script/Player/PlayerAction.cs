@@ -52,7 +52,6 @@ public partial class PlayerAction : MonoBehaviour
     [Space]
     [Header("=====> 플레이어 설정 <=====")]
     public Transform CameraArm;
-    public float Gravity = -9.81f;
 
     // 장착무기번호
     private int EquipWeaponIndex = -1;
@@ -84,17 +83,14 @@ public partial class PlayerAction : MonoBehaviour
     private bool IsSwap;
     private bool IsReloadReady;
     private bool IsDamage;
-    private bool IsShop;
+    private bool IsDead;
 
     // 쿨타임
     private bool IsDodgeCoolTime;
 
-    private GameObject NearObject;
-
-    private Rigidbody PlayerRigid;
     private Animator PlayerAnimator;
-    private CharacterController PlayerController;
     private MeshRenderer[] PlayerMeshRenderArray;
+    private Rigidbody PlayerRigid;
 
     // CallBack
     private event Action DodgeCallback;
@@ -102,7 +98,6 @@ public partial class PlayerAction : MonoBehaviour
     #endregion // 변수
 
     #region 프로퍼티 
-    public Item oItem { get; set; }
     public int oCoin
     {
         get => Coin;
@@ -144,27 +139,39 @@ public partial class PlayerAction : MonoBehaviour
         get => MaxHasGrenades;
         set => MaxHasGrenades = value;
     }
+
+    // 행동중 확인
+    public bool IsShop { get; set; }
+
+    // 장착중인 무기
     public Weapon oEquipWeapon { get; set; }
     public bool[] oHasWeaponArray
     {
         get => HasWeaponArray;
         set => HasWeaponArray = value;
     }
+
+    // 아이템 줍기
+    public Item oItem { get; set; }
+    // 상호작용
+    public GameObject oNearObject { get; set; }
+
+    public MainSceneManager oMainSceneManager;
     #endregion // 프로퍼티 
 
     #region 함수
     /** 초기화 */
     private void Awake()
     {
-        PlayerRigid = GetComponentInChildren<Rigidbody>();
+        PlayerRigid = GetComponent<Rigidbody>();
         PlayerAnimator = GetComponentInChildren<Animator>();
-        PlayerController = GetComponentInChildren<CharacterController>();
         PlayerMeshRenderArray = GetComponentsInChildren<MeshRenderer>();
 
         // Callback 등록
         DodgeCallback += CoolTimePlayerDodge;
         SwapCallback += CoolTimePlayerSwap;
 
+        // 점수 저장
         PlayerPrefs.SetInt("MaxScore", 112500);
     }
 
@@ -172,7 +179,7 @@ public partial class PlayerAction : MonoBehaviour
     private void Update()
     {
         // 플레이어 중력
-        PlayerGravity();
+        //PlayerGravity();
         // 플레이어 입력처리
         PlayerInput();
         // 플레이어 이동
@@ -194,7 +201,6 @@ public partial class PlayerAction : MonoBehaviour
         // 플레이어 수류탄 던지기
         PlayerThrowGrenade();
     }
-
     /** 초기화 => 접촉했을 경우 (트리거) */
     private void OnTriggerEnter(Collider other)
     {
@@ -211,6 +217,7 @@ public partial class PlayerAction : MonoBehaviour
                 Debug.Log($"적 공격 체력 : {Health}");
 
                 bool IsBossTaunt = other.gameObject.name == "MeleeTauntArea";
+
                 // 1초 무적판정
                 StartCoroutine(OnHit(IsBossTaunt));
             }
@@ -221,37 +228,6 @@ public partial class PlayerAction : MonoBehaviour
                 // 원거리 공격 삭제
                 Destroy(other.gameObject);
             }
-        }
-    }
-
-    /** 초기화 => 접촉중일 경우 (트리거) */
-    private void OnTriggerStay(Collider other)
-    {
-        // Weapon일 경우, Shop일 경우
-        if (other.gameObject.CompareTag("Weapon") || other.gameObject.CompareTag("Shop"))
-        {
-            // NearObject 변수에 접촉중인 오브젝트 저장
-            NearObject = other.gameObject;
-        }
-    }
-
-    /** 초기화 => 접촉이 끝났을 경우 (트리거) */
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Weapon"))
-        {
-            // 오브젝트 null
-            NearObject = null;
-        }
-        else if (other.gameObject.CompareTag("Shop"))
-        {
-            Shop NpcShop = NearObject.GetComponent<Shop>();
-
-            // 상점 나가기
-            NpcShop.Exit();
-            IsShop = false;
-            // 오브젝트 null
-            NearObject = null;
         }
     }
 
@@ -289,7 +265,7 @@ public partial class PlayerAction : MonoBehaviour
     private void PlayerDodge()
     {
         // 회피를 눌렀을 경우, 점프중X, 회피중X, 무기교체중X, 재장전X
-        if (IsDodgeDown && !IsJump && !IsDodge && !IsSwap && !IsDodgeCoolTime && !IsReloadReady && !IsShop)
+        if (IsDodgeDown && !IsJump && !IsDodge && !IsSwap && !IsDodgeCoolTime && !IsReloadReady && !IsShop && !IsDead)
         {
             // 속도 변화
             PlayerWalkSpeed *= PlayerDodgeMagnification;
@@ -327,28 +303,19 @@ public partial class PlayerAction : MonoBehaviour
     /** 플레이어 상호작용 */
     private void PlayerInteraction()
     {
-        // 상호작용키를 눌렀을 경우, 가까운곳에 오브젝트가 있을경우, 점프중X, 회피중X
-        if (IsInteractionDown && NearObject != null && !IsJump && !IsDodge)
+        // 상호작용 키를 눌렀을 경우, 점프X, 회피X
+        if (IsInteractionDown && oNearObject != null && !IsJump && !IsDodge && !IsDead)
         {
-            // 무기일 경우
-            if (NearObject.CompareTag("Weapon"))
+            // 상호작용 오브젝트 태그
+            switch (oNearObject.tag)
             {
-                Item ItemComponent = NearObject.GetComponent<Item>();
+                case "Shop":
+                    Shop NpcShop = oNearObject.GetComponent<Shop>();
 
-                // 무기 인덱스 번호를 가져온다
-                int WeaponIndex = ItemComponent.oWeaponIndex;
-                HasWeaponArray[WeaponIndex] = true;
-
-                Destroy(NearObject);
-            }
-            // 상점일 경우
-            else if (NearObject.CompareTag("Shop"))
-            {
-                Shop NpcShop = NearObject.GetComponent<Shop>();
-
-                // 상점 입장
-                NpcShop.Enter(this);
-                IsShop = true;
+                    // 상점 입장
+                    NpcShop.Enter(this);
+                    IsShop = true;
+                    break;
             }
         }
     }
@@ -442,6 +409,13 @@ public partial class PlayerAction : MonoBehaviour
                         HasGrenades = MaxHasGrenades;
                     }
                     break;
+                case Item.ItemType.Weapon:
+                    // 무기 인덱스 번호를 가져온다
+                    int WeaponIndex = oItem.oWeaponIndex;
+                    HasWeaponArray[WeaponIndex] = true;
+
+                    Destroy(oNearObject);
+                    break;
             }
 
             // 아이템 파괴
@@ -461,7 +435,7 @@ public partial class PlayerAction : MonoBehaviour
         IsAttackReady = oEquipWeapon.oWeaponRate < AttackDelay;
 
         // 마우스 왼쪽클릭일 경우, 공격준비가능, 회피X, 무기교체X, 재장전X
-        if(IsAttackDown && IsAttackReady && !IsDodge && !IsSwap && !IsReloadReady && !IsShop)
+        if(IsAttackDown && IsAttackReady && !IsDodge && !IsSwap && !IsReloadReady && !IsShop && !IsDead)
         {
             // 무기 사용
             oEquipWeapon.WeaponUse();
@@ -490,7 +464,7 @@ public partial class PlayerAction : MonoBehaviour
         if(Ammo == 0) { return; }
 
         // 리로드키를 눌렀을경우, 회피X, 무기교체X, 점프X, 공격가능한상태일때, 재장전중이 아닐때
-        if(IsReloadDown && !IsJump && !IsDodge && !IsSwap && IsAttackReady && !IsReloadReady & !IsShop)
+        if(IsReloadDown && !IsJump && !IsDodge && !IsSwap && IsAttackReady && !IsReloadReady && !IsShop && !IsDead)
         {
             Debug.Log("asdf");
             PlayerAnimator.SetTrigger("TriggerReload");
@@ -521,7 +495,7 @@ public partial class PlayerAction : MonoBehaviour
         if(HasGrenades == 0) { return; }
 
         // 수류탄키를 눌렀을 경우, 재장전X, 무기교체X, 회피X
-        if(IsGrenadeDown && !IsReloadReady && !IsSwap && !IsDodge && !IsShop)
+        if(IsGrenadeDown && !IsReloadReady && !IsSwap && !IsDodge && !IsShop & !IsDead)
         {
             // 수류탄 생성
             GameObject GrenadeObj = Instantiate(GrenadePrefab, transform.position, transform.rotation);
@@ -552,6 +526,11 @@ public partial class PlayerAction : MonoBehaviour
             PlayerRigid.AddForce(transform.forward * -25, ForceMode.Impulse); 
         }
 
+        if (Health <= 0 && !IsDead)
+        {
+            OnDie();
+        }
+
         // 피격 후 1초 무적
         yield return new WaitForSeconds(1);
 
@@ -566,6 +545,14 @@ public partial class PlayerAction : MonoBehaviour
         {
             PlayerRigid.velocity = Vector3.zero;
         }
+    }
+
+    /** 플레이어 죽음 */
+    private void OnDie()
+    {
+        PlayerAnimator.SetTrigger("TriggerDie");
+        IsDead = true;
+        oMainSceneManager.GameOver();
     }
 
     /** 쿨타임 적용 */

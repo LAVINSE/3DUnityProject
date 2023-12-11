@@ -72,6 +72,7 @@ GameObject:
   - component: {fileID: 3733971860872919298}
   - component: {fileID: 3733971860872919299}
   - component: {fileID: 3733971860872919297}
+  - component: {fileID: 4628243433285046843}
   - component: {fileID: 5666914351228687039}
   m_Layer: 11
   m_Name: Enemy A
@@ -111,7 +112,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!65 &3733971860872919299
 BoxCollider:
@@ -148,6 +149,19 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4628243433285046843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3989913478870399293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9bc337baec279a49a70aefe495f01b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OtherEnemy: {fileID: 0}
 --- !u!114 &5666914351228687039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,6 +177,8 @@ MonoBehaviour:
   MaxHealth: 100
   CurrentHealth: 100
   Score: 100
+  TrackingRange: 500
+  AttackRange: 200
   CoinArray:
   - {fileID: 3965216735015063618, guid: 46ba57b04d85b0a4c98a5343e0b8edb4, type: 3}
   - {fileID: 7371405321460240163, guid: 6ad4e1358daeee44cbcc0316d23694b2, type: 3}

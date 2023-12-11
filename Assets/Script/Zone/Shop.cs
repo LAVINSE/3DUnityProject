@@ -18,6 +18,32 @@ public class Shop : MonoBehaviour
     #endregion // 변수
 
     #region 함수
+    /** 초기화 => 접촉했을 경우 (트리거) */
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Player = other.GetComponent<PlayerAction>();
+            Player.oNearObject = this.gameObject;
+        }
+    }
+
+    /** 초기화 => 접촉이 끝났을 경우 (트리거) */
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            if(Player != null)
+            {
+                // 상점 나가기
+                Exit();
+                Player.IsShop = false;
+                Player.oNearObject = null;
+                Player = null;
+            }
+        }
+    }
+
     /** 상점에 입장한다 */
     public void Enter(PlayerAction Player)
     {

@@ -23,20 +23,6 @@ public class EnemyB : Enemy
     }
 
     /** 초기화 => 상태를 갱신한다 */
-    private void Update()
-    {
-        // 추적상태일 경우, D 타입X
-        if (EnemyNavMeshAgent.enabled)
-        {
-            // 도착할 목표 지정
-            EnemyNavMeshAgent.SetDestination(Target.position);
-
-            // 추적중일 경우 >> 추적, 아닐경우 >> 멈춤
-            EnemyNavMeshAgent.isStopped = !IsTracking;
-        }
-    }
-
-    /** 초기화 => 상태를 갱신한다 */
     protected override void FixedUpdate()
     {
         base.FixedUpdate();

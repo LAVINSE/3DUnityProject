@@ -5,13 +5,27 @@ using UnityEngine;
 public partial class PlayerAction : MonoBehaviour
 {
     #region 변수
+    // 행동중 확인
     private bool IsMove;
+    public bool IsWall;
 
     private Vector3 MoveVector;
-    private Vector3 JumpVector;
     #endregion // 변수
 
     #region 함수
+    /** 초기화 => 접촉했을 경우 */
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            PlayerAnimator.SetBool("IsJump", false);
+            IsJump = false;
+        }
+    }
+    private void FixedUpdate()
+    {
+        StopToWall();
+    }
     /** 플레이어가 움직인다 */
     private void PlayerMove()
     {
@@ -32,21 +46,19 @@ public partial class PlayerAction : MonoBehaviour
             // 이동방향 적용
             //MoveVector = MoveDirect;
 
-            MoveVector = new Vector3(MoveDirect.x, MoveDirect.y + JumpVector.y, MoveDirect.z);
+            MoveVector = MoveDirect;
             // 캐릭터 방향
             this.transform.forward = MoveDirect;
-        }
-        else
-        {
-            MoveVector = new Vector3(0, JumpVector.y, 0);
         }
 
         // 움직임 제한
         PlayerMoveLimit();
 
         // 플레이어 움직임
-        //PlayerController.Move(MoveVector + JumpVector);
-        PlayerController.Move(MoveVector);
+        if (!IsWall)
+        {
+            transform.position += MoveVector;
+        }
 
         // 애니메이션
         PlayerMoveAnimation();
@@ -76,13 +88,6 @@ public partial class PlayerAction : MonoBehaviour
     /** 플레이어 움직임 애니메이션 */
     private void PlayerMoveAnimation()
     {
-        // 바닥일경우, 점프 활성화
-        if (PlayerController.isGrounded == true)
-        {
-            PlayerAnimator.SetBool("IsJump", false);
-            IsJump = false;
-        }
-
         // 애니메이션
         PlayerAnimator.SetBool("IsWalk", IsMove);
         PlayerAnimator.SetBool("IsRun", IsRunDown && IsMove);
@@ -94,7 +99,7 @@ public partial class PlayerAction : MonoBehaviour
         // 점프를 눌렀을 경우, 점프중X, 회피중X, 무기교체중X, 재장전X
         if (IsJumpDown && !IsJump && !IsDodge && !IsSwap & !IsReloadReady)
         {
-            JumpVector.y = PlayerJumpPower;
+            PlayerRigid.AddForce(Vector3.up * PlayerJumpPower, ForceMode.Impulse);
 
             // 애니메이션
             PlayerAnimator.SetBool("IsJump", true);
@@ -104,13 +109,12 @@ public partial class PlayerAction : MonoBehaviour
         }
     }
 
-    /** 플레이어 중력 */
-    private void PlayerGravity()
+    /** 벽 통과 방지 */
+    private void StopToWall()
     {
-        if (PlayerController.isGrounded == false)
-        {
-            JumpVector.y += Gravity * Time.deltaTime;
-        }
+        Debug.DrawRay(transform.position, transform.forward * 4, Color.green);
+        IsWall = Physics.Raycast(transform.position, MoveVector,
+            4, LayerMask.GetMask("Wall"));
     }
     #endregion // 함수
 }

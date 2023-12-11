@@ -11,6 +11,8 @@ public class CameraManager : MonoBehaviour
 
     [SerializeField] private float Speed;
     [SerializeField] private float Senstivity;
+    [SerializeField] private float Height;
+    [SerializeField] private float Distance;
     #endregion // 변수
 
     #region 함수
@@ -21,6 +23,7 @@ public class CameraManager : MonoBehaviour
         FollowCam();    
     }
 
+    /** 카메라 회전 */
     private void LookAround()
     {
         Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * Senstivity;
@@ -43,8 +46,8 @@ public class CameraManager : MonoBehaviour
     /** 타겟을 추적한다 */
     private void FollowCam()
     {
-        transform.position = Vector3.MoveTowards(transform.position, FollowTarget.position,
-            Speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position,
+            FollowTarget.position, Speed * Time.deltaTime);
     }
     #endregion // 함수
 }

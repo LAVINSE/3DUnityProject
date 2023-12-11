@@ -10,19 +10,22 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int MaxHealth;
     [SerializeField] private int CurrentHealth;
     [SerializeField] private int Score;
+    [SerializeField] private float TrackingRange;
+    [SerializeField] private float AttackRange;
     [SerializeField] private GameObject[] CoinArray;
 
     [Space]
     [Header("=====> 적 공통 <=====")]
     [SerializeField] protected Transform Target;
     [SerializeField] protected bool IsTracking;
-    [SerializeField] protected bool IsAttack;  
+    [SerializeField] protected bool IsAttack;
     
     protected Rigidbody EnemyRigid;
     protected BoxCollider EnemyBoxCollider;
     protected MeshRenderer[] EnemyMeshArray;
     protected NavMeshAgent EnemyNavMeshAgent;
     protected Animator EnemyAnimator;
+    protected EnemyState EnemyStateMachine;
 
     protected bool IsEnemyDead;
     #endregion // 변수
@@ -38,6 +41,14 @@ public class Enemy : MonoBehaviour
         get => CurrentHealth;
         set => CurrentHealth = value;
     }
+    public Transform oTarget
+    {
+        get => Target;
+        set => Target = value;
+    }
+    public MainSceneManager oMainSceneManager { get; set; }
+    public float oTrackingRange => TrackingRange;
+    public float oAttackRange => AttackRange;
     #endregion // 프로퍼티
 
     #region 함수
@@ -49,8 +60,7 @@ public class Enemy : MonoBehaviour
         EnemyMeshArray = GetComponentsInChildren<MeshRenderer>();
         EnemyNavMeshAgent = GetComponent<NavMeshAgent>();
         EnemyAnimator = GetComponentInChildren<Animator>();
-
-        Invoke("TrackingStart", 2);
+        EnemyStateMachine = GetComponent<EnemyState>();
     }
 
     /** 초기화 => 상태를 갱신한다 */
@@ -113,6 +123,7 @@ public class Enemy : MonoBehaviour
         {
             ChageColor(Color.white);
         }
+        // 죽었을 경우
         else
         {
             // 색상 변경
@@ -137,8 +148,11 @@ public class Enemy : MonoBehaviour
             // 가중치 랜덤 함수 추가예정
             Instantiate(CoinArray[RanCoin], transform.position, Quaternion.identity);
 
+            // 카운트 감소
+            this.oMainSceneManager.oEnemyCount--;
+
             // 수류탄일 경우
-            if(IsGrenade )
+            if(IsGrenade)
             {
                 // 넉백 처리
                 ReactVector = ReactVector.normalized;
@@ -162,10 +176,24 @@ public class Enemy : MonoBehaviour
     }
 
     /** 추적을 시작한다 */
-    private void TrackingStart()
+    public void TrackingStart()
     {
         IsTracking = true;
         EnemyAnimator.SetBool("IsWalk", true);
+    }
+
+    /** 추적중 */
+    public void Tracking()
+    {
+        // 추적상태일 경우
+        if (EnemyNavMeshAgent.enabled)
+        {
+            // 도착할 목표 지정
+            EnemyNavMeshAgent.SetDestination(Target.position);
+
+            // 추적중일 경우 >> 추적, 아닐경우 >> 멈춤
+            EnemyNavMeshAgent.isStopped = !IsTracking;
+        }
     }
 
     /** 물리속도, 회전을 0으로 한다 */

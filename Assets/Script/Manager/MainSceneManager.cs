@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainSceneManager : SceneManager
+public class MainSceneManager : CSceneManager
 {
     #region 변수
     [SerializeField] private GameObject MenuCamera;
@@ -15,15 +16,19 @@ public class MainSceneManager : SceneManager
     [SerializeField] private GameObject WeaponShopObject;
     [SerializeField] private GameObject StartZoneObject;
     [SerializeField] private Transform SpawnPoint;
-    [SerializeField] private int StatgeCount;
+    [SerializeField] private int StageCount;
     [SerializeField] private float PlayTime;
     [SerializeField] private bool IsBattle;
-    [SerializeField] private int EnemyCountA;
-    [SerializeField] private int EnemyCountB;
-    [SerializeField] private int EnemyCountC;
+    [SerializeField] private int EnemyCount;
+    [SerializeField] private int EnemyCountD;
+
+    [SerializeField] private Transform[] EnemyZoneArray;
+    [SerializeField] private GameObject[] EnemyPrefabArray;
+    [SerializeField] private List<int> EnemyList = new List<int>();
 
     [SerializeField] private GameObject MenuPanelObject;
     [SerializeField] private GameObject GamePanelObject;
+    [SerializeField] private GameObject GameOverPanelObject;
     [SerializeField] private TMP_Text MaxScoreText;
 
     [SerializeField] private TMP_Text ScoreText;
@@ -38,13 +43,22 @@ public class MainSceneManager : SceneManager
     [SerializeField] private Image Weapon_3_Img;
     [SerializeField] private Image Weapon_R_Img;
 
-    [SerializeField] private TMP_Text EnemyAText;
-    [SerializeField] private TMP_Text EnemyBText;
-    [SerializeField] private TMP_Text EnemyCText;
+    [SerializeField] private TMP_Text EnemyText;
 
     [SerializeField] private RectTransform BossHealthGroup;
     [SerializeField] private RectTransform BossHealthBar;
+
+    [SerializeField] private TMP_Text CurrentScoreText;
+    [SerializeField] private TMP_Text BestScoreText;
     #endregion // 변수
+
+    #region 프로퍼티
+    public int oEnemyCount
+    {
+        get => EnemyCount;
+        set => EnemyCount = value;
+    }
+    #endregion // 프로퍼티
 
     #region 함수
     /** 초기화 */
@@ -74,7 +88,7 @@ public class MainSceneManager : SceneManager
         // 텍스트 설정
         PlayTimeText.text = string.Format("{0:00}", Hour) + ":" + string.Format("{0:00}", Min) 
             + ":" + string.Format("{0:00}", Second);
-        StageText.text = "STAGE" + StatgeCount;
+        StageText.text = "STAGE" + StageCount;
         ScoreText.text = string.Format("{0:n0}", Player.oScroe);
 
         // 플레이어 UI
@@ -101,12 +115,18 @@ public class MainSceneManager : SceneManager
         Weapon_R_Img.color = new Color(1, 1, 1, Player.oHasGrenades > 0 ? 1 : 0);
 
         // 몬스터 숫자 UI
-        EnemyAText.text = EnemyCountA.ToString();
-        EnemyBText.text = EnemyCountB.ToString();
-        EnemyCText.text = EnemyCountC.ToString();
+        EnemyText.text = EnemyCount.ToString();
 
-        // 보스 체력바
-        BossHealthBar.localScale = new Vector3((float)Boss.oCurrentHealth / Boss.oMaxHealth, 1, 1);
+        if(Boss != null)
+        {
+            BossHealthGroup.anchoredPosition = Vector3.down * 30;
+            // 보스 체력바
+            BossHealthBar.localScale = new Vector3((float)Boss.oCurrentHealth / Boss.oMaxHealth, 1, 1);
+        }
+        else
+        {
+            //BossHealthGroup.anchoredPosition = Vector3.down * 200;
+        }
     }
 
     /** 게임을 시작한다 */
@@ -120,6 +140,27 @@ public class MainSceneManager : SceneManager
 
         Player.gameObject.SetActive(true);
     }
+    
+    /** 게임을 종료한다 */
+    public void GameOver()
+    {
+        GamePanelObject.SetActive(false);
+        GameOverPanelObject.SetActive(true);
+        CurrentScoreText.text = ScoreText.text;
+
+        int MaxScore = PlayerPrefs.GetInt("MaxScore");
+        if(Player.oScroe > MaxScore)
+        {
+            BestScoreText.gameObject.SetActive(true);
+            PlayerPrefs.SetInt("MaxScore", Player.oScroe);
+        }
+    }
+
+    /** 게임 재시작 */
+    public void ReStart()
+    {
+        SceneManager.LoadScene(0);
+    }
 
     /** 스테이지 시작 */
     public void StageStart()
@@ -127,6 +168,11 @@ public class MainSceneManager : SceneManager
         ItemShopObject.SetActive(false);
         WeaponShopObject.SetActive(false);
         StartZoneObject.SetActive(false);
+
+        foreach(Transform ZonePos in EnemyZoneArray)
+        {
+            ZonePos.gameObject.SetActive(true);
+        }
 
         IsBattle = true;
         StartCoroutine(StartBattel());
@@ -142,14 +188,63 @@ public class MainSceneManager : SceneManager
         WeaponShopObject.SetActive(true);
         StartZoneObject.SetActive(true);
 
+        foreach (Transform ZonePos in EnemyZoneArray)
+        {
+            ZonePos.gameObject.SetActive(false);
+        }
+
         IsBattle = false;
-        StatgeCount++;
+        StageCount++;
     }
 
     // 전투 시작
     private IEnumerator StartBattel()
     {
-        yield return new WaitForSeconds(5f);
+        if (StageCount % 5 == 0)
+        {
+            GameObject EnemyObject = Instantiate(EnemyPrefabArray[3],
+                EnemyZoneArray[0].position, EnemyZoneArray[0].rotation);
+            Enemy EnemyComponent = EnemyObject.GetComponent<Enemy>();
+            EnemyComponent.oTarget = Player.transform;
+            EnemyComponent.oMainSceneManager = this;
+            Boss = EnemyObject.GetComponent<EnemyBoss>();
+            EnemyCount++;
+        }
+        else
+        {
+            for (int i = 0; i < StageCount; i++)
+            {
+                // 몬스터 종류 랜덤
+                int Ran = Random.Range(0, 3);
+                EnemyList.Add(Ran);
+
+                EnemyCount++;
+            }
+        }
+
+        // 4초마다 소환
+        while (EnemyList.Count > 0)
+        {
+            // 스폰위치 랜덤
+            int RandomZone = Random.Range(0, 4);
+            GameObject EnemyObject = Instantiate(EnemyPrefabArray[EnemyList[0]],
+                EnemyZoneArray[RandomZone].position, EnemyZoneArray[RandomZone].rotation);
+            Enemy EnemyComponent = EnemyObject.GetComponent<Enemy>();
+            EnemyComponent.oTarget = Player.transform;
+            EnemyComponent.oMainSceneManager = this;
+            EnemyList.RemoveAt(0);
+            yield return new WaitForSeconds(4f);
+        }
+        
+
+        while (EnemyCount > 0)
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(4f);
+
+        Boss = null;
         StageEnd();
     }
     #endregion // 함수
