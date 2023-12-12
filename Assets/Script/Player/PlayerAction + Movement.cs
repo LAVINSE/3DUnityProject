@@ -5,9 +5,10 @@ using UnityEngine;
 public partial class PlayerAction : MonoBehaviour
 {
     #region 변수
+    [SerializeField] private LayerMask Layer;
+    [SerializeField] private bool IsWall;
     // 행동중 확인
     private bool IsMove;
-    public bool IsWall;
 
     private Vector3 MoveVector;
     #endregion // 변수
@@ -114,7 +115,7 @@ public partial class PlayerAction : MonoBehaviour
     {
         Debug.DrawRay(transform.position, transform.forward * 4, Color.green);
         IsWall = Physics.Raycast(transform.position, MoveVector,
-            4, LayerMask.GetMask("Wall"));
+            4, Layer);
     }
     #endregion // 함수
 }

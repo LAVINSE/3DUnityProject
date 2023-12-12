@@ -64,7 +64,6 @@ public class MainSceneManager : CSceneManager
     /** 초기화 */
     private void Awake()
     {
-        Player.transform.position = SpawnPoint.position;
         MaxScoreText.text = string.Format("{0:n0}", PlayerPrefs.GetInt("MaxScore"));
     }
 
