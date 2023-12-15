@@ -6,15 +6,21 @@ using UnityEngine;
 public class Shop : MonoBehaviour
 {
     #region 변수
-    [SerializeField] private RectTransform ShopUiGroup;
+    [Header("=====> 상점 데이터 <=====")]
+    [SerializeField] private ItemTable ItemTableData;
+
+    [Header("=====> 상점 오브젝트 <=====")]
+    [SerializeField] private GameObject ItemShopPrefab;
+    [SerializeField] private GameObject ItemShopRoot;
+    [SerializeField] private GameObject ItemSpawnPos;
+
+    [Header("=====> 상점 UI 설정 <=====")]
     [SerializeField] private Animator NpcAnimator;
-    [SerializeField] private GameObject[] ItemPrefabArray;
-    [SerializeField] private int[] ItemPriceArray;
-    [SerializeField] private Transform[] ItemPosArray;
     [SerializeField] private TMP_Text TalkText;
     [SerializeField] private string[] TalkDataArray;
 
     private PlayerAction Player;
+    private GameObject ItemShopObject;
     #endregion // 변수
 
     #region 함수
@@ -45,42 +51,65 @@ public class Shop : MonoBehaviour
     }
 
     /** 상점에 입장한다 */
-    public void Enter(PlayerAction Player)
+    public void Enter()
     {
-        this.Player = Player;
-
         // 화면 중앙에 위치
-        ShopUiGroup.anchoredPosition = Vector3.zero;
+        var ItemShop = this.transform.GetComponentInChildren<ItemShopUI>(true);
+
+        // 아이템 상점UI가 없을경우
+        if(ItemShop == null)
+        {
+            Debug.Log("입장");
+            // 상점 생성, 설정
+            ItemShopObject = CFactory.CreateCloneObj("ItemShop", ItemShopPrefab,
+                ItemShopRoot, Vector3.zero, Vector3.one, Vector3.zero);
+            ItemShopObject.GetComponent<ItemShopUI>().ShopSetting(this, ItemTableData);
+            ItemShopObject.SetActive(true);
+        }
+        else
+        {
+            ItemShopObject.SetActive(true);
+        }
     }
 
     /** 상점을 나간다 */
     public void Exit()
     {
         NpcAnimator.SetTrigger("TriggerHello");
-        // 아래로 숨기기
-        ShopUiGroup.anchoredPosition = Vector3.down * 1000;
+
+        // 상점 UI 숨기기
+        if(ItemShopObject != null)
+        {
+            ItemShopObject.SetActive(false);
+        }
     }
 
     /** 물건을 구입한다 */
-    public void Buy(int Index)
+    public void Buy(GameObject ItemPrefab, string ItemName, int ItemPrice)
     {
-        int ItemPrice = ItemPriceArray[Index];
+        // 아이템 가격이 플레이어 돈 보다 높을경우
         if(ItemPrice > Player.oCoin)
         {
-            StopCoroutine(Talk());
-            StartCoroutine(Talk());
+            //StopCoroutine(Talk());
+            //StartCoroutine(Talk());
             return;
         }
 
-        // 아이템 가격만큼 차감
-        Player.oCoin -= ItemPrice;
+        // 아이템이 생성되어있지 않을경우
+        if(ItemSpawnPos.gameObject.transform.childCount == 0)
+        {
+            // 아이템 가격만큼 차감
+            Player.oCoin -= ItemPrice;
 
-        // 아이템 소환랜덤위치
-        Vector3 RandomPos = Vector3.right * Random.Range(-3, 3) + Vector3.forward * Random.Range(-3, 3);
-
-        // 아이템 생성
-        Instantiate(ItemPrefabArray[Index], ItemPosArray[Index].position + RandomPos,
-            ItemPosArray[Index].rotation);
+            // 아이템 생성
+            CFactory.CreateCloneObj(ItemName, ItemPrefab, ItemSpawnPos,
+                Vector3.zero, Vector3.one, Vector3.zero);
+        }
+        else
+        {
+            Debug.Log("아이템 있음");
+        }
+        
     }
 
     /** Npc 대화 */

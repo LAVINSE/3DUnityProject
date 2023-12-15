@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,14 +9,23 @@ using UnityEngine.UI;
 public class MainSceneManager : CSceneManager
 {
     #region 변수
+    [Header("=====> 카메라 <=====")]
     [SerializeField] private GameObject MenuCamera;
     [SerializeField] private GameObject PlayerCamera;
+
+    [Header("=====> 플레이어 <=====")]
     [SerializeField] private PlayerAction Player;
     [SerializeField] private EnemyBoss Boss;
+
+    [Header("=====> UI <=====")]
     [SerializeField] private GameObject ItemShopObject;
     [SerializeField] private GameObject WeaponShopObject;
+
+    [Header("=====> 스폰 위치 <=====")]
     [SerializeField] private GameObject StartZoneObject;
     [SerializeField] private Transform SpawnPoint;
+
+    [Header("=====> 설정 <=====")]
     [SerializeField] private int StageCount;
     [SerializeField] private float PlayTime;
     [SerializeField] private bool IsBattle;
@@ -50,6 +60,17 @@ public class MainSceneManager : CSceneManager
 
     [SerializeField] private TMP_Text CurrentScoreText;
     [SerializeField] private TMP_Text BestScoreText;
+
+    [SerializeField] private List<GameObject> WallDoorList = new List<GameObject>(); 
+    [SerializeField] private float WaitTimer; // 게임 시작전 대기 시간
+    [SerializeField] private float FarmingTimer; // 게임 시작 파밍 시간
+    [SerializeField] private float BattleTimer; // 게임 시작 파밍 이후 전투 시간 >> 빨리깨면 보상 up
+    [SerializeField] private bool IsWaitTime;
+    [SerializeField] private bool IsFarmingTime;
+    [SerializeField] private bool IsBattleTime;
+
+    private float SaveWaitTimer;
+    private float SaveFarmingTimer;
     #endregion // 변수
 
     #region 프로퍼티
@@ -64,12 +85,30 @@ public class MainSceneManager : CSceneManager
     /** 초기화 */
     private void Awake()
     {
+        SaveWaitTimer = WaitTimer;
+        SaveFarmingTimer = FarmingTimer;
         MaxScoreText.text = string.Format("{0:n0}", PlayerPrefs.GetInt("MaxScore"));
     }
 
     /** 초기화 => 상태를 갱신한다 */
     private void Update()
     {
+        // 시간 설정
+        if (IsWaitTime)
+        {
+            WaitTimer -= Time.deltaTime;
+        }
+        else if (IsFarmingTime)
+        {
+            FarmingTimer -= Time.deltaTime;
+        }
+        else if (IsBattleTime)
+        {
+            BattleTimer += Time.deltaTime;
+        }
+
+        WallDoorControl();
+
         // 전투가 시작될 경우
         if (IsBattle)
         {
@@ -128,7 +167,7 @@ public class MainSceneManager : CSceneManager
         }
     }
 
-    /** 게임을 시작한다 */
+    /** 버튼 >> 게임을 시작한다 */
     public void GameStart()
     {
         MenuCamera.SetActive(false);
@@ -174,13 +213,12 @@ public class MainSceneManager : CSceneManager
         }
 
         IsBattle = true;
-        StartCoroutine(StartBattel());
+        StartCoroutine(StartBattelCo());
     }
 
     /** 스테이지 종료 */
     public void StageEnd()
     {
-        // TODO : 안되는 이유 찾아야함;
         Player.transform.position = SpawnPoint.position;
 
         ItemShopObject.SetActive(true);
@@ -197,7 +235,7 @@ public class MainSceneManager : CSceneManager
     }
 
     // 전투 시작
-    private IEnumerator StartBattel()
+    private IEnumerator StartBattelCo()
     {
         if (StageCount % 5 == 0)
         {
@@ -245,6 +283,49 @@ public class MainSceneManager : CSceneManager
 
         Boss = null;
         StageEnd();
+    }
+
+    /** 움직히는 문을 컨트롤 한다 */
+    private void WallDoorControl()
+    {
+        // 0 초가 됐을 경우
+        if(WaitTimer <= 0 && IsWaitTime)
+        {
+            IsWaitTime = false;
+            WaitTimer = SaveWaitTimer;
+            for (int i = 0; i < WallDoorList.Count; i++)
+            {
+                WallDoorList[i].transform.DOMove(WallDoorList[i].transform.position + Vector3.down * 15f,
+                    2f);
+            }
+            IsFarmingTime = true;
+        }
+
+        IsFarming();
+    }
+
+    /** 파밍이 끝났는지 확인 */
+    private void IsFarming()
+    {
+        if(FarmingTimer <= 0 && IsFarmingTime)
+        {
+            IsFarmingTime = false;
+            FarmingTimer = SaveFarmingTimer;
+            IsBattleTime = true;
+        }
+
+        StartBattle();
+    }
+
+    /** 전투 시작 */
+    private void StartBattle()
+    {
+        if(IsBattleTime && BattleTimer == 0)
+        {
+            Debug.Log("성공");
+            // 전투 시작
+            // 코루틴 시작
+        }
     }
     #endregion // 함수
 }

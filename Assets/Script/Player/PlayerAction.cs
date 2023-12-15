@@ -313,7 +313,7 @@ public partial class PlayerAction : MonoBehaviour
                     Shop NpcShop = oNearObject.GetComponent<Shop>();
 
                     // 상점 입장
-                    NpcShop.Enter(this);
+                    NpcShop.Enter();
                     IsShop = true;
                     break;
             }
