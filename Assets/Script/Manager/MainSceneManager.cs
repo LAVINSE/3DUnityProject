@@ -242,7 +242,7 @@ public class MainSceneManager : CSceneManager
             GameObject EnemyObject = Instantiate(EnemyPrefabArray[3],
                 EnemyZoneArray[0].position, EnemyZoneArray[0].rotation);
             Enemy EnemyComponent = EnemyObject.GetComponent<Enemy>();
-            EnemyComponent.oTarget = Player.transform;
+            EnemyComponent.oPlayerTarget = Player.transform;
             EnemyComponent.oMainSceneManager = this;
             Boss = EnemyObject.GetComponent<EnemyBoss>();
             EnemyCount++;
@@ -267,7 +267,7 @@ public class MainSceneManager : CSceneManager
             GameObject EnemyObject = Instantiate(EnemyPrefabArray[EnemyList[0]],
                 EnemyZoneArray[RandomZone].position, EnemyZoneArray[RandomZone].rotation);
             Enemy EnemyComponent = EnemyObject.GetComponent<Enemy>();
-            EnemyComponent.oTarget = Player.transform;
+            EnemyComponent.oPlayerTarget = Player.transform;
             EnemyComponent.oMainSceneManager = this;
             EnemyList.RemoveAt(0);
             yield return new WaitForSeconds(4f);

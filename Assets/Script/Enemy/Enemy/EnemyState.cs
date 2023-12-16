@@ -10,8 +10,6 @@ public class EnemyState : MonoBehaviour
         Wait,
         Tracking,
         Attack,
-        Hit,
-        Dead,
     }
 
     #region 변수
@@ -33,8 +31,8 @@ public class EnemyState : MonoBehaviour
         // 초기 상태
         StateArray[(int)EnemyStateType.Wait] = new EnemyStateWait();
         StateArray[(int)EnemyStateType.Tracking] = new EnemyStateTracking();
+        StateArray[(int)EnemyStateType.Attack] = new EnemyStateAttack();
         CurrentState = StateArray[(int)EnemyStateType.Wait];
-        CurrentState.State = this;
     }
 
     /** 초기화 => 상태를 갱신한다 */
@@ -68,29 +66,36 @@ public class EnemyState : MonoBehaviour
     {
         public override void EnemyStateEnter(Enemy Enemy)
         {
-            
+            Debug.Log("대기");
         }
 
         public override void EnemyStateUpdate(Enemy Enemy, float Time)
         {
             Debug.Log("찾는중");
-            var Distance = Enemy.oTarget.transform.position - Enemy.transform.position;
 
-            if (Distance.magnitude.ExIsLessEquals(Enemy.oTrackingRange))
+            // 플레이어와 적 거리
+            var PlayerDistance = Enemy.oPlayerTarget.transform.position - Enemy.transform.position;
+            // 석상과 적 거리
+            var StoneStatueDistance = Enemy.oStoneStatueTarget.transform.position - Enemy.transform.position;
+
+            // 추적 범위안에 있을경우
+            if (StoneStatueDistance.magnitude.ExIsGreat(Enemy.oTrackingRange) ||
+                PlayerDistance.magnitude.ExIsLessEquals(Enemy.oTrackingRange))
             {
-                Debug.Log("추적");
-                State.ChangeState(EnemyStateType.Tracking);
+                Debug.Log("추적상태");
+                Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Tracking);
             }
-            else if (Distance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
+            // 공격 범위안에 있을경우
+            else if (PlayerDistance.magnitude <= Enemy.oAttackRange)
             {
-                Debug.Log("공격");
-                //State.ChangeState(EnemyStateType.Attack);
+                Debug.Log("공격상태");
+                Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Attack);
             }
         }
 
         public override void EnemyStateExit(Enemy Enemy)
         {
-            
+            Debug.Log("대기 종료");
         }
     }
 
@@ -100,6 +105,7 @@ public class EnemyState : MonoBehaviour
         public override void EnemyStateEnter(Enemy Enemy)
         {
             Debug.Log("추적 시작");
+
             // 추적 시작
             Enemy.TrackingStart();
         }
@@ -108,13 +114,34 @@ public class EnemyState : MonoBehaviour
         {
             Debug.Log("추적 중");
 
-            // 추적 중
-            Enemy.Tracking();
+            // 플레이어와 적 거리
+            var PlayerDistance = Enemy.oPlayerTarget.transform.position - Enemy.transform.position;
+            // 석상과 적 거리
+            var StoneStatueDistance = Enemy.oStoneStatueTarget.transform.position - Enemy.transform.position;
+
+            // 석상 추적
+            if (StoneStatueDistance.magnitude.ExIsGreat(Enemy.oTrackingRange))
+            {
+                // 추적 중
+                Enemy.Tracking(Enemy.oStoneStatueTarget);
+            }
+            // 추적 범위안에 있을경우
+            else if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oTrackingRange) &&
+                PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange))
+            {
+                // 추적 중
+                Enemy.Tracking(Enemy.oPlayerTarget);
+            }
+            // 공격 범위 안에 있을경우
+            else if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
+            {
+                Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Attack);
+            }
         }
 
         public override void EnemyStateExit(Enemy Enemy)
         {
-
+            Debug.Log("추적 종료");
         }
     }
 
@@ -123,17 +150,30 @@ public class EnemyState : MonoBehaviour
     {
         public override void EnemyStateEnter(Enemy Enemy)
         {
-            
+            Debug.Log("공격 시작");
         }
 
         public override void EnemyStateUpdate(Enemy Enemy, float Time)
         {
+            Debug.Log("공격상태");
+            var PlayerDistance = Enemy.oPlayerTarget.transform.position - Enemy.transform.position;
+
+            // 공격범위 안에 있을경우
+            if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
+            {
+                Enemy.Targeting();
+            }
+            // 공격범위 밖에 있을경우, 추적준비 완료일 경우
+            else if(PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange) && Enemy.IsTracking)
+            {
+                Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Tracking);
+            }
             
         }
 
         public override void EnemyStateExit(Enemy Enemy)
         {
-
+            Debug.Log("공격 종료");
         }
     }
     #endregion // 상태 클래스

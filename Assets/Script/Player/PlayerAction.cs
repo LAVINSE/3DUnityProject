@@ -466,7 +466,7 @@ public partial class PlayerAction : MonoBehaviour
         // 리로드키를 눌렀을경우, 회피X, 무기교체X, 점프X, 공격가능한상태일때, 재장전중이 아닐때
         if(IsReloadDown && !IsJump && !IsDodge && !IsSwap && IsAttackReady && !IsReloadReady && !IsShop && !IsDead)
         {
-            Debug.Log("asdf");
+            Debug.Log("리로드");
             PlayerAnimator.SetTrigger("TriggerReload");
             IsReloadReady = true;
 

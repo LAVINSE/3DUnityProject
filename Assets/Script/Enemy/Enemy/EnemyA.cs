@@ -27,13 +27,8 @@ public class EnemyA : Enemy
         base.FixedUpdate();
     }
 
-    public void asd()
-    {
-        Debug.Log("A");
-    }
-
     /** 플레이어를 타겟한다 */
-    public void Targeting()
+    public override void Targeting()
     {
         // 구체모양의 레이캐스트 (모든오브젝트)
         RaycastHit[] RayHitArray = Physics.SphereCastAll(this.transform.position, TargetRadius,
@@ -52,7 +47,7 @@ public class EnemyA : Enemy
         IsTracking = false;
         IsAttack = true;
         EnemyAnimator.SetBool("IsAttack", true);
-            
+
         yield return new WaitForSeconds(0.2f);
         EnemyAttackMeleeBoxCollider.enabled = true;
 

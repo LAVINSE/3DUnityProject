@@ -45,7 +45,7 @@ public class EnemyBoss : Enemy
             float Horizontal = Input.GetAxisRaw("Horizontal");
             float Vertical = Input.GetAxisRaw("Vertical");
             LookVector = new Vector3(Horizontal, 0, Vertical) * 5f;
-            transform.LookAt(Target.position + LookVector);
+            transform.LookAt(PlayerTarget.position + LookVector);
         }
         else
         {
@@ -86,13 +86,13 @@ public class EnemyBoss : Enemy
         GameObject EnemyBossMissileObjectA = Instantiate(EnemyBossMissilePrefab, EnemyBossMissilePortA.position,
             EnemyBossMissilePortA.rotation);
         EnemyBossMissile BossMissileA = EnemyBossMissileObjectA.GetComponent<EnemyBossMissile>();
-        BossMissileA.oTarget = Target;
+        BossMissileA.oTarget = PlayerTarget;
 
         yield return new WaitForSeconds(0.3f);
         GameObject EnemyBossMissileObjectB = Instantiate(EnemyBossMissilePrefab, EnemyBossMissilePortB.position,
             EnemyBossMissilePortB.rotation);
         EnemyBossMissile BossMissileB = EnemyBossMissileObjectB.GetComponent<EnemyBossMissile>();
-        BossMissileB.oTarget = Target;
+        BossMissileB.oTarget = PlayerTarget;
 
         yield return new WaitForSeconds(2f);
 
@@ -114,7 +114,7 @@ public class EnemyBoss : Enemy
     /** 적 보스 점프 찍기 공격 */
     private IEnumerator EnemyBossTaunt()
     {
-        TauntVector = Target.position + LookVector;
+        TauntVector = PlayerTarget.position + LookVector;
 
         IsLook = false;
         EnemyNavMeshAgent.isStopped = false;

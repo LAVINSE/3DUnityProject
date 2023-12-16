@@ -9,7 +9,7 @@ public partial class PlayerAction : MonoBehaviour
     [SerializeField] private bool IsWall;
     // 행동중 확인
     private bool IsMove;
-
+    private Vector3 LastPos;
     private Vector3 MoveVector;
     #endregion // 변수
 
@@ -23,10 +23,7 @@ public partial class PlayerAction : MonoBehaviour
             IsJump = false;
         }
     }
-    private void FixedUpdate()
-    {
-        StopToWall();
-    }
+   
     /** 플레이어가 움직인다 */
     private void PlayerMove()
     {
@@ -55,8 +52,11 @@ public partial class PlayerAction : MonoBehaviour
         // 움직임 제한
         PlayerMoveLimit();
 
+        var stNextPos = this.transform.position + MoveVector;
+        bool bIsHit = Physics.Raycast(this.transform.position, MoveVector.normalized, MoveVector.magnitude, Layer);
+
         // 플레이어 움직임
-        if (!IsWall)
+        if (!bIsHit)
         {
             transform.position += MoveVector;
         }
@@ -113,9 +113,10 @@ public partial class PlayerAction : MonoBehaviour
     /** 벽 통과 방지 */
     private void StopToWall()
     {
-        Debug.DrawRay(transform.position, transform.forward * 4, Color.green);
-        IsWall = Physics.Raycast(transform.position, MoveVector,
+        Debug.DrawRay(transform.position + Vector3.up * 2f, MoveVector, Color.green);
+        IsWall = Physics.Raycast(transform.position + Vector3.up * 2f, MoveVector,
             4, Layer);
+
     }
     #endregion // 함수
 }

@@ -30,7 +30,7 @@ public class EnemyB : Enemy
     }
 
     /** 플레이어를 타겟한다 */
-    private void Targeting()
+    public override void Targeting()
     {
         // 구체모양의 레이캐스트 (모든오브젝트)
         RaycastHit[] RayHitArray = Physics.SphereCastAll(this.transform.position, TargetRadius,

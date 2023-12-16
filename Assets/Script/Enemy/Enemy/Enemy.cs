@@ -16,8 +16,8 @@ public class Enemy : MonoBehaviour
 
     [Space]
     [Header("=====> 적 공통 <=====")]
-    [SerializeField] protected Transform Target;
-    [SerializeField] protected bool IsTracking;
+    [SerializeField] protected Transform PlayerTarget;
+    [SerializeField] protected Transform StoneStatueTarget;
     [SerializeField] protected bool IsAttack;
     
     protected Rigidbody EnemyRigid;
@@ -25,9 +25,10 @@ public class Enemy : MonoBehaviour
     protected MeshRenderer[] EnemyMeshArray;
     protected NavMeshAgent EnemyNavMeshAgent;
     protected Animator EnemyAnimator;
-    protected EnemyState EnemyStateMachine;
 
     protected bool IsEnemyDead;
+
+    private Transform TargetPos;
     #endregion // 변수
 
     #region 프로퍼티
@@ -41,17 +42,33 @@ public class Enemy : MonoBehaviour
         get => CurrentHealth;
         set => CurrentHealth = value;
     }
-    public Transform oTarget
-    {
-        get => Target;
-        set => Target = value;
-    }
-    public MainSceneManager oMainSceneManager { get; set; }
     public float oTrackingRange => TrackingRange;
     public float oAttackRange => AttackRange;
+    public bool IsTracking { get; set; }
+    public Transform oPlayerTarget
+    {
+        get => PlayerTarget;
+        set => PlayerTarget = value;
+    }
+    public Transform oStoneStatueTarget
+    {
+        get => StoneStatueTarget;
+        set => StoneStatueTarget = value;
+    }
+    public MainSceneManager oMainSceneManager { get; set; }
+    public EnemyState EnemyStateMachine { get; set; }
     #endregion // 프로퍼티
 
     #region 함수
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(this.transform.position + Vector3.up *1f, this.transform.forward * AttackRange);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(this.transform.position + Vector3.up *2f, this.transform.forward * TrackingRange);
+    }
+
     /** 초기화 */
     protected virtual void Awake()
     {
@@ -100,6 +117,12 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    /** 플레이어를 타겟한다 */
+    public virtual void Targeting()
+    {
+        
+    }
+
     /** 수류탄 피격 */
     public void HitGrenade(Vector3 ExplosionPos)
     {
@@ -140,7 +163,7 @@ public class Enemy : MonoBehaviour
 
             // 애니메이션
             EnemyAnimator.SetTrigger("TriggerDie");
-            PlayerAction Player = Target.GetComponent<PlayerAction>();
+            PlayerAction Player = PlayerTarget.GetComponent<PlayerAction>();
             Player.oScroe += Score;
 
             // 코인 3개중 랜덤
@@ -183,13 +206,14 @@ public class Enemy : MonoBehaviour
     }
 
     /** 추적중 */
-    public void Tracking()
+    public void Tracking(Transform TargetPos)
     {
+        this.TargetPos = TargetPos;
         // 추적상태일 경우
-        if (EnemyNavMeshAgent.enabled)
+        if (EnemyNavMeshAgent.enabled && !IsAttack)
         {
             // 도착할 목표 지정
-            EnemyNavMeshAgent.SetDestination(Target.position);
+            EnemyNavMeshAgent.SetDestination(this.TargetPos.position);
 
             // 추적중일 경우 >> 추적, 아닐경우 >> 멈춤
             EnemyNavMeshAgent.isStopped = !IsTracking;

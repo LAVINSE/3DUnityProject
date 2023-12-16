@@ -116,8 +116,8 @@ MonoBehaviour:
   MaxHealth: 200
   CurrentHealth: 200
   Score: 400
-  TrackingRange: 0
-  AttackRange: 0
+  TrackingRange: 40
+  AttackRange: 10
   CoinArray:
   - {fileID: 3965216735015063618, guid: 46ba57b04d85b0a4c98a5343e0b8edb4, type: 3}
   - {fileID: 7371405321460240163, guid: 6ad4e1358daeee44cbcc0316d23694b2, type: 3}
@@ -125,6 +125,7 @@ MonoBehaviour:
   Target: {fileID: 0}
   IsTracking: 0
   IsAttack: 0
+  EnemyStateMachine: {fileID: 0}
   EnemyBullet: {fileID: 2574547400055179989, guid: c4d0a8c88b8bfe74b8ff03dc48259c63, type: 3}
   TargetRadius: 0.5
   TargetRange: 25

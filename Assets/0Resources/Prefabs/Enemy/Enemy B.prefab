@@ -117,8 +117,8 @@ MonoBehaviour:
   MaxHealth: 120
   CurrentHealth: 120
   Score: 250
-  TrackingRange: 0
-  AttackRange: 0
+  TrackingRange: 30
+  AttackRange: 5
   CoinArray:
   - {fileID: 3965216735015063618, guid: 46ba57b04d85b0a4c98a5343e0b8edb4, type: 3}
   - {fileID: 7371405321460240163, guid: 6ad4e1358daeee44cbcc0316d23694b2, type: 3}
@@ -126,6 +126,7 @@ MonoBehaviour:
   Target: {fileID: 0}
   IsTracking: 0
   IsAttack: 0
+  EnemyStateMachine: {fileID: 0}
   EnemyAttackMeleeBoxCollider: {fileID: 5727915120920128573}
   TargetRadius: 1
   TargetRange: 12
