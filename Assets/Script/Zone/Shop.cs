@@ -7,7 +7,7 @@ public class Shop : MonoBehaviour
 {
     #region 변수
     [Header("=====> 상점 데이터 <=====")]
-    [SerializeField] private ItemTable ItemTableData;
+    [SerializeField] private ItemShopTable ItemTableData;
 
     [Header("=====> 상점 오브젝트 <=====")]
     [SerializeField] private GameObject ItemShopPrefab;

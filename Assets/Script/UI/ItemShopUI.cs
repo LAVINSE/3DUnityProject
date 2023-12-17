@@ -31,7 +31,7 @@ public class ItemShopUI : MonoBehaviour
     [SerializeField] private Button ExitButton;
 
     private Shop MainShop;
-    private ItemTable ItemData;
+    private ItemShopTable ItemData;
     #endregion // 변수
 
     #region 함수
@@ -43,7 +43,7 @@ public class ItemShopUI : MonoBehaviour
     }
 
     /** 상점 UI를 세팅한다 */
-    public void ShopSetting(Shop MainShop,ItemTable ItemData)
+    public void ShopSetting(Shop MainShop,ItemShopTable ItemData)
     {
         this.MainShop = MainShop;
         this.ItemData = ItemData;

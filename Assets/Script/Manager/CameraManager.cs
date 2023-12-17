@@ -8,6 +8,7 @@ public class CameraManager : MonoBehaviour
     #region 변수
     [SerializeField] private Transform FollowTarget;
     [SerializeField] private Transform CameraArm;
+    [SerializeField] private GameObject Inven;
 
     [SerializeField] private float Speed;
     [SerializeField] private float Senstivity;
@@ -19,7 +20,12 @@ public class CameraManager : MonoBehaviour
     /** 초기화 => 상태를 갱신한다 */
     private void Update()
     {
-        LookAround();
+        // 인벤토리 활성화시 카메라 회전 X
+        if (FollowTarget.parent.GetComponent<PlayerAction>().Inven.gameObject.activeSelf == false)
+        {
+            LookAround();
+        }
+        
         FollowCam();    
     }
 

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEditor.Timeline.Actions.MenuPriority;
+using static UnityEngine.Rendering.VolumeComponent;
 
 public partial class PlayerAction : MonoBehaviour
 {
@@ -52,6 +53,7 @@ public partial class PlayerAction : MonoBehaviour
     [Space]
     [Header("=====> 플레이어 설정 <=====")]
     public Transform CameraArm;
+    public Inventory Inven;
 
     // 장착무기번호
     private int EquipWeaponIndex = -1;
@@ -75,6 +77,7 @@ public partial class PlayerAction : MonoBehaviour
     private bool IsSwapWeapon_0;
     private bool IsSwapWeapon_1;
     private bool IsSwapWeapon_2;
+    private bool IsInventoryDown;
 
     // 동작중인지 확인
     private bool IsAttackReady = true;
@@ -178,8 +181,6 @@ public partial class PlayerAction : MonoBehaviour
     /** 초기화 => 상태를 갱신한다 */
     private void Update()
     {
-        // 플레이어 중력
-        //PlayerGravity();
         // 플레이어 입력처리
         PlayerInput();
         // 플레이어 이동
@@ -190,6 +191,8 @@ public partial class PlayerAction : MonoBehaviour
         PlayerDodge();
         // 플레이어 상호작용
         PlayerInteraction();
+        // 플레이어 인벤토리
+        PlayerInventory();
         // 플레이어 무기교체
         PlayerWeaponSwap();
         // 플레이어 아이템 줍기
@@ -254,6 +257,9 @@ public partial class PlayerAction : MonoBehaviour
         IsReloadDown = Input.GetKeyDown(KeyCode.R);
         // 수류탄
         IsGrenadeDown = Input.GetKeyDown(KeyCode.Mouse1);
+        // 인벤토리
+        IsInventoryDown = Input.GetKeyDown(KeyCode.I);
+
 
         // 무기 교체 단축키
         IsSwapWeapon_0 = Input.GetKeyDown(KeyCode.Alpha1);
@@ -320,6 +326,22 @@ public partial class PlayerAction : MonoBehaviour
         }
     }
 
+    /** 플레이어 인벤토리를 활성/비활성화 한다 */
+    private void PlayerInventory()
+    {
+        if(IsInventoryDown)
+        {
+            if(Inven.gameObject.activeSelf)
+            {
+                Inven.CloseInventory();
+            }
+            else
+            {
+                Inven.OpenInventory();
+            } 
+        }
+    }
+
     /** 플레이어 무기 교체 */
     private void PlayerWeaponSwap()
     {
@@ -378,6 +400,7 @@ public partial class PlayerAction : MonoBehaviour
                 return;
             }
 
+            // TODO : 아이템 사용 함수 만들기
             // 아이템 타입에따라 행동
             switch (oItem.oType)
             {
@@ -385,6 +408,7 @@ public partial class PlayerAction : MonoBehaviour
                     Ammo += oItem.oItemValue;
                     if (Ammo > MaxAmmo)
                     {
+                        Inven.AcquireItem(oItem.ItemDataTable, oItem.oItemValue);
                         Ammo = MaxAmmo;
                     }
                     break;

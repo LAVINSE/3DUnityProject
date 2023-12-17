@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Item : MonoBehaviour
 {
@@ -14,9 +15,12 @@ public class Item : MonoBehaviour
     }
 
     #region 변수
+    [SerializeField] public ItemData ItemDataTable;
     [SerializeField] private ItemType Type;
     [SerializeField] private int WeaponIndex;
     [SerializeField] private int ItemValue;
+    public string ItemName;
+    public Sprite ItemImg;
 
     private PlayerAction Player;
     private Rigidbody ItemRigid;
@@ -49,6 +53,13 @@ public class Item : MonoBehaviour
 
         // 첫번째 콜라이더
         ItemSphereCollider = GetComponent<SphereCollider>();
+
+        if(ItemDataTable != null)
+        {
+            ItemValue = ItemDataTable.ItemValue;
+            ItemName = ItemDataTable.ItemName;
+            ItemImg = ItemDataTable.ItemImg;
+        }
     }
     /** 초기화 => 상태를 갱신한다 */
     private void Update()
