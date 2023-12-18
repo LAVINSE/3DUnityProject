@@ -9,15 +9,23 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     IDragHandler, IEndDragHandler, IDropHandler
 {
     #region 변수
-    [SerializeField] public ItemData PlusItem; // 획득한 아이템
-    [SerializeField] public int ItemCount; // 획득한 아이템 수
-    [SerializeField] public Image ItemImg; // 아이템 이미지
+    [SerializeField] private Image ItemImg; // 아이템 이미지
     [SerializeField] private GameObject ItemCountImg;
     [SerializeField] private TMP_Text ItemCountText;
-    
+
     #endregion // 변수
+    public ItemData PlusItem; // 획득한 아이템
+    public int ItemCount;  // 획득한 아이템 수
+    #region 프로퍼티
+    #endregion // 프로퍼티
 
     #region 함수
+    /** 초기화 */
+    private void Awake()
+    {
+        
+    }
+
     /** 아이템 이미지 투명도 조절 */
     private void SetColor(float Alpha)
     {
@@ -101,7 +109,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
             if(PlusItem != null)
             {
                 // 아이템 타입에 따라 장착 , 사용 여부 if
-                
+                PlusItem.Use();
                 Debug.Log(PlusItem.ItemName + "를 사용했습니다");
 
                 // 개수 조정

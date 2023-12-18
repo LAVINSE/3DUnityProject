@@ -4918,7 +4918,7 @@ GameObject:
   - component: {fileID: 2632099887737452468}
   - component: {fileID: 2632099887737452466}
   - component: {fileID: 2632099887737452469}
-  - component: {fileID: 2632099887737452467}
+  - component: {fileID: 4794083471042331904}
   m_Layer: 0
   m_Name: Ex Weapon Hammer
   m_TagString: Weapon
@@ -4986,7 +4986,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2632099887737452467
+--- !u!114 &4794083471042331904
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4995,12 +4995,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 3905382902363046390}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5424b48f564e7774eaf845e1bc44e3cd, type: 3}
+  m_Script: {fileID: 11500000, guid: dc22340f2d43e104fab137bf6a5f52aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 4
+  ItemDataTable: {fileID: 11400000, guid: 5366874d8124d72498001fa05a7bded6, type: 2}
+  Type: 0
   WeaponIndex: 0
   ItemValue: 0
+  ItemName: 
+  ItemImg: {fileID: 0}
 --- !u!1 &5266744154535519065
 GameObject:
   m_ObjectHideFlags: 0

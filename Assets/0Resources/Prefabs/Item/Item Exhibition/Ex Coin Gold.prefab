@@ -4822,6 +4822,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3034887578328044669}
   - component: {fileID: 3034887578328044666}
+  - component: {fileID: 2766172800951768373}
   m_Layer: 0
   m_Name: Light
   m_TagString: Untagged
@@ -4906,6 +4907,26 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &2766172800951768373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3034887578328044668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &7209039954682850086
 GameObject:
   m_ObjectHideFlags: 0
@@ -4918,7 +4939,7 @@ GameObject:
   - component: {fileID: 3034887578754387299}
   - component: {fileID: 3034887578754387326}
   - component: {fileID: 3034887578754387297}
-  - component: {fileID: 3034887578754387296}
+  - component: {fileID: 405449328331405724}
   m_Layer: 0
   m_Name: Ex Coin Gold
   m_TagString: Item
@@ -4986,7 +5007,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3034887578754387296
+--- !u!114 &405449328331405724
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4995,12 +5016,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 7209039954682850086}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5424b48f564e7774eaf845e1bc44e3cd, type: 3}
+  m_Script: {fileID: 11500000, guid: c4b6311ed8a60764bbc93ecb68877c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 1
+  ItemDataTable: {fileID: 11400000, guid: 07f8731fed5117b41a6ea75017448951, type: 2}
+  Type: 0
   WeaponIndex: 0
-  ItemValue: 5
+  ItemValue: 0
+  ItemName: 
+  ItemImg: {fileID: 0}
+  CoinValue: 0
 --- !u!1 &8035461113729649399
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8763043978180351619}
   - component: {fileID: 8763043978180351618}
   - component: {fileID: 8763043978180351617}
-  - component: {fileID: 8763043978180351620}
+  - component: {fileID: 1031512553308630863}
   m_Layer: 0
   m_Name: Ex Weapon HandGun
   m_TagString: Weapon
@@ -80,7 +80,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8763043978180351620
+--- !u!114 &1031512553308630863
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,12 +89,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7885258293240703923}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5424b48f564e7774eaf845e1bc44e3cd, type: 3}
+  m_Script: {fileID: 11500000, guid: fe205463bc0d5184faae62c5be0a16db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 4
-  WeaponIndex: 1
+  ItemDataTable: {fileID: 11400000, guid: 025c6f5698e3f724d9c1ae7b00843c7a, type: 2}
+  Type: 0
+  WeaponIndex: 0
   ItemValue: 0
+  ItemName: 
+  ItemImg: {fileID: 0}
 --- !u!1 &8184298382963717644
 GameObject:
   m_ObjectHideFlags: 0

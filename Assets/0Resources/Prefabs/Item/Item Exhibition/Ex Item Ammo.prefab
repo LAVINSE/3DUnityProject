@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 7845654746114686495}
   - component: {fileID: 7845654746114686494}
   - component: {fileID: 7845654746114686465}
-  - component: {fileID: 7845654746114686492}
+  - component: {fileID: 5714264803805298529}
   m_Layer: 0
   m_Name: Ex Item Ammo
   m_TagString: Item
@@ -163,7 +163,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7845654746114686492
+--- !u!114 &5714264803805298529
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -172,12 +172,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 3568837500092966625}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5424b48f564e7774eaf845e1bc44e3cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 688fd1dbfd4c3494eaa17498d966a6c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ItemDataTable: {fileID: 11400000, guid: 6d0c124dde5480e4aa5eaf4759730f75, type: 2}
   Type: 0
   WeaponIndex: 0
-  ItemValue: 10
+  ItemValue: 0
+  ItemName: 
+  ItemImg: {fileID: 0}
+  AmmoValue: 0
 --- !u!1 &7845654745573190251
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,6 +192,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7845654745573190248}
   - component: {fileID: 7845654745573190249}
+  - component: {fileID: 1549645687862886996}
   m_Layer: 0
   m_Name: Light
   m_TagString: Untagged
@@ -272,6 +277,26 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1549645687862886996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7845654745573190251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &7845654746300066444
 GameObject:
   m_ObjectHideFlags: 0

@@ -5001,7 +5001,7 @@ GameObject:
   - component: {fileID: 1254816636015269672}
   - component: {fileID: 1254816636015269673}
   - component: {fileID: 1254816636015269674}
-  - component: {fileID: 1254816636015269671}
+  - component: {fileID: 7461888786531701995}
   m_Layer: 0
   m_Name: Ex Item Grenade
   m_TagString: Item
@@ -5069,7 +5069,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1254816636015269671
+--- !u!114 &7461888786531701995
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5078,9 +5078,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8459728449549587598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5424b48f564e7774eaf845e1bc44e3cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 23e33be3e6a399e4e8c7dde724b7de4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 2
+  ItemDataTable: {fileID: 11400000, guid: 655a903f6863682459d4568d510ae7fc, type: 2}
+  Type: 0
   WeaponIndex: 0
-  ItemValue: 1
+  ItemValue: 0
+  ItemName: 
+  ItemImg: {fileID: 0}
+  GrenadeValue: 0

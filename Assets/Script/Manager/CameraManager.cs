@@ -8,7 +8,6 @@ public class CameraManager : MonoBehaviour
     #region 변수
     [SerializeField] private Transform FollowTarget;
     [SerializeField] private Transform CameraArm;
-    [SerializeField] private GameObject Inven;
 
     [SerializeField] private float Speed;
     [SerializeField] private float Senstivity;
@@ -25,7 +24,7 @@ public class CameraManager : MonoBehaviour
         {
             LookAround();
         }
-        
+
         FollowCam();    
     }
 

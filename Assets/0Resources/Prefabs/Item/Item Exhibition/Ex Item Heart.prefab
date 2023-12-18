@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9033815736431364708}
   - component: {fileID: 9033815736431364699}
   - component: {fileID: 9033815736431364698}
-  - component: {fileID: 9033815736431364709}
+  - component: {fileID: 7308252082353361535}
   m_Layer: 0
   m_Name: Ex Item Heart
   m_TagString: Item
@@ -80,7 +80,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &9033815736431364709
+--- !u!114 &7308252082353361535
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,12 +89,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8416394977233805773}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5424b48f564e7774eaf845e1bc44e3cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 27c029e88f49c6e45accebb3270b71bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 3
+  ItemDataTable: {fileID: 11400000, guid: f06fd21bdda9f034dba70bbbfe126c27, type: 2}
+  Type: 0
   WeaponIndex: 0
-  ItemValue: 1
+  ItemValue: 0
+  ItemName: 
+  ItemImg: {fileID: 0}
+  HealthValue: 0
 --- !u!1 &8906283845208973790
 GameObject:
   m_ObjectHideFlags: 0

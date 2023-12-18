@@ -4939,7 +4939,7 @@ GameObject:
   - component: {fileID: 939489447615349993}
   - component: {fileID: 939489447615349998}
   - component: {fileID: 939489447615349999}
-  - component: {fileID: 939489447615349992}
+  - component: {fileID: 6479261839923260610}
   m_Layer: 0
   m_Name: Ex Coin Bronze
   m_TagString: Item
@@ -5007,7 +5007,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &939489447615349992
+--- !u!114 &6479261839923260610
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5016,12 +5016,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 3965216735015063618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5424b48f564e7774eaf845e1bc44e3cd, type: 3}
+  m_Script: {fileID: 11500000, guid: c4b6311ed8a60764bbc93ecb68877c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 1
+  ItemDataTable: {fileID: 11400000, guid: 13c2a115e8f0f7f44936ca581d542e1c, type: 2}
+  Type: 0
   WeaponIndex: 0
-  ItemValue: 1
+  ItemValue: 0
+  ItemName: 
+  ItemImg: {fileID: 0}
+  CoinValue: 0
 --- !u!1 &4363796136699097491
 GameObject:
   m_ObjectHideFlags: 0

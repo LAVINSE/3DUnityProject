@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,15 +8,15 @@ public class ItemData : ScriptableObject
 {
     public enum ItemType
     {
-        Ammo = 0,
-        Coin,
-        Grenade,
-        Heart,
+        Consumable,
         Weapon,
     }
 
     public ItemType Type;
     public int ItemValue;
+    public int WeaponIndex;
     public string ItemName;
     public Sprite ItemImg;
+
+    public Action Use;
 }

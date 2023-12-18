@@ -15,6 +15,7 @@ public class MainSceneManager : CSceneManager
 
     [Header("=====> 플레이어 <=====")]
     [SerializeField] private PlayerAction Player;
+    [SerializeField] private GameObject PlayerInven;
     [SerializeField] private EnemyBoss Boss;
 
     [Header("=====> UI <=====")]
@@ -83,8 +84,15 @@ public class MainSceneManager : CSceneManager
 
     #region 함수
     /** 초기화 */
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
+        var InventoryObject = CFactory.CreateCloneObj("PlayerInventory", PlayerInven, PublicRoot,
+            Vector3.zero, Vector3.one, Vector3.zero);
+        var InventoryComponent = InventoryObject.GetComponent<Inventory>();
+        InventoryComponent.CloseInventory();
+        Player.Inven = InventoryComponent;
+
         SaveWaitTimer = WaitTimer;
         SaveFarmingTimer = FarmingTimer;
         MaxScoreText.text = string.Format("{0:n0}", PlayerPrefs.GetInt("MaxScore"));

@@ -2,29 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class Item : MonoBehaviour
 {
     public enum ItemType
     {
-        Ammo = 0,
-        Coin,
-        Grenade,
-        Heart,
+        Consumable,
         Weapon,
     }
 
     #region 변수
-    [SerializeField] public ItemData ItemDataTable;
-    [SerializeField] private ItemType Type;
-    [SerializeField] private int WeaponIndex;
-    [SerializeField] private int ItemValue;
-    public string ItemName;
-    public Sprite ItemImg;
+    [Header("=====> 아이템 데이터 <=====")]
+    [SerializeField] protected ItemData ItemDataTable;
 
-    private PlayerAction Player;
-    private Rigidbody ItemRigid;
-    private SphereCollider ItemSphereCollider;
+    [Header("=====> 인스펙터 확인용 <=====")]
+    [SerializeField] protected ItemType Type;
+    [SerializeField] protected int WeaponIndex;
+    [SerializeField] protected int ItemValue;
+    [SerializeField] protected string ItemName;
+    [SerializeField] protected Sprite ItemImg;
+
+    protected PlayerAction Player;
+    protected Rigidbody ItemRigid;
+    protected SphereCollider ItemSphereCollider;
     #endregion // 변수
 
     #region 프로퍼티
@@ -43,23 +44,21 @@ public class Item : MonoBehaviour
         get => ItemValue;
         set => ItemValue = value;
     }
+    public ItemData oItemDataTable
+    {
+        get => ItemDataTable;
+        set => ItemDataTable = value;
+    }
     #endregion // 프로퍼티
 
     #region 함수
     /** 초기화 */
-    private void Awake()
+    public virtual void Awake()
     {
         ItemRigid = GetComponent<Rigidbody>();
 
         // 첫번째 콜라이더
         ItemSphereCollider = GetComponent<SphereCollider>();
-
-        if(ItemDataTable != null)
-        {
-            ItemValue = ItemDataTable.ItemValue;
-            ItemName = ItemDataTable.ItemName;
-            ItemImg = ItemDataTable.ItemImg;
-        }
     }
     /** 초기화 => 상태를 갱신한다 */
     private void Update()
@@ -102,6 +101,12 @@ public class Item : MonoBehaviour
                 Player = null;
             }
         }
+    }
+
+    /** 아이템을 사용한다 */
+    public virtual void ItemUse()
+    {
+        
     }
     #endregion // 함수
 }

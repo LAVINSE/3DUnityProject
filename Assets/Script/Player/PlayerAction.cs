@@ -400,47 +400,8 @@ public partial class PlayerAction : MonoBehaviour
                 return;
             }
 
-            // TODO : 아이템 사용 함수 만들기
-            // 아이템 타입에따라 행동
-            switch (oItem.oType)
-            {
-                case Item.ItemType.Ammo:
-                    Ammo += oItem.oItemValue;
-                    if (Ammo > MaxAmmo)
-                    {
-                        Inven.AcquireItem(oItem.ItemDataTable, oItem.oItemValue);
-                        Ammo = MaxAmmo;
-                    }
-                    break;
-                case Item.ItemType.Coin:
-                    Coin += oItem.oItemValue;
-                    if (Coin > MaxCoin)
-                    {
-                        Coin = MaxCoin;
-                    }
-                    break;
-                case Item.ItemType.Heart:
-                    Health += oItem.oItemValue;
-                    if (Health > MaxHealth)
-                    {
-                        Health = MaxHealth;
-                    }
-                    break;
-                case Item.ItemType.Grenade:
-                    HasGrenades += oItem.oItemValue;
-                    if (HasGrenades > MaxHasGrenades)
-                    {
-                        HasGrenades = MaxHasGrenades;
-                    }
-                    break;
-                case Item.ItemType.Weapon:
-                    // 무기 인덱스 번호를 가져온다
-                    int WeaponIndex = oItem.oWeaponIndex;
-                    HasWeaponArray[WeaponIndex] = true;
-
-                    Destroy(oNearObject);
-                    break;
-            }
+            // 아이템 습득
+            Inven.AcquireItem(oItem.oItemDataTable);
 
             // 아이템 파괴
             Destroy(oItem.gameObject);
