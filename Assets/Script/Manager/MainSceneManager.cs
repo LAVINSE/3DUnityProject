@@ -63,18 +63,19 @@ public class MainSceneManager : CSceneManager
     [SerializeField] private TMP_Text BestScoreText;
 
     [SerializeField] private List<GameObject> WallDoorList = new List<GameObject>(); 
-    [SerializeField] private float WaitTimer; // 게임 시작전 대기 시간
-    [SerializeField] private float FarmingTimer; // 게임 시작 파밍 시간
-    [SerializeField] private float BattleTimer; // 게임 시작 파밍 이후 전투 시간 >> 빨리깨면 보상 up
-    [SerializeField] private bool IsWaitTime;
-    [SerializeField] private bool IsFarmingTime;
-    [SerializeField] private bool IsBattleTime;
+    [SerializeField] public float WaitTimer; // 게임 시작전 대기 시간
+    [SerializeField] public float FarmingTimer; // 게임 시작 파밍 시간
+    [SerializeField] public float BattleTimer; // 게임 시작 파밍 이후 전투 시간 >> 빨리깨면 보상 up
+    [SerializeField] public bool IsWaitTime;
+    [SerializeField] public bool IsFarmingTime;
+    [SerializeField] public bool IsBattleTime;
 
     private float SaveWaitTimer;
     private float SaveFarmingTimer;
     #endregion // 변수
 
     #region 프로퍼티
+    public override string SceneName => CDefine.MainGameScene;
     public int oEnemyCount
     {
         get => EnemyCount;
@@ -127,20 +128,14 @@ public class MainSceneManager : CSceneManager
     /** 초기화 => 상태를 갱신한다 */
     private void LateUpdate()
     {
-        int Hour = (int)(PlayTime / 3600);
-        int Min = (int)((PlayTime - Hour * 3600) / 60);
-        int Second = (int)(PlayTime % 60);
-
-        // 텍스트 설정
-        PlayTimeText.text = string.Format("{0:00}", Hour) + ":" + string.Format("{0:00}", Min) 
-            + ":" + string.Format("{0:00}", Second);
         StageText.text = "STAGE" + StageCount;
-        ScoreText.text = string.Format("{0:n0}", Player.oScroe);
+        
 
         // 플레이어 UI
         PlayerHealthText.text = Player.oHealth + " / " + Player.oMaxHealth;
         PlayerCoinText.text = string.Format("{0:n0}", Player.oCoin);
         PlayerAmmoText.text = Player.oAmmo + " / " + Player.oMaxAmmo;
+
         if(Player.oEquipWeapon == null)
         {
             PlayerAmmoText.text = "- / " + Player.oAmmo;

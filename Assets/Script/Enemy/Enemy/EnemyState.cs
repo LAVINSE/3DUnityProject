@@ -124,19 +124,21 @@ public class EnemyState : MonoBehaviour
             {
                 // 추적 중
                 Enemy.Tracking(Enemy.oStoneStatueTarget);
+
+                // 추적 범위안에 있을경우
+                if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oTrackingRange) &&
+                    PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange))
+                {
+                    // 추적 중
+                    Enemy.Tracking(Enemy.oPlayerTarget);
+                }
+                // 공격 범위 안에 있을경우
+                else if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
+                {
+                    Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Attack);
+                }
             }
-            // 추적 범위안에 있을경우
-            else if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oTrackingRange) &&
-                PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange))
-            {
-                // 추적 중
-                Enemy.Tracking(Enemy.oPlayerTarget);
-            }
-            // 공격 범위 안에 있을경우
-            else if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
-            {
-                Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Attack);
-            }
+            
         }
 
         public override void EnemyStateExit(Enemy Enemy)

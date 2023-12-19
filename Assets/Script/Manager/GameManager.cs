@@ -9,12 +9,17 @@ public class GameManager : CSingleton<GameManager>
     private bool IsCursor = true;
     #endregion // 변수
 
+    #region 프로퍼티
+    public ObjectPoolManager oPoolManager { get; private set; }
+    #endregion // 프로퍼티
+
     #region 함수
     /** 초기화 */
     public override void Awake()
     {
         base.Awake();
-
+        oPoolManager = CFactory.CreateObject<ObjectPoolManager>("ObjectPoolManager", this.gameObject,
+            Vector3.zero, Vector3.one, Vector3.zero);
         CursorOn();
     }
 
