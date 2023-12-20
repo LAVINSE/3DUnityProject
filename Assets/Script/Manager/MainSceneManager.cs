@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,7 +17,7 @@ public class MainSceneManager : CSceneManager
     [Header("=====> 플레이어 <=====")]
     [SerializeField] private PlayerAction Player;
     [SerializeField] private GameObject PlayerInven;
-    [SerializeField] private EnemyBoss Boss;
+    [SerializeField] private GameObject Boss;
 
     [Header("=====> UI <=====")]
     [SerializeField] private GameObject ItemShopObject;
@@ -27,7 +28,6 @@ public class MainSceneManager : CSceneManager
     [SerializeField] private Transform SpawnPoint;
 
     [Header("=====> 설정 <=====")]
-    [SerializeField] private int StageCount;
     [SerializeField] private float PlayTime;
     [SerializeField] private bool IsBattle;
     [SerializeField] private int EnemyCount;
@@ -69,7 +69,10 @@ public class MainSceneManager : CSceneManager
     [SerializeField] public bool IsWaitTime;
     [SerializeField] public bool IsFarmingTime;
     [SerializeField] public bool IsBattleTime;
-
+    [SerializeField] public GameObject StatusObj;
+    [SerializeField] private List<GameObject> EnemySpawnZoneList = new List<GameObject>();
+    [SerializeField] private StageDataTable StageData;
+    [SerializeField] private int StageCount;
     private float SaveWaitTimer;
     private float SaveFarmingTimer;
     #endregion // 변수
@@ -88,6 +91,7 @@ public class MainSceneManager : CSceneManager
     public override void Awake()
     {
         base.Awake();
+        PlayerObj = Player.gameObject;
         var InventoryObject = CFactory.CreateCloneObj("PlayerInventory", PlayerInven, PublicRoot,
             Vector3.zero, Vector3.one, Vector3.zero);
         var InventoryComponent = InventoryObject.GetComponent<Inventory>();
@@ -117,57 +121,12 @@ public class MainSceneManager : CSceneManager
         }
 
         WallDoorControl();
-
-        // 전투가 시작될 경우
-        if (IsBattle)
-        {
-            PlayTime += Time.deltaTime;
-        }
     }
 
     /** 초기화 => 상태를 갱신한다 */
     private void LateUpdate()
     {
         StageText.text = "STAGE" + StageCount;
-        
-
-        // 플레이어 UI
-        PlayerHealthText.text = Player.oHealth + " / " + Player.oMaxHealth;
-        PlayerCoinText.text = string.Format("{0:n0}", Player.oCoin);
-        PlayerAmmoText.text = Player.oAmmo + " / " + Player.oMaxAmmo;
-
-        if(Player.oEquipWeapon == null)
-        {
-            PlayerAmmoText.text = "- / " + Player.oAmmo;
-        }
-        else if(Player.oEquipWeapon.oType == Weapon.WeaponType.Melee)
-        {
-            PlayerAmmoText.text = "- / " + Player.oAmmo;
-        }
-        else
-        {
-            PlayerAmmoText.text = Player.oEquipWeapon.oCurrentAmmo + " / " + Player.oAmmo;
-        }
-
-        // 무기 이미지 설정
-        Weapon_1_Img.color = new Color(1, 1, 1, Player.oHasWeaponArray[0] ? 1 : 0);
-        Weapon_2_Img.color = new Color(1, 1, 1, Player.oHasWeaponArray[1] ? 1 : 0);
-        Weapon_3_Img.color = new Color(1, 1, 1, Player.oHasWeaponArray[2] ? 1 : 0);
-        Weapon_R_Img.color = new Color(1, 1, 1, Player.oHasGrenades > 0 ? 1 : 0);
-
-        // 몬스터 숫자 UI
-        EnemyText.text = EnemyCount.ToString();
-
-        if(Boss != null)
-        {
-            BossHealthGroup.anchoredPosition = Vector3.down * 30;
-            // 보스 체력바
-            BossHealthBar.localScale = new Vector3((float)Boss.oCurrentHealth / Boss.oMaxHealth, 1, 1);
-        }
-        else
-        {
-            //BossHealthGroup.anchoredPosition = Vector3.down * 200;
-        }
     }
 
     /** 버튼 >> 게임을 시작한다 */
@@ -206,93 +165,24 @@ public class MainSceneManager : CSceneManager
     /** 스테이지 시작 */
     public void StageStart()
     {
-        ItemShopObject.SetActive(false);
-        WeaponShopObject.SetActive(false);
-        StartZoneObject.SetActive(false);
-
-        foreach(Transform ZonePos in EnemyZoneArray)
-        {
-            ZonePos.gameObject.SetActive(true);
-        }
-
-        IsBattle = true;
+        Debug.Log("스테이지 시작");
         StartCoroutine(StartBattelCo());
     }
 
     /** 스테이지 종료 */
     public void StageEnd()
     {
-        Player.transform.position = SpawnPoint.position;
+        Debug.Log("스테이지 종료");
 
-        ItemShopObject.SetActive(true);
-        WeaponShopObject.SetActive(true);
-        StartZoneObject.SetActive(true);
-
-        foreach (Transform ZonePos in EnemyZoneArray)
-        {
-            ZonePos.gameObject.SetActive(false);
-        }
-
-        IsBattle = false;
+        IsBattleTime = false;
         StageCount++;
-    }
-
-    // 전투 시작
-    private IEnumerator StartBattelCo()
-    {
-        if (StageCount % 5 == 0)
-        {
-            GameObject EnemyObject = Instantiate(EnemyPrefabArray[3],
-                EnemyZoneArray[0].position, EnemyZoneArray[0].rotation);
-            Enemy EnemyComponent = EnemyObject.GetComponent<Enemy>();
-            EnemyComponent.oPlayerTarget = Player.transform;
-            EnemyComponent.oMainSceneManager = this;
-            Boss = EnemyObject.GetComponent<EnemyBoss>();
-            EnemyCount++;
-        }
-        else
-        {
-            for (int i = 0; i < StageCount; i++)
-            {
-                // 몬스터 종류 랜덤
-                int Ran = Random.Range(0, 3);
-                EnemyList.Add(Ran);
-
-                EnemyCount++;
-            }
-        }
-
-        // 4초마다 소환
-        while (EnemyList.Count > 0)
-        {
-            // 스폰위치 랜덤
-            int RandomZone = Random.Range(0, 4);
-            GameObject EnemyObject = Instantiate(EnemyPrefabArray[EnemyList[0]],
-                EnemyZoneArray[RandomZone].position, EnemyZoneArray[RandomZone].rotation);
-            Enemy EnemyComponent = EnemyObject.GetComponent<Enemy>();
-            EnemyComponent.oPlayerTarget = Player.transform;
-            EnemyComponent.oMainSceneManager = this;
-            EnemyList.RemoveAt(0);
-            yield return new WaitForSeconds(4f);
-        }
-        
-
-        while (EnemyCount > 0)
-        {
-            yield return null;
-        }
-
-        yield return new WaitForSeconds(4f);
-
-        Boss = null;
-        StageEnd();
     }
 
     /** 움직히는 문을 컨트롤 한다 */
     private void WallDoorControl()
     {
         // 0 초가 됐을 경우
-        if(WaitTimer <= 0 && IsWaitTime)
+        if (WaitTimer <= 0 && IsWaitTime)
         {
             IsWaitTime = false;
             WaitTimer = SaveWaitTimer;
@@ -310,7 +200,7 @@ public class MainSceneManager : CSceneManager
     /** 파밍이 끝났는지 확인 */
     private void IsFarming()
     {
-        if(FarmingTimer <= 0 && IsFarmingTime)
+        if (FarmingTimer <= 0 && IsFarmingTime)
         {
             IsFarmingTime = false;
             FarmingTimer = SaveFarmingTimer;
@@ -323,12 +213,54 @@ public class MainSceneManager : CSceneManager
     /** 전투 시작 */
     private void StartBattle()
     {
-        if(IsBattleTime && BattleTimer == 0)
+        if (IsBattleTime && BattleTimer == 0)
         {
             Debug.Log("성공");
-            // 전투 시작
-            // 코루틴 시작
+            StageStart();
         }
+    }
+
+    // 전투 시작
+    private IEnumerator StartBattelCo()
+    {
+        List<GameObject> ZoneList = new List<GameObject>();
+
+        if(StageCount % 5 == 0)
+        {
+
+        }
+        // 적 스폰존 활성화
+        for(int i =0; i < StageData.StageArray[StageCount].StageSpawnActiveCount; i++)
+        {
+            int Rand = Random.Range(0, EnemySpawnZoneList.Count);
+            var EnemyZone = EnemySpawnZoneList[Rand];
+            ZoneList.Add(EnemyZone);
+        }
+
+        // 적 소환
+        int Count = 0;
+        while (Count <= StageData.StageArray[StageCount].StageEnemyCount)
+        {
+            int Rand = Random.Range(0, ZoneList.Count);
+            int EnemyRand = Random.Range(0, StageData.StageArray[StageCount].EnemyPrefabList.Length);
+            ZoneList[Rand].SetActive(true);
+            GameObject EnemyObject = CFactory.CreateCloneObj("Enemy",
+                                    StageData.StageArray[StageCount].EnemyPrefabList[EnemyRand],
+                                    ZoneList[Rand], Vector3.zero, Vector3.one, Vector3.zero);
+            EnemyObject.GetComponent<Enemy>().oPlayerTarget = Player.transform;
+            EnemyObject.GetComponent<Enemy>().oStoneStatueTarget = StatusObj.transform;
+            EnemyCount++;
+            yield return new WaitForSeconds(4f);
+        }
+
+        while (EnemyCount > 0)
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(4f);
+
+        StageEnd();
     }
     #endregion // 함수
 }

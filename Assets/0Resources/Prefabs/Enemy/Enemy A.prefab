@@ -112,7 +112,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &3733971860872919299
 BoxCollider:
@@ -161,7 +161,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9bc337baec279a49a70aefe495f01b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OtherEnemy: {fileID: 0}
 --- !u!114 &5666914351228687039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,14 +176,14 @@ MonoBehaviour:
   MaxHealth: 100
   CurrentHealth: 100
   Score: 100
-  TrackingRange: 500
-  AttackRange: 200
+  TrackingRange: 10
+  AttackRange: 5
   CoinArray:
   - {fileID: 3965216735015063618, guid: 46ba57b04d85b0a4c98a5343e0b8edb4, type: 3}
   - {fileID: 7371405321460240163, guid: 6ad4e1358daeee44cbcc0316d23694b2, type: 3}
   - {fileID: 7209039954682850086, guid: 0d7bebf16c527a34ca847c463887a5f9, type: 3}
-  Target: {fileID: 0}
-  IsTracking: 0
+  PlayerTarget: {fileID: 0}
+  StoneStatueTarget: {fileID: 0}
   IsAttack: 0
   EnemyAttackMeleeBoxCollider: {fileID: 3733971861356054134}
   TargetRadius: 1.5

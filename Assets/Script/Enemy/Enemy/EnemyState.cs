@@ -16,7 +16,6 @@ public class EnemyState : MonoBehaviour
     private StateFSM[] StateArray;
     private StateFSM CurrentState;
     private Enemy Enemy;
-    public Enemy OtherEnemy;
     #endregion // 변수
 
     #region 함수

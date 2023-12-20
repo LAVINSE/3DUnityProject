@@ -55,7 +55,6 @@ public class Enemy : MonoBehaviour
         get => StoneStatueTarget;
         set => StoneStatueTarget = value;
     }
-    public MainSceneManager oMainSceneManager { get; set; }
     public EnemyState EnemyStateMachine { get; set; }
     #endregion // 프로퍼티
 
@@ -172,7 +171,7 @@ public class Enemy : MonoBehaviour
             Instantiate(CoinArray[RanCoin], transform.position, Quaternion.identity);
 
             // 카운트 감소
-            this.oMainSceneManager.oEnemyCount--;
+            //this.oMainSceneManager.oEnemyCount--;
 
             // 수류탄일 경우
             if(IsGrenade)

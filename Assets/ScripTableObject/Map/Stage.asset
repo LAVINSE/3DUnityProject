@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f6f72f2e481af5428ff870812ab6174, type: 3}
+  m_Name: Stage
+  m_EditorClassIdentifier: 
+  StageArray:
+  - StageName: Stage1
+    StageSpawnActiveCount: 5
+    StageEnemyCount: 7
+    EnemyPrefabList:
+    - {fileID: 3989913478870399293, guid: 8ba1e53a9c41c534ca2a9d15cf1c2802, type: 3}
+    - {fileID: 3459428222040369351, guid: 8a6b8c49529cbdd47aa71770ebaa76cc, type: 3}
+  - StageName: Stage2
+    StageSpawnActiveCount: 9
+    StageEnemyCount: 11
+    EnemyPrefabList:
+    - {fileID: 3989913478870399293, guid: 8ba1e53a9c41c534ca2a9d15cf1c2802, type: 3}
+    - {fileID: 3459428222040369351, guid: 8a6b8c49529cbdd47aa71770ebaa76cc, type: 3}
+    - {fileID: 2859997369615576257, guid: d714e1db09f3b134a82726a29f8efd7f, type: 3}
+  - StageName: Stage3
+    StageSpawnActiveCount: 12
+    StageEnemyCount: 14
+    EnemyPrefabList: []
+  - StageName: Stage4
+    StageSpawnActiveCount: 15
+    StageEnemyCount: 17
+    EnemyPrefabList: []
+  - StageName: Stage5
+    StageSpawnActiveCount: 19
+    StageEnemyCount: 21
+    EnemyPrefabList: []

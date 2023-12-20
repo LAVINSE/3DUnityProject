@@ -18,7 +18,6 @@ public class EnemyA : Enemy
     protected override void Awake()
     {
         base.Awake();
-        EnemyStateMachine.OtherEnemy = this;
     }
 
     /** 초기화 => 상태를 갱신한다 */
