@@ -52,11 +52,9 @@ public class MainSceneManager : CSceneManager
     [SerializeField] private GameObject MenuPanelObject;
     [SerializeField] private GameObject GamePanelObject;
     [SerializeField] private GameObject GameOverPanelObject;
-    [SerializeField] private TMP_Text MaxScoreText;
-    [SerializeField] private TMP_Text ScoreText;
-    [SerializeField] private TMP_Text CurrentScoreText;
-    [SerializeField] private TMP_Text BestScoreText;
-    
+    [SerializeField] private List<float> StageClearBattleTimer = new List<float>();
+    [SerializeField] private bool IsEnemyDie;
+
     private float SaveWaitTimer;
     private float SaveFarmingTimer;
     #endregion // 변수
@@ -97,12 +95,18 @@ public class MainSceneManager : CSceneManager
 
         SaveWaitTimer = WaitTimer;
         SaveFarmingTimer = FarmingTimer;
-        MaxScoreText.text = string.Format("{0:n0}", PlayerPrefs.GetInt("MaxScore"));
     }
 
     /** 초기화 => 상태를 갱신한다 */
     private void Update()
     {
+        if (IsEnemyDie)
+        {
+            EnemyCount = 0;
+            EnemyBossCount = 0;
+            IsEnemyDie = false;
+        }
+
         // 시간 설정
         if (IsWaitTime)
         {
@@ -117,7 +121,7 @@ public class MainSceneManager : CSceneManager
             BattleTimer += Time.deltaTime;
         }
 
-        WallDoorControl();
+        WaitTimeWallDoorDown();
     }
 
     /** 버튼 >> 게임을 시작한다 */
@@ -137,14 +141,6 @@ public class MainSceneManager : CSceneManager
     {
         GamePanelObject.SetActive(false);
         GameOverPanelObject.SetActive(true);
-        CurrentScoreText.text = ScoreText.text;
-
-        int MaxScore = PlayerPrefs.GetInt("MaxScore");
-        if(Player.oScroe > MaxScore)
-        {
-            BestScoreText.gameObject.SetActive(true);
-            PlayerPrefs.SetInt("MaxScore", Player.oScroe);
-        }
     }
 
     /** 게임 재시작 */
@@ -165,12 +161,20 @@ public class MainSceneManager : CSceneManager
     {
         Debug.Log("스테이지 종료");
 
+        StageClearBattleTimer.Add(BattleTimer);
+        BattleTimer = 0;
+
         IsBattleTime = false;
+
+        // 문 올리기
+        NextStageWallDoorUp();
+
+        IsWaitTime = true;
         StageCount++;
     }
 
-    /** 움직히는 문을 컨트롤 한다 */
-    private void WallDoorControl()
+    /** 대기시간이 끝났을경우 문을 닫는다 */
+    private void WaitTimeWallDoorDown()
     {
         // 0 초가 됐을 경우
         if (WaitTimer <= 0 && IsWaitTime)
@@ -186,6 +190,16 @@ public class MainSceneManager : CSceneManager
         }
 
         IsFarming();
+    }
+
+    /** 스테이지가 바뀌고 문이 올라간다 */
+    private void NextStageWallDoorUp()
+    {
+        for (int i = 0; i < WallDoorList.Count; i++)
+        {
+            WallDoorList[i].transform.DOMove(WallDoorList[i].transform.position + Vector3.up * 15f,
+                1f);
+        }
     }
 
     /** 파밍이 끝났는지 확인 */

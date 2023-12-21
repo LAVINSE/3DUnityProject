@@ -173,9 +173,6 @@ public partial class PlayerAction : MonoBehaviour
         // Callback 등록
         DodgeCallback += CoolTimePlayerDodge;
         SwapCallback += CoolTimePlayerSwap;
-
-        // 점수 저장
-        PlayerPrefs.SetInt("MaxScore", 112500);
     }
 
     /** 초기화 => 상태를 갱신한다 */

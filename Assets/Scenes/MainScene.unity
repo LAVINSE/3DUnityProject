@@ -6919,7 +6919,7 @@ MonoBehaviour:
   PlayerInven: {fileID: 812210948840965839, guid: 77950fce2d50f6e459c685b2da762615, type: 3}
   ItemShopObject: {fileID: 0}
   WeaponShopObject: {fileID: 0}
-  PlayerSpawnPos: {fileID: 0}
+  PlayerSpawnPos: {fileID: 1877426402}
   StageData: {fileID: 11400000, guid: 26a34c4b04b4f0a409d4c1d3ed3b7b22, type: 2}
   WallDoorList:
   - {fileID: 1655266779}
@@ -105765,7 +105765,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1877426401}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 229.57, y: 50.25, z: 301.09}
+  m_LocalPosition: {x: 235.4, y: 50.25, z: 305.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
