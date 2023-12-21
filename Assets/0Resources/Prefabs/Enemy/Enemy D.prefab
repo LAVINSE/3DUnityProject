@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 6928019074475139412}
   - component: {fileID: 6928019074475139413}
   - component: {fileID: 6928019074475139414}
-  - component: {fileID: 1454876527919817581}
   - component: {fileID: 6928019074475139415}
   m_Layer: 11
   m_Name: Enemy D
@@ -30,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1080351297754816958}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6859838559461214502}
@@ -54,7 +53,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &6928019074475139413
 BoxCollider:
@@ -91,19 +90,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1454876527919817581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1080351297754816958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9bc337baec279a49a70aefe495f01b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OtherEnemy: {fileID: 0}
 --- !u!114 &6928019074475139415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,17 +102,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0d67c3dadd0ae5459ba4a9fda0d04f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Type: 1
   MaxHealth: 100
   CurrentHealth: 100
   Score: 1000
-  TrackingRange: 0
-  AttackRange: 0
+  TrackingRange: 50
+  AttackRange: 15
   CoinArray:
   - {fileID: 3965216735015063618, guid: 46ba57b04d85b0a4c98a5343e0b8edb4, type: 3}
   - {fileID: 7371405321460240163, guid: 6ad4e1358daeee44cbcc0316d23694b2, type: 3}
   - {fileID: 7209039954682850086, guid: 0d7bebf16c527a34ca847c463887a5f9, type: 3}
-  Target: {fileID: 0}
-  IsTracking: 0
+  TargetLayer:
+    serializedVersion: 2
+    m_Bits: 16512
+  PlayerTarget: {fileID: 0}
+  StoneStatueTarget: {fileID: 0}
   IsAttack: 0
   EnemyBossMissilePrefab: {fileID: 5633837067224874449, guid: b4fddee5117b9094880f1632b5313d02, type: 3}
   EnemyBossRockPrefab: {fileID: 5795745227209732226, guid: 816f80432a2d3994d84865aaf6bc9fbc, type: 3}

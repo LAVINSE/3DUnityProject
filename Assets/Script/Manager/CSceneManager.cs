@@ -10,7 +10,6 @@ public abstract class CSceneManager : MonoBehaviour
 
     public GameObject PublicRoot { get; private set; }
     public GameObject PlayerObj { get; set; }
-    public GameObject BossObj { get; set; }
     #endregion // 프로퍼티 
 
     #region 함수 

@@ -10,7 +10,6 @@ public class EnemyA : Enemy
     [Header("=====> 적 근접공격 <=====")]
     [SerializeField] private BoxCollider EnemyAttackMeleeBoxCollider;
     [SerializeField] private float TargetRadius = 1.5f;
-    [SerializeField] private float TargetRange = 3f;
     #endregion // 변수
 
     #region 함수
@@ -31,7 +30,7 @@ public class EnemyA : Enemy
     {
         // 구체모양의 레이캐스트 (모든오브젝트)
         RaycastHit[] RayHitArray = Physics.SphereCastAll(this.transform.position, TargetRadius,
-            transform.forward, TargetRange, LayerMask.GetMask("Player"));
+            transform.forward, oAttackRange, TargetLayer);
 
         // 플레이어가 있을 경우, 공격중 X
         if (RayHitArray.Length > 0 && !IsAttack)

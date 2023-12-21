@@ -207,7 +207,7 @@ public partial class PlayerAction : MonoBehaviour
     /** 초기화 => 접촉했을 경우 (트리거) */
     private void OnTriggerEnter(Collider other)
     {
-        // 적 총알에 맞았을 경우
+        // 적 공격에 맞았을 경우
         if (other.gameObject.CompareTag("EnemyAttack"))
         {
             // 데미지를 받지 않는중일경우
@@ -215,9 +215,9 @@ public partial class PlayerAction : MonoBehaviour
             {
                 EnemyAttack EnemyAttackComponent = other.GetComponent<EnemyAttack>();
 
-                // 적 총알데미지 만큼 체력감소
+                // 적 공격데미지 만큼 체력감소
                 Health -= EnemyAttackComponent.oAttackDamage;
-                Debug.Log($"적 공격 체력 : {Health}");
+                Debug.Log($"적 공격 >> 남은 체력 : {Health}");
 
                 bool IsBossTaunt = other.gameObject.name == "MeleeTauntArea";
 
@@ -316,7 +316,7 @@ public partial class PlayerAction : MonoBehaviour
             switch (oNearObject.tag)
             {
                 case "Shop":
-                    Shop NpcShop = oNearObject.GetComponent<Shop>();
+                    ShopZone NpcShop = oNearObject.GetComponent<ShopZone>();
 
                     // 상점 입장
                     NpcShop.Enter();
@@ -437,6 +437,9 @@ public partial class PlayerAction : MonoBehaviour
             
             // 공격 딜레이 초기화
             AttackDelay = 0;
+
+            // 탄약 상태창 갱신
+            UIManager.Instance.PlayerAmmoTextUpdate();
         }
     }
 
@@ -506,20 +509,26 @@ public partial class PlayerAction : MonoBehaviour
             Mesh.material.color = Color.yellow;
         }
 
+        // 보스 넉백 공격
         if (IsBossTaunt)
         {
             PlayerRigid.AddForce(transform.forward * -25, ForceMode.Impulse); 
         }
 
+        // 죽었을 경우
         if (Health <= 0 && !IsDead)
         {
             OnDie();
         }
 
-        // 피격 후 1초 무적
-        yield return new WaitForSeconds(1);
+        // 체력 상태창 갱신
+        UIManager.Instance.PlayerHealthTextUpdate();
+
+        // 피격 후 0.5초 무적
+        yield return new WaitForSeconds(0.5f);
 
         IsDamage = false;
+
         // 피격 색상 복구
         foreach (MeshRenderer Mesh in PlayerMeshRenderArray)
         {

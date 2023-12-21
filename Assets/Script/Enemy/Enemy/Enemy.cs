@@ -5,8 +5,15 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    public enum EnemyType
+    {
+        Normal,
+        Boss,
+    }
+
     #region 변수
     [Header("=====> 적 정보 <=====")]
+    [SerializeField] private EnemyType Type;
     [SerializeField] private int MaxHealth;
     [SerializeField] private int CurrentHealth;
     [SerializeField] private int Score;
@@ -16,18 +23,16 @@ public class Enemy : MonoBehaviour
 
     [Space]
     [Header("=====> 적 공통 <=====")]
+    [SerializeField] protected LayerMask TargetLayer;
     [SerializeField] protected Transform PlayerTarget;
     [SerializeField] protected Transform StoneStatueTarget;
     [SerializeField] protected bool IsAttack;
     
     protected Rigidbody EnemyRigid;
     protected BoxCollider EnemyBoxCollider;
-    protected MeshRenderer[] EnemyMeshArray;
-    protected NavMeshAgent EnemyNavMeshAgent;
+    protected MeshRenderer[] EnemyMeshArray;  
     protected Animator EnemyAnimator;
-
     protected bool IsEnemyDead;
-
     private Transform TargetPos;
     #endregion // 변수
 
@@ -56,6 +61,8 @@ public class Enemy : MonoBehaviour
         set => StoneStatueTarget = value;
     }
     public EnemyState EnemyStateMachine { get; set; }
+    public NavMeshAgent oEnemyNavMeshAgent { get; set; }
+    public MainSceneManager oMainSceneManager { get; set; }
     #endregion // 프로퍼티
 
     #region 함수
@@ -74,9 +81,13 @@ public class Enemy : MonoBehaviour
         EnemyRigid = GetComponent<Rigidbody>();
         EnemyBoxCollider = GetComponent<BoxCollider>();
         EnemyMeshArray = GetComponentsInChildren<MeshRenderer>();
-        EnemyNavMeshAgent = GetComponent<NavMeshAgent>();
+        oEnemyNavMeshAgent = GetComponent<NavMeshAgent>();
         EnemyAnimator = GetComponentInChildren<Animator>();
         EnemyStateMachine = GetComponent<EnemyState>();
+
+        oMainSceneManager = CSceneManager.GetSceneManager<MainSceneManager>(CDefine.MainGameScene);
+
+        CurrentHealth = MaxHealth;
     }
 
     /** 초기화 => 상태를 갱신한다 */
@@ -158,20 +169,29 @@ public class Enemy : MonoBehaviour
             IsEnemyDead = true; 
             // 추적 종료
             IsTracking = false;
-            EnemyNavMeshAgent.enabled = false;
+            oEnemyNavMeshAgent.enabled = false;
 
             // 애니메이션
             EnemyAnimator.SetTrigger("TriggerDie");
             PlayerAction Player = PlayerTarget.GetComponent<PlayerAction>();
             Player.oScroe += Score;
 
+            // TODO : 드랍
             // 코인 3개중 랜덤
             int RanCoin = Random.Range(0, 3);
             // 가중치 랜덤 함수 추가예정
             Instantiate(CoinArray[RanCoin], transform.position, Quaternion.identity);
 
-            // 카운트 감소
-            //this.oMainSceneManager.oEnemyCount--;
+            switch (Type)
+            {
+                case EnemyType.Normal:
+                    oMainSceneManager.oEnemyCount--;
+                    break;
+                case EnemyType.Boss:
+                    oMainSceneManager.oEnemyBossCount--;
+                    break;
+            }
+            
 
             // 수류탄일 경우
             if(IsGrenade)
@@ -209,13 +229,13 @@ public class Enemy : MonoBehaviour
     {
         this.TargetPos = TargetPos;
         // 추적상태일 경우
-        if (EnemyNavMeshAgent.enabled && !IsAttack)
+        if (oEnemyNavMeshAgent.enabled && !IsAttack)
         {
             // 도착할 목표 지정
-            EnemyNavMeshAgent.SetDestination(this.TargetPos.position);
-
+            oEnemyNavMeshAgent.SetDestination(this.TargetPos.position);
+            
             // 추적중일 경우 >> 추적, 아닐경우 >> 멈춤
-            EnemyNavMeshAgent.isStopped = !IsTracking;
+            oEnemyNavMeshAgent.isStopped = !IsTracking;
         }
     }
 

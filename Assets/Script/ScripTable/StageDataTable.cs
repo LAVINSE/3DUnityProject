@@ -12,6 +12,7 @@ public class StageDataTable : ScriptableObject
         public int StageSpawnActiveCount;
         public int StageEnemyCount;
         public GameObject[] EnemyPrefabList;
+        public GameObject EnemyBoss;
     }
 
     public StageInfo[] StageArray;

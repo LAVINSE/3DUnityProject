@@ -23,7 +23,7 @@ public class EnemyBoss : Enemy
     {
         base.Awake();
 
-        EnemyNavMeshAgent.isStopped = true;
+        oEnemyNavMeshAgent.isStopped = true;
         IsLook = true;
 
         StartCoroutine(Select());
@@ -49,7 +49,7 @@ public class EnemyBoss : Enemy
         }
         else
         {
-            EnemyNavMeshAgent.SetDestination(TauntVector);
+            oEnemyNavMeshAgent.SetDestination(TauntVector);
         }
     }
 
@@ -117,7 +117,7 @@ public class EnemyBoss : Enemy
         TauntVector = PlayerTarget.position + LookVector;
 
         IsLook = false;
-        EnemyNavMeshAgent.isStopped = false;
+        oEnemyNavMeshAgent.isStopped = false;
         EnemyBoxCollider.enabled = false;
         EnemyAnimator.SetTrigger("TriggerTaunt");
         yield return new WaitForSeconds(1.5f);
@@ -128,7 +128,7 @@ public class EnemyBoss : Enemy
 
         yield return new WaitForSeconds(1f);
         IsLook = true;
-        EnemyNavMeshAgent.isStopped = true;
+        oEnemyNavMeshAgent.isStopped = true;
         EnemyBoxCollider.enabled = true;  
         StartCoroutine(Select());
     }

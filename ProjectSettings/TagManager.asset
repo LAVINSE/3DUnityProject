@@ -26,9 +26,9 @@ TagManager:
   - Floor
   - Wall
   - Enemy
-  - EnemyDead
+  - Dead
   - EnemyAttack
-  - 
+  - StoneStatue
   - 
   - 
   - 

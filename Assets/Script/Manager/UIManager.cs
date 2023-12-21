@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject InGamePanelUI;
 
     [Header("=====> 상태창 UI <=====")]
+    [SerializeField] private TMP_Text StoneHealthText;
     [SerializeField] private TMP_Text PlayerHealthText;
     [SerializeField] private TMP_Text PlayerAmmoText;
     [SerializeField] private TMP_Text PlayerCoinText;
@@ -31,15 +32,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text TimerText;
     [SerializeField] private TMP_Text EnemyCountText;
 
-    public float WaitTimer;
-    public float FarmingTimer;
-    public float BattleTimer;
-    public MainSceneManager oMainSceneManager { get; private set; }
-    public PlayerAction oPlayer { get; private set; }
+    private float WaitTimer;
+    private float FarmingTimer;
+    private float BattleTimer; 
     #endregion // 변수
 
     #region 프로퍼티
     public static UIManager Instance { get; private set; }
+    public MainSceneManager oMainSceneManager { get; private set; }
+    public PlayerAction oPlayer { get; private set; }
+    public StoneStatue oStoneStatue { get; private set; }
     #endregion // 프로퍼티
 
     #region 함수
@@ -48,27 +50,31 @@ public class UIManager : MonoBehaviour
     {
         Instance = this;
         oMainSceneManager = CSceneManager.GetSceneManager<MainSceneManager>(CDefine.MainGameScene);
+        oStoneStatue = oMainSceneManager.oStoneStatueObject.GetComponent<StoneStatue>();
         oPlayer = oMainSceneManager.PlayerObj.GetComponent<PlayerAction>();
-        HealthTextUpdate();
-        AmmoTextUpdate();
+
+        // 상태창 갱신
+        PlayerHealthTextUpdate();
+        PlayerAmmoTextUpdate();
+        PlayerWeaponImgUpdate();
     }
 
     /** 초기화 => 상태를 갱신한다 */
     private void LateUpdate()
     {
-        WaitTimer = oMainSceneManager.WaitTimer;
-        FarmingTimer = oMainSceneManager.FarmingTimer;
-        BattleTimer = oMainSceneManager.BattleTimer;
+        WaitTimer = oMainSceneManager.oWaitTimer;
+        FarmingTimer = oMainSceneManager.oFarmingTimer;
+        BattleTimer = oMainSceneManager.oBattleTimer;
 
-        if (oMainSceneManager.IsWaitTime)
+        if (oMainSceneManager.oIsWaitTime)
         {
             TimerTextSetting(WaitTimer);
         }
-        else if (oMainSceneManager.IsFarmingTime)
+        else if (oMainSceneManager.oIsFarmingTime)
         {
             TimerTextSetting(FarmingTimer);
         }
-        else if (oMainSceneManager.IsBattleTime)
+        else if (oMainSceneManager.oIsBattleTime)
         {
             TimerTextSetting(BattleTimer);
         }
@@ -86,15 +92,16 @@ public class UIManager : MonoBehaviour
     }
 
     /** 상태창을 갱신한다 */
-    public void HealthTextUpdate()
+    public void PlayerHealthTextUpdate()
     {
+        StoneHealthText.text = oStoneStatue.oCurrentHealth + " / " + oStoneStatue.oMaxHealth;
         PlayerHealthText.text = oPlayer.oHealth + " / " + oPlayer.oMaxHealth;
         PlayerAmmoText.text = oPlayer.oAmmo + " / " + oPlayer.oMaxAmmo;
         PlayerCoinText.text = string.Format("{0:n0}", oPlayer.oCoin);
     }
 
     /** 탄약정보를 갱신한다 */
-    public void AmmoTextUpdate()
+    public void PlayerAmmoTextUpdate()
     {
         if (oPlayer.oEquipWeapon == null)
         {
@@ -111,7 +118,7 @@ public class UIManager : MonoBehaviour
     }
 
     /** 무기 이미지를 갱신한다 */
-    public void WeaponImgUpdate()
+    public void PlayerWeaponImgUpdate()
     {
         // 무기 이미지 설정
         Weapon_1Img.color = new Color(1, 1, 1, oPlayer.oHasWeaponArray[0] ? 1 : 0);
@@ -129,9 +136,9 @@ public class UIManager : MonoBehaviour
     /** 보스 상태창을 갱신한다 */
     public void BossHealthBarUpdate()
     {
-        if (oMainSceneManager.BossObj != null)
+        if (oMainSceneManager.oBossObject != null)
         {
-            var BossComponent = oMainSceneManager.BossObj.GetComponent<Enemy>();
+            var BossComponent = oMainSceneManager.oBossObject.GetComponent<Enemy>();
             BossStatusGroup.SetActive(true);
             // 보스 체력바
             BossHealthBarImg.localScale = new Vector3((float)BossComponent.oCurrentHealth / BossComponent.oMaxHealth, 1, 1);

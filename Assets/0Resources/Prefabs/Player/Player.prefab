@@ -196,6 +196,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c1d2edfd2723d64bb3dd58414c2e53f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Layer:
+    serializedVersion: 2
+    m_Bits: 17920
+  IsWall: 0
   PlayerWalkSpeed: 11
   PlayerRunSpeed: 14
   PlayerJumpPower: 15
@@ -218,6 +222,7 @@ MonoBehaviour:
   GrenadePrefab: {fileID: 536562968086531354, guid: 58da417b58896bc48a5494823e17ee9c, type: 3}
   HasWeaponArray: 000000
   CameraArm: {fileID: 0}
+  Inven: {fileID: 0}
   oMainSceneManager: {fileID: 0}
 --- !u!1 &6213362319734160727
 GameObject:

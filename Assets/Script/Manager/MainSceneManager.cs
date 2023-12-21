@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,73 +18,69 @@ public class MainSceneManager : CSceneManager
     [Header("=====> 플레이어 <=====")]
     [SerializeField] private PlayerAction Player;
     [SerializeField] private GameObject PlayerInven;
-    [SerializeField] private GameObject Boss;
-
-    [Header("=====> UI <=====")]
+    
+    [Header("=====> 상호작용 오브젝트 <=====")]
     [SerializeField] private GameObject ItemShopObject;
     [SerializeField] private GameObject WeaponShopObject;
 
     [Header("=====> 스폰 위치 <=====")]
-    [SerializeField] private GameObject StartZoneObject;
-    [SerializeField] private Transform SpawnPoint;
+    [SerializeField] private Transform PlayerSpawnPos;
+
+    [Header("=====> 게임 설정 <=====")]
+    [SerializeField] private StageDataTable StageData;
+    [SerializeField] private List<GameObject> WallDoorList = new List<GameObject>();
+    [SerializeField] private List<GameObject> EnemySpawnZoneList = new List<GameObject>();
+    [SerializeField] private List<GameObject> EnemyBossSpawnZoneList = new List<GameObject>();
+    [SerializeField] private GameObject StoneStatueObject;
+    [SerializeField] private GameObject StoneStatueTargetPos;
+    
+    [Space]
+    [SerializeField] private float WaitTimer; // 게임 시작전 대기 시간
+    [SerializeField] private float FarmingTimer; // 게임 시작 파밍 시간
+    [SerializeField] private float BattleTimer; // 게임 시작 파밍 이후 전투 시간 >> 빨리깨면 보상 up
+    [SerializeField] private bool IsWaitTime;
+    [SerializeField] private bool IsFarmingTime;
+    [SerializeField] private bool IsBattleTime;
+
+    [Space]
+    [SerializeField] private int EnemyCount;
+    [SerializeField] private int EnemyBossCount;
+    [SerializeField] private int StageCount;
+    [SerializeField] private GameObject BossObject;
 
     [Header("=====> 설정 <=====")]
-    [SerializeField] private float PlayTime;
-    [SerializeField] private bool IsBattle;
-    [SerializeField] private int EnemyCount;
-    [SerializeField] private int EnemyCountD;
-
-    [SerializeField] private Transform[] EnemyZoneArray;
-    [SerializeField] private GameObject[] EnemyPrefabArray;
-    [SerializeField] private List<int> EnemyList = new List<int>();
-
     [SerializeField] private GameObject MenuPanelObject;
     [SerializeField] private GameObject GamePanelObject;
     [SerializeField] private GameObject GameOverPanelObject;
     [SerializeField] private TMP_Text MaxScoreText;
-
     [SerializeField] private TMP_Text ScoreText;
-    [SerializeField] private TMP_Text StageText;
-    [SerializeField] private TMP_Text PlayTimeText;
-    [SerializeField] private TMP_Text PlayerHealthText;
-    [SerializeField] private TMP_Text PlayerAmmoText;
-    [SerializeField] private TMP_Text PlayerCoinText;
-
-    [SerializeField] private Image Weapon_1_Img;
-    [SerializeField] private Image Weapon_2_Img;
-    [SerializeField] private Image Weapon_3_Img;
-    [SerializeField] private Image Weapon_R_Img;
-
-    [SerializeField] private TMP_Text EnemyText;
-
-    [SerializeField] private RectTransform BossHealthGroup;
-    [SerializeField] private RectTransform BossHealthBar;
-
     [SerializeField] private TMP_Text CurrentScoreText;
     [SerializeField] private TMP_Text BestScoreText;
-
-    [SerializeField] private List<GameObject> WallDoorList = new List<GameObject>(); 
-    [SerializeField] public float WaitTimer; // 게임 시작전 대기 시간
-    [SerializeField] public float FarmingTimer; // 게임 시작 파밍 시간
-    [SerializeField] public float BattleTimer; // 게임 시작 파밍 이후 전투 시간 >> 빨리깨면 보상 up
-    [SerializeField] public bool IsWaitTime;
-    [SerializeField] public bool IsFarmingTime;
-    [SerializeField] public bool IsBattleTime;
-    [SerializeField] public GameObject StatusObj;
-    [SerializeField] private List<GameObject> EnemySpawnZoneList = new List<GameObject>();
-    [SerializeField] private StageDataTable StageData;
-    [SerializeField] private int StageCount;
+    
     private float SaveWaitTimer;
     private float SaveFarmingTimer;
     #endregion // 변수
 
     #region 프로퍼티
     public override string SceneName => CDefine.MainGameScene;
+    public float oWaitTimer => WaitTimer;
+    public float oFarmingTimer => FarmingTimer;
+    public float oBattleTimer => BattleTimer;
+    public bool oIsWaitTime => IsWaitTime;
+    public bool oIsFarmingTime => IsFarmingTime;
+    public bool oIsBattleTime => IsBattleTime;
     public int oEnemyCount
     {
         get => EnemyCount;
         set => EnemyCount = value;
     }
+    public int oEnemyBossCount
+    {
+        get => EnemyBossCount;
+        set => EnemyBossCount = value;
+    }
+    public GameObject oStoneStatueObject => StoneStatueObject;
+    public GameObject oBossObject => BossObject;
     #endregion // 프로퍼티
 
     #region 함수
@@ -121,12 +118,6 @@ public class MainSceneManager : CSceneManager
         }
 
         WallDoorControl();
-    }
-
-    /** 초기화 => 상태를 갱신한다 */
-    private void LateUpdate()
-    {
-        StageText.text = "STAGE" + StageCount;
     }
 
     /** 버튼 >> 게임을 시작한다 */
@@ -225,10 +216,6 @@ public class MainSceneManager : CSceneManager
     {
         List<GameObject> ZoneList = new List<GameObject>();
 
-        if(StageCount % 5 == 0)
-        {
-
-        }
         // 적 스폰존 활성화
         for(int i =0; i < StageData.StageArray[StageCount].StageSpawnActiveCount; i++)
         {
@@ -239,7 +226,7 @@ public class MainSceneManager : CSceneManager
 
         // 적 소환
         int Count = 0;
-        while (Count <= StageData.StageArray[StageCount].StageEnemyCount)
+        while (Count < StageData.StageArray[StageCount].StageEnemyCount)
         {
             int Rand = Random.Range(0, ZoneList.Count);
             int EnemyRand = Random.Range(0, StageData.StageArray[StageCount].EnemyPrefabList.Length);
@@ -247,17 +234,45 @@ public class MainSceneManager : CSceneManager
             GameObject EnemyObject = CFactory.CreateCloneObj("Enemy",
                                     StageData.StageArray[StageCount].EnemyPrefabList[EnemyRand],
                                     ZoneList[Rand], Vector3.zero, Vector3.one, Vector3.zero);
+            EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = false;
             EnemyObject.GetComponent<Enemy>().oPlayerTarget = Player.transform;
-            EnemyObject.GetComponent<Enemy>().oStoneStatueTarget = StatusObj.transform;
+            EnemyObject.GetComponent<Enemy>().oStoneStatueTarget = StoneStatueTargetPos.transform;
             EnemyCount++;
-            yield return new WaitForSeconds(4f);
+            Count++;
+
+            // 4초 마다 소환
+            yield return new WaitForSeconds(2f);
+            EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = true;
+            yield return new WaitForSeconds(2f);
         }
 
         while (EnemyCount > 0)
         {
+            Debug.Log($"적이 {EnemyCount}만큼 남았습니다");
             yield return null;
         }
 
+        if(EnemyCount == 0)
+        {
+            int ZoneRand = Random.Range(0, EnemyBossSpawnZoneList.Count);
+            var BossZone = EnemyBossSpawnZoneList[ZoneRand];
+            BossZone.SetActive(true);
+            GameObject EnemyObject = CFactory.CreateCloneObj("Enemy",
+                                    StageData.StageArray[StageCount].EnemyBoss, BossZone
+                                    , Vector3.zero, Vector3.one, Vector3.zero);
+
+            EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = false;
+            EnemyObject.GetComponent<Enemy>().oPlayerTarget = Player.transform;
+            EnemyObject.GetComponent<Enemy>().oStoneStatueTarget = StoneStatueTargetPos.transform;
+            EnemyBossCount++;
+        }
+
+
+        while (EnemyBossCount > 0)
+        {
+            Debug.Log($"보스가 {EnemyBossCount} 만큼 남았습니다");
+            yield return null;
+        }
         yield return new WaitForSeconds(4f);
 
         StageEnd();

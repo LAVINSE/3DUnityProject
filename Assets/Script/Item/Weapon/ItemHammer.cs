@@ -34,6 +34,9 @@ public class ItemHammer : Item
             // 무기 인덱스 번호를 가져온다
             Player.oHasWeaponArray[WeaponIndex] = true;
         }
+
+        // 무기 이미지 상태창 갱신
+        UIManager.Instance.PlayerWeaponImgUpdate();
     }
     #endregion // 함수
 }
