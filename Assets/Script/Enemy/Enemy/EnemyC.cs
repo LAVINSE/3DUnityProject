@@ -25,7 +25,6 @@ public class EnemyC : Enemy
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        Targeting();
     }
 
     /** 플레이어를 타겟한다 */

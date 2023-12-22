@@ -110,6 +110,9 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
             {
                 // 아이템 타입에 따라 장착 , 사용 여부 if
                 PlusItem.Use();
+                // 무기 이미지, 탄약 상태창 갱신
+                UIManager.Instance.PlayerWeaponImgUpdate();
+                UIManager.Instance.PlayerAmmoTextUpdate();
                 Debug.Log(PlusItem.ItemName + "를 사용했습니다");
 
                 // 개수 조정

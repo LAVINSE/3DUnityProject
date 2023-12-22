@@ -330,10 +330,12 @@ public partial class PlayerAction : MonoBehaviour
         {
             if(Inven.gameObject.activeSelf)
             {
+                GameManager.Inst.CursorUnLock();
                 Inven.CloseInventory();
             }
             else
             {
+                GameManager.Inst.CursorUnLock();
                 Inven.OpenInventory();
             } 
         }

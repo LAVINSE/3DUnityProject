@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class Inventory : MonoBehaviour
     [Header("=====> 인벤토리 설정 <=====")]
     [SerializeField] private GameObject InventoryObject;
     [SerializeField] private GameObject InventoryContent;
+    [SerializeField] private Button InventoryCloseButton;
 
     public InventorySlot[] SlotArray;
     #endregion // 변수
@@ -17,6 +19,7 @@ public class Inventory : MonoBehaviour
     private void Awake()
     {
         SlotArray = InventoryContent.GetComponentsInChildren<InventorySlot>(true);
+        InventoryCloseButton.onClick.AddListener(() => CloseButton());
     }
 
     /** 인벤토리 활성화 */
@@ -49,6 +52,13 @@ public class Inventory : MonoBehaviour
                 return;
             }
         }
+    }
+
+    /** 인벤토리 닫기 버튼을 누른다 */
+    private void CloseButton()
+    {
+        GameManager.Inst.CursorLock();
+        this.gameObject.SetActive(false);
     }
     #endregion // 함수
 }

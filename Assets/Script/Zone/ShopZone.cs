@@ -53,6 +53,8 @@ public class ShopZone : MonoBehaviour
     /** 상점에 입장한다 */
     public void Enter()
     {
+        // 커서 잠금 해제
+        GameManager.Inst.CursorUnLock();
         // 화면 중앙에 위치
         var ItemShop = this.transform.GetComponentInChildren<ItemShopUI>(true);
 
@@ -75,6 +77,8 @@ public class ShopZone : MonoBehaviour
     /** 상점을 나간다 */
     public void Exit()
     {
+        // 커서 잠금
+        GameManager.Inst.CursorLock();
         NpcAnimator.SetTrigger("TriggerHello");
 
         // 상점 UI 숨기기
@@ -92,6 +96,7 @@ public class ShopZone : MonoBehaviour
         {
             //StopCoroutine(Talk());
             //StartCoroutine(Talk());
+            Debug.Log(" 돈 부족 ");
             return;
         }
 

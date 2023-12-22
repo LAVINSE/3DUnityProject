@@ -254,6 +254,9 @@ public class MainSceneManager : CSceneManager
             EnemyCount++;
             Count++;
 
+            // 적 숫자 상태창 업데이트
+            UIManager.Instance.EnemyCountTextUpdate();
+
             // 4초 마다 소환
             yield return new WaitForSeconds(2f);
             EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = true;
@@ -266,6 +269,7 @@ public class MainSceneManager : CSceneManager
             yield return null;
         }
 
+        // 일반 몹을 다 잡았을 경우
         if(EnemyCount == 0)
         {
             int ZoneRand = Random.Range(0, EnemyBossSpawnZoneList.Count);
@@ -287,7 +291,8 @@ public class MainSceneManager : CSceneManager
             Debug.Log($"보스가 {EnemyBossCount} 만큼 남았습니다");
             yield return null;
         }
-        yield return new WaitForSeconds(4f);
+
+        yield return new WaitForSeconds(1f);
 
         StageEnd();
     }

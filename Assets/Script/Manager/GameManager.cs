@@ -20,7 +20,7 @@ public class GameManager : CSingleton<GameManager>
         base.Awake();
         oPoolManager = CFactory.CreateObject<ObjectPoolManager>("ObjectPoolManager", this.gameObject,
             Vector3.zero, Vector3.one, Vector3.zero);
-        CursorOn();
+        CursorLock();
     }
 
     /** 초기화 => 상태를 갱신한다 */
@@ -31,27 +31,27 @@ public class GameManager : CSingleton<GameManager>
         // 커서잠금이 활성화 상태가 아닐경우
         if(IsEscDown && !IsCursor)
         {
-            CursorOn();
+            CursorLock();
             IsCursor = true;
 
         }
         // 커서잠금이 활성화 상태일 경우
         else if (IsEscDown && IsCursor)
         {
-            CursorOff();
+            CursorUnLock();
             IsCursor = false;
         }
     }
 
     // 커서 잠금
-    public void CursorOn()
+    public void CursorLock()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     // 커서 잠금해제
-    public void CursorOff()
+    public void CursorUnLock()
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;

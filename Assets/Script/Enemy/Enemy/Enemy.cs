@@ -73,6 +73,9 @@ public class Enemy : MonoBehaviour
 
         Gizmos.color = Color.blue;
         Gizmos.DrawRay(this.transform.position + Vector3.up *2f, this.transform.forward * TrackingRange);
+
+        //Gizmos.color = Color.green;
+        //Gizmos.DrawSphere(this.transform.position, 1.5f);
     }
 
     /** 초기화 */
