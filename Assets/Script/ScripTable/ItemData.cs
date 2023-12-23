@@ -16,7 +16,10 @@ public class ItemData : ScriptableObject
     public int ItemValue;
     public int WeaponIndex;
     public string ItemName;
+    [TextArea] public string ItemDesc;
+    public string ItemDescUse;
     public Sprite ItemImg;
+    public GameObject ItemPrefab;
 
     public Action Use;
 }

@@ -17,3 +17,4 @@ MonoBehaviour:
   WeaponIndex: 0
   ItemName: "\uB9DD\uCE58"
   ItemImg: {fileID: 21300000, guid: 1c436558df0caa04eb65bf6f8d065918, type: 3}
+  ItemPrefab: {fileID: 3905382902363046390, guid: 78c9f15294b626641858436df4f3f07e, type: 3}

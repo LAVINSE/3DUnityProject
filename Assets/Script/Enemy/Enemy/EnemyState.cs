@@ -1,3 +1,4 @@
+using Cinemachine.Utility;
 using EnemyStateFSM;
 using System.Collections;
 using System.Collections.Generic;
@@ -74,15 +75,18 @@ public class EnemyState : MonoBehaviour
 
             // 플레이어와 적 거리
             var PlayerDistance = Enemy.oPlayerTarget.transform.position - Enemy.transform.position;
-            // 석상과 적 거리
-            var StoneStatueDistance = Enemy.oStoneStatueTarget.transform.position - Enemy.transform.position;
 
             // 추적 범위안에 있을경우
-            if (StoneStatueDistance.magnitude.ExIsGreat(Enemy.oTrackingRange) ||
-                PlayerDistance.magnitude.ExIsLessEquals(Enemy.oTrackingRange))
+            if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oTrackingRange))
             {
                 Debug.Log("추적상태");
                 Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Tracking);
+
+                if(PlayerDistance.magnitude <= Enemy.oAttackRange)
+                {
+                    Debug.Log("공격상태");
+                    Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Attack);
+                }
             }
             // 공격 범위안에 있을경우
             else if (PlayerDistance.magnitude <= Enemy.oAttackRange)
@@ -115,27 +119,24 @@ public class EnemyState : MonoBehaviour
 
             // 플레이어와 적 거리
             var PlayerDistance = Enemy.oPlayerTarget.transform.position - Enemy.transform.position;
-            // 석상과 적 거리
-            var StoneStatueDistance = Enemy.oStoneStatueTarget.transform.position - Enemy.transform.position;
 
-            // TODO : 플레이어 우선순위
-            // 추적 범위안에 있을경우
-            if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oTrackingRange) &&
-                PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange))
+            if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oTrackingRange))
             {
-                // 추적 중
                 Enemy.Tracking(Enemy.oPlayerTarget);
+
+                if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
+                {
+                    Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Attack);
+                }
             }
-            // 플레이어 or 석상 공격 범위 안에 있을경우
-            else if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange) ||
-                StoneStatueDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
+            else if(PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
             {
                 Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Attack);
             }
-            else if(StoneStatueDistance.magnitude.ExIsGreat(Enemy.oTrackingRange))
+            else if (PlayerDistance.magnitude.ExIsGreat(Enemy.oTrackingRange))
             {
-                // 추적 중
-                Enemy.Tracking(Enemy.oStoneStatueTarget);
+                Enemy.Tracking(Enemy.oSpawnPos);
+                Debug.Log("123");
             }
         }
 
@@ -157,20 +158,16 @@ public class EnemyState : MonoBehaviour
         {
             Debug.Log("공격상태");
             var PlayerDistance = Enemy.oPlayerTarget.transform.position - Enemy.transform.position;
-            var StoneStatueDistance = Enemy.oStoneStatueTarget.transform.position - Enemy.transform.position; 
 
-            // 플레이어 or 석상 공격범위 안에 있을경우
-            if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange) ||
-                StoneStatueDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
-            {
-                Enemy.Targeting();
-            }
             // 플레이어 or 석상 공격범위 밖에 있을경우, 추적준비 완료일 경우
-            else if(PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange) ||
-                StoneStatueDistance.magnitude.ExIsGreat(Enemy.oAttackRange)
-                && Enemy.IsTracking)
+            if (PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange) && Enemy.IsTracking)
             {
                 Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Tracking);
+            }
+            // 플레이어 or 석상 공격범위 안에 있을경우
+            else if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
+            {
+                Enemy.Targeting();
             }
         }
 

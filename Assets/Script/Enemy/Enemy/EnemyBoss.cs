@@ -11,6 +11,7 @@ public class EnemyBoss : Enemy
     [SerializeField] private Transform EnemyBossMissilePortA;
     [SerializeField] private Transform EnemyBossMissilePortB;
     [SerializeField] private BoxCollider EnemyBossTauntBoxCollider;
+    [SerializeField] private Transform RockSpawnPos;
     [SerializeField] private float TargetRadius;
     [SerializeField] private bool IsLook;
 
@@ -78,12 +79,14 @@ public class EnemyBoss : Enemy
             case 0:
             case 1:
                 // 미사일
-                StartCoroutine(EnemyBossMissileShot());
+                //StartCoroutine(EnemyBossMissileShot());
+                IsAttack = false;
                 break;
             case 2:
             case 3:
                 // 돌 굴리기
-                StartCoroutine(EnemyBossRockShot());
+                //StartCoroutine(EnemyBossRockShot());
+                IsAttack = false;
                 break;
             case 4:
                 // 점프 공격
@@ -122,12 +125,17 @@ public class EnemyBoss : Enemy
     {
         IsTracking = false;
         IsLook = false;
+        
+        yield return new WaitForSeconds(1.5f);
         EnemyAnimator.SetTrigger("TriggerBigShot");
-        var Rock = Instantiate(EnemyBossRockPrefab, transform.position, transform.rotation);
-        yield return new WaitForSeconds(3f);
+
+        var Rock = Instantiate(EnemyBossRockPrefab, RockSpawnPos.position, transform.rotation);
+
+        yield return new WaitForSeconds(4f);
 
         Destroy(Rock);
 
+        yield return new WaitForSeconds(1f);
         IsLook = true;
         IsTracking = true;
         IsAttack = false;
@@ -138,6 +146,7 @@ public class EnemyBoss : Enemy
     private IEnumerator EnemyBossTaunt()
     {
         IsTracking = false;
+
         TauntVector = PlayerTarget.position + LookVector;
 
         EnemyBoxCollider.enabled = false;

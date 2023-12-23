@@ -31,6 +31,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text StageName;
     [SerializeField] private TMP_Text TimerText;
     [SerializeField] private TMP_Text EnemyCountText;
+    [SerializeField] private TMP_Text EnemyBossCountText;
 
     private float WaitTimer;
     private float FarmingTimer;
@@ -50,7 +51,6 @@ public class UIManager : MonoBehaviour
     {
         Instance = this;
         oMainSceneManager = CSceneManager.GetSceneManager<MainSceneManager>(CDefine.MainGameScene);
-        oStoneStatue = oMainSceneManager.oStoneStatueObject.GetComponent<StoneStatue>();
         oPlayer = oMainSceneManager.PlayerObj.GetComponent<PlayerAction>();
 
         // 상태창 갱신
@@ -94,7 +94,6 @@ public class UIManager : MonoBehaviour
     /** 상태창을 갱신한다 */
     public void PlayerHealthTextUpdate()
     {
-        StoneHealthText.text = oStoneStatue.oCurrentHealth + " / " + oStoneStatue.oMaxHealth;
         PlayerHealthText.text = oPlayer.oHealth + " / " + oPlayer.oMaxHealth;
         PlayerAmmoText.text = oPlayer.oAmmo + " / " + oPlayer.oMaxAmmo;
         PlayerCoinText.text = string.Format("{0:n0}", oPlayer.oCoin);
@@ -131,6 +130,7 @@ public class UIManager : MonoBehaviour
     public void EnemyCountTextUpdate()
     {
         EnemyCountText.text = oMainSceneManager.oEnemyCount.ToString();
+        EnemyBossCountText.text = oMainSceneManager.oEnemyBossCount.ToString();
     }
 
     /** 보스 상태창을 갱신한다 */

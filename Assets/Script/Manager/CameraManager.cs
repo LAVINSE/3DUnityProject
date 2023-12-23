@@ -11,8 +11,6 @@ public class CameraManager : MonoBehaviour
 
     [SerializeField] private float Speed;
     [SerializeField] private float Senstivity;
-    [SerializeField] private float Height;
-    [SerializeField] private float Distance;
     #endregion // 변수
 
     #region 함수

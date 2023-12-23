@@ -10,6 +10,10 @@ public class Inventory : MonoBehaviour
     [SerializeField] private GameObject InventoryObject;
     [SerializeField] private GameObject InventoryContent;
     [SerializeField] private Button InventoryCloseButton;
+    [SerializeField] private InventorySlotToolTip ToolTip;
+    [SerializeField] private GameObject SlotPrefab;
+    [SerializeField] private Transform ContentArea;
+    [SerializeField] private int SlotCount = 25;
 
     public InventorySlot[] SlotArray;
     #endregion // 변수
@@ -18,8 +22,22 @@ public class Inventory : MonoBehaviour
     /** 초기화 */
     private void Awake()
     {
-        SlotArray = InventoryContent.GetComponentsInChildren<InventorySlot>(true);
         InventoryCloseButton.onClick.AddListener(() => CloseButton());
+        InventorySlotCreate();
+        SlotArray = GetComponentsInChildren<InventorySlot>();
+
+        for(int i = 0; i < SlotArray.Length; i++)
+        {
+            SlotArray[i].ToolTip = ToolTip;
+        }
+    }
+
+    public void InventorySlotCreate()
+    {
+        for(int i = 0; i < 25; i++)
+        {
+            var Slot = Instantiate(SlotPrefab, ContentArea);
+        }
     }
 
     /** 인벤토리 활성화 */

@@ -7,7 +7,7 @@ public class EnemyBossRock : EnemyAttack
     #region 변수
     private Rigidbody EnemyBossRockRigid;
     private float AngularPower = 2f; // 회전 힘
-    private float ScaleValue = 0.1f; // 크기
+    private float ScaleValue = 0.2f; // 크기
     private bool IsShoot;
     #endregion // 변수
 

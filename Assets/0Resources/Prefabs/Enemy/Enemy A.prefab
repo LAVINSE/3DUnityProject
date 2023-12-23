@@ -136,7 +136,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3989913478870399293}
   m_Enabled: 0
   m_AgentTypeID: 0
-  m_Radius: 1.5
+  m_Radius: 1.2
   m_Speed: 8
   m_Acceleration: 30
   avoidancePriority: 50
@@ -173,6 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21f6607132139c9448326a28a9590dcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DropTable: {fileID: 11400000, guid: 2e61289ffb893254ca8c104d4eedbd36, type: 2}
   Type: 0
   MaxHealth: 100
   CurrentHealth: 100

@@ -284,7 +284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
-  WeaponMeleeDamage: 0
+  WeaponMeleeDamage: 30
   MeleeArea: {fileID: 1639393741737896765}
   MeleeTrailEffect: {fileID: 3861438678001440927}
   BulletPos: {fileID: 0}
@@ -294,3 +294,4 @@ MonoBehaviour:
   MaxAmmo: 0
   CurrentAmmo: 0
   WeaponRate: 0.5
+  MagicRate: 0

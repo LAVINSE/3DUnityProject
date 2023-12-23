@@ -382,3 +382,5 @@ MonoBehaviour:
   ItemImg: {fileID: 7864224910065309803}
   ItemCountImg: {fileID: 6033631364330024915}
   ItemCountText: {fileID: 3976504706849749600}
+  PlusItem: {fileID: 0}
+  ItemCount: 0

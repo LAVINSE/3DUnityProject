@@ -64,7 +64,8 @@ public partial class PlayerAction : MonoBehaviour
 
     // 공격 딜레이
     private float AttackDelay;
-    
+    private float MagicDelay;
+
     // 입력정보
     private bool IsRunDown;
     private bool IsJumpDown;
@@ -72,6 +73,7 @@ public partial class PlayerAction : MonoBehaviour
     private bool IsInteractionDown;
     private bool IsAddItemDown; 
     private bool IsAttackDown;
+    private bool IsRightAttackDown;
     private bool IsReloadDown;
     private bool IsGrenadeDown;
     private bool IsSwapWeapon_0;
@@ -81,6 +83,7 @@ public partial class PlayerAction : MonoBehaviour
 
     // 동작중인지 확인
     private bool IsAttackReady = true;
+    private bool IsMagickReady = true;
     private bool IsJump;
     private bool IsDodge;
     private bool IsSwap;
@@ -250,6 +253,8 @@ public partial class PlayerAction : MonoBehaviour
         IsAddItemDown = Input.GetKeyDown(KeyCode.Z);
         // 공격
         IsAttackDown = Input.GetKey(KeyCode.Mouse0);
+        // 마법공격 망치
+        IsRightAttackDown = Input.GetKey(KeyCode.Mouse1);
         // 재장전
         IsReloadDown = Input.GetKeyDown(KeyCode.R);
         // 수류탄
@@ -414,12 +419,14 @@ public partial class PlayerAction : MonoBehaviour
 
         // 공격 딜레이 적용
         AttackDelay += Time.deltaTime;
+        MagicDelay += Time.deltaTime;
 
         // 공격 딜레이가 공격속도보다 클 경우, 공격가능
         IsAttackReady = oEquipWeapon.oWeaponRate < AttackDelay;
+        IsMagickReady = oEquipWeapon.oMagicRate < MagicDelay;
 
         // 마우스 왼쪽클릭일 경우, 공격준비가능, 회피X, 무기교체X, 재장전X
-        if(IsAttackDown && IsAttackReady && !IsDodge && !IsSwap && !IsReloadReady && !IsShop && !IsDead)
+        if (IsAttackDown && IsAttackReady && !IsDodge && !IsSwap && !IsReloadReady && !IsShop && !IsDead)
         {
             // 무기 사용
             oEquipWeapon.WeaponUse();
@@ -439,6 +446,14 @@ public partial class PlayerAction : MonoBehaviour
 
             // 탄약 상태창 갱신
             UIManager.Instance.PlayerAmmoTextUpdate();
+        }
+        else if(IsRightAttackDown && IsMagickReady && !IsDodge && !IsSwap && !IsReloadReady && !IsShop && !IsDead)
+        {
+            // 마법사용
+            oEquipWeapon.WeaponMagic();
+
+            // 공격 딜레이 초기화
+            MagicDelay = 0;
         }
     }
 

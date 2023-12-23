@@ -199,7 +199,6 @@ MonoBehaviour:
   Layer:
     serializedVersion: 2
     m_Bits: 17920
-  IsWall: 0
   PlayerWalkSpeed: 11
   PlayerRunSpeed: 14
   PlayerJumpPower: 15
@@ -589,6 +588,10 @@ PrefabInstance:
     - target: {fileID: 6453951796557949665, guid: 62007f34aa58ec547964f1650e9e0062, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8314013176684992373, guid: 62007f34aa58ec547964f1650e9e0062, type: 3}
+      propertyPath: MagicRate
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8314013176684992373, guid: 62007f34aa58ec547964f1650e9e0062, type: 3}
       propertyPath: WeaponMeleeDamage

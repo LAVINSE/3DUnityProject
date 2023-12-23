@@ -8,6 +8,7 @@ public class Weapon : MonoBehaviour
     {
         Melee,
         Range,
+        Magic,
     }
 
     #region 변수
@@ -32,6 +33,7 @@ public class Weapon : MonoBehaviour
     [Space]
     [Header("=====> 무기 공통 설정 <=====")]
     [SerializeField] private float WeaponRate;
+    [SerializeField] private float MagicRate;
     
     #endregion // 변수
 
@@ -41,6 +43,7 @@ public class Weapon : MonoBehaviour
         get => WeaponRate;
         set => WeaponRate = value;
     }
+    public float oMagicRate => MagicRate;
     public int oCurrentAmmo
     {
         get => CurrentAmmo;
@@ -81,6 +84,17 @@ public class Weapon : MonoBehaviour
         }
     }
 
+    /** 마법을 사용한다 */
+    public void WeaponMagic()
+    {
+        // 근접무기
+        if (Type == WeaponType.Melee)
+        {
+            StopCoroutine(MagicShot());
+            StartCoroutine(MagicShot());
+        }
+    }
+
     /** 근접무기 스윙 */
     private IEnumerator MeleeSwing()
     {
@@ -115,6 +129,12 @@ public class Weapon : MonoBehaviour
         Vector3 BulletCaseVector = Vector3.forward * Random.Range(-3, -2) + Vector3.up * Random.Range(2, 3);
         BulletCaseRigid.AddForce(BulletCaseVector, ForceMode.Impulse);
         BulletCaseRigid.AddTorque(Vector3.up);
+    }
+
+    /** 마법무기 */
+    private IEnumerator MagicShot()
+    {
+        yield return null;
     }
     #endregion // 함수
 }

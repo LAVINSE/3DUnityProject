@@ -32,8 +32,6 @@ public class MainSceneManager : CSceneManager
     [SerializeField] private List<GameObject> WallDoorList = new List<GameObject>();
     [SerializeField] private List<GameObject> EnemySpawnZoneList = new List<GameObject>();
     [SerializeField] private List<GameObject> EnemyBossSpawnZoneList = new List<GameObject>();
-    [SerializeField] private GameObject StoneStatueObject;
-    [SerializeField] private GameObject StoneStatueTargetPos;
     
     [Space]
     [SerializeField] private float WaitTimer; // 게임 시작전 대기 시간
@@ -59,6 +57,7 @@ public class MainSceneManager : CSceneManager
 
     private float SaveWaitTimer;
     private float SaveFarmingTimer;
+    private List<int> NumList = new List<int>();
     #endregion // 변수
 
     #region 프로퍼티
@@ -79,7 +78,6 @@ public class MainSceneManager : CSceneManager
         get => EnemyBossCount;
         set => EnemyBossCount = value;
     }
-    public GameObject oStoneStatueObject => StoneStatueObject;
     public GameObject oBossObject => BossObject;
     #endregion // 프로퍼티
 
@@ -89,11 +87,15 @@ public class MainSceneManager : CSceneManager
     {
         base.Awake();
         PlayerObj = Player.gameObject;
+
         var InventoryObject = CFactory.CreateCloneObj("PlayerInventory", PlayerInven, PublicRoot,
             Vector3.zero, Vector3.one, Vector3.zero);
         var InventoryComponent = InventoryObject.GetComponent<Inventory>();
         InventoryComponent.CloseInventory();
+
         Player.Inven = InventoryComponent;
+
+        Player.transform.position = PlayerSpawnPos.position;
 
         SaveWaitTimer = WaitTimer;
         SaveFarmingTimer = FarmingTimer;
@@ -162,7 +164,7 @@ public class MainSceneManager : CSceneManager
     public void StageEnd()
     {
         Debug.Log("스테이지 종료");
-
+        NumList.Clear();
         StageClearBattleTimer.Add(BattleTimer);
         BattleTimer = 0;
 
@@ -235,34 +237,35 @@ public class MainSceneManager : CSceneManager
         // 적 스폰존 활성화
         for(int i =0; i < StageData.StageArray[StageCount].StageSpawnActiveCount; i++)
         {
-            int Rand = Random.Range(0, EnemySpawnZoneList.Count);
-            var EnemyZone = EnemySpawnZoneList[Rand];
+            int Number = RandomNumber(0, EnemySpawnZoneList.Count);
+            var EnemyZone = EnemySpawnZoneList[Number];
             ZoneList.Add(EnemyZone);
         }
+
+        NumList.Clear();
 
         // 적 소환
         int Count = 0;
         while (Count < StageData.StageArray[StageCount].StageEnemyCount)
         {
-            int Rand = Random.Range(0, ZoneList.Count);
+            int Number = RandomNumber(0, ZoneList.Count);
             int EnemyRand = Random.Range(0, StageData.StageArray[StageCount].EnemyPrefabList.Length);
-            ZoneList[Rand].SetActive(true);
+            ZoneList[Number].SetActive(true);
 
             GameObject EnemyObject = CFactory.CreateCloneObj("Enemy",
                                     StageData.StageArray[StageCount].EnemyPrefabList[EnemyRand],
-                                    ZoneList[Rand], Vector3.zero, Vector3.one, Vector3.zero);
+                                    ZoneList[Number], Vector3.zero, Vector3.one, Vector3.zero);
 
+            EnemyObject.GetComponent<Enemy>().oSpawnPos = ZoneList[Number].transform;
+            EnemyObject.GetComponent<Enemy>().oPlayerTarget = Player.transform;
             bool Ishit = NavMesh.SamplePosition(EnemyObject.transform.position, out NavMeshHit Hit, float.MaxValue / 2, 1);
-
+            
             if (Ishit)
             {
                 EnemyObject.transform.position = Hit.position;
                 EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = true;
             }
 
-            
-            EnemyObject.GetComponent<Enemy>().oPlayerTarget = Player.transform;
-            EnemyObject.GetComponent<Enemy>().oStoneStatueTarget = StoneStatueTargetPos.transform;
             EnemyCount++;
             Count++;
 
@@ -285,18 +288,23 @@ public class MainSceneManager : CSceneManager
             int ZoneRand = Random.Range(0, EnemyBossSpawnZoneList.Count);
             var BossZone = EnemyBossSpawnZoneList[ZoneRand];
             BossZone.SetActive(true);
-            GameObject EnemyObject = CFactory.CreateCloneObj("Enemy",
-                                    StageData.StageArray[StageCount].EnemyBoss, BossZone
-                                    , Vector3.zero, Vector3.one, Vector3.zero);
-            
-            EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = false;
+           
+            GameObject EnemyObject = Instantiate(StageData.StageArray[StageCount].EnemyBoss, BossZone.transform);
+
+            EnemyObject.GetComponent<Enemy>().oSpawnPos = BossZone.transform;
             EnemyObject.GetComponent<Enemy>().oPlayerTarget = Player.transform;
-            EnemyObject.GetComponent<Enemy>().oStoneStatueTarget = StoneStatueTargetPos.transform;
+            bool Ishit = NavMesh.SamplePosition(EnemyObject.transform.position, out NavMeshHit Hit, float.MaxValue / 2, 1);
+
+            if (Ishit)
+            {
+                EnemyObject.transform.position = Hit.position;
+                EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = true;
+            }
+            
             EnemyBossCount++;
 
-            yield return new WaitForSeconds(2);
-            //TODO: 보스 카운트 증가 함수 추가
-            EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = true;
+            // 적 숫자 상태창 업데이트
+            UIManager.Instance.EnemyCountTextUpdate();
         }
 
 
@@ -309,6 +317,19 @@ public class MainSceneManager : CSceneManager
         yield return new WaitForSeconds(1f);
 
         StageEnd();
+    }
+
+    /** 랜덤숫자중 중복 숫자를 뽑지 않는다 */
+    private int RandomNumber(int Min, int Max)
+    {
+        int RandomValue;
+        do
+        {
+            RandomValue = Random.Range(Min, Max);
+        } while (NumList.Contains(RandomValue));
+
+        NumList.Add(RandomValue);
+        return RandomValue;
     }
     #endregion // 함수
 }

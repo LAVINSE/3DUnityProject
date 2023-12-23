@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
-    IDragHandler, IEndDragHandler, IDropHandler
+    IDragHandler, IEndDragHandler, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
     #region 변수
     [SerializeField] private Image ItemImg; // 아이템 이미지
@@ -15,16 +15,18 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
 
     public ItemData PlusItem; // 획득한 아이템
     public int ItemCount;  // 획득한 아이템 수
+
     #endregion // 변수
 
     #region 프로퍼티
+    public InventorySlotToolTip ToolTip { get; set; }
     #endregion // 프로퍼티
 
     #region 함수
     /** 초기화 */
     private void Awake()
     {
-        
+        ToolTip = GetComponent<InventorySlotToolTip>();
     }
 
     /** 아이템 이미지 투명도 조절 */
@@ -151,8 +153,6 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     {
         Debug.Log("EndDrag");
 
-        // 아이템 버리기 추가예정
-
         // 투명도, 비우기
         DragSlot.Instance.SetColor(0);
         DragSlot.Instance.InventoryDragSlot = null;
@@ -168,6 +168,24 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         {
             // 아이템 교환
             ChangeSlot();
+        }
+    }
+
+    /** 슬롯에 마우스를 올렸을 경우 */
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if(PlusItem != null)
+        {
+            ToolTip.ShowToolTip(PlusItem);
+        }
+    }
+
+    /** 슬롯에있는 마우스가 나갔을 경우 */
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (PlusItem != null)
+        {
+            ToolTip.HideToolTip();
         }
     }
     #endregion // 함수

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dffb4d982c9abdb4ebd6a6fff86de985, type: 3}
+  m_Name: NoramlEnemyDrop
+  m_EditorClassIdentifier: 
+  TotalWeight: 100
+  DropTableList:
+  - ItemArray:
+    - {fileID: 11400000, guid: 13c2a115e8f0f7f44936ca581d542e1c, type: 2}
+    Weight: 60
+  - ItemArray:
+    - {fileID: 11400000, guid: 07f8731fed5117b41a6ea75017448951, type: 2}
+    - {fileID: 11400000, guid: ea6dd5da704288e409e3028b605b786d, type: 2}
+    Weight: 20
+  - ItemArray:
+    - {fileID: 11400000, guid: 13c2a115e8f0f7f44936ca581d542e1c, type: 2}
+    - {fileID: 11400000, guid: ea6dd5da704288e409e3028b605b786d, type: 2}
+    - {fileID: 11400000, guid: 07f8731fed5117b41a6ea75017448951, type: 2}
+    Weight: 20
