@@ -118,26 +118,25 @@ public class EnemyState : MonoBehaviour
             // 석상과 적 거리
             var StoneStatueDistance = Enemy.oStoneStatueTarget.transform.position - Enemy.transform.position;
 
-            // 석상 추적
-            if (StoneStatueDistance.magnitude.ExIsGreat(Enemy.oTrackingRange))
+            // TODO : 플레이어 우선순위
+            // 추적 범위안에 있을경우
+            if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oTrackingRange) &&
+                PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange))
+            {
+                // 추적 중
+                Enemy.Tracking(Enemy.oPlayerTarget);
+            }
+            // 플레이어 or 석상 공격 범위 안에 있을경우
+            else if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange) ||
+                StoneStatueDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
+            {
+                Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Attack);
+            }
+            else if(StoneStatueDistance.magnitude.ExIsGreat(Enemy.oTrackingRange))
             {
                 // 추적 중
                 Enemy.Tracking(Enemy.oStoneStatueTarget);
-
-                // 추적 범위안에 있을경우
-                if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oTrackingRange) &&
-                    PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange))
-                {
-                    // 추적 중
-                    Enemy.Tracking(Enemy.oPlayerTarget);
-                }
-                // 공격 범위 안에 있을경우
-                else if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
-                {
-                    Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Attack);
-                }
             }
-            
         }
 
         public override void EnemyStateExit(Enemy Enemy)
@@ -158,18 +157,21 @@ public class EnemyState : MonoBehaviour
         {
             Debug.Log("공격상태");
             var PlayerDistance = Enemy.oPlayerTarget.transform.position - Enemy.transform.position;
+            var StoneStatueDistance = Enemy.oStoneStatueTarget.transform.position - Enemy.transform.position; 
 
-            // 공격범위 안에 있을경우
-            if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
+            // 플레이어 or 석상 공격범위 안에 있을경우
+            if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange) ||
+                StoneStatueDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
             {
                 Enemy.Targeting();
             }
-            // 공격범위 밖에 있을경우, 추적준비 완료일 경우
-            else if(PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange) && Enemy.IsTracking)
+            // 플레이어 or 석상 공격범위 밖에 있을경우, 추적준비 완료일 경우
+            else if(PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange) ||
+                StoneStatueDistance.magnitude.ExIsGreat(Enemy.oAttackRange)
+                && Enemy.IsTracking)
             {
                 Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Tracking);
             }
-            
         }
 
         public override void EnemyStateExit(Enemy Enemy)

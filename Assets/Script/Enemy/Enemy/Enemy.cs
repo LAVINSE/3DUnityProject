@@ -91,6 +91,8 @@ public class Enemy : MonoBehaviour
         oMainSceneManager = CSceneManager.GetSceneManager<MainSceneManager>(CDefine.MainGameScene);
 
         CurrentHealth = MaxHealth;
+
+        IsTracking = true;
     }
 
     /** 초기화 => 상태를 갱신한다 */
@@ -223,7 +225,6 @@ public class Enemy : MonoBehaviour
     /** 추적을 시작한다 */
     public void TrackingStart()
     {
-        IsTracking = true;
         EnemyAnimator.SetBool("IsWalk", true);
     }
 
@@ -232,7 +233,7 @@ public class Enemy : MonoBehaviour
     {
         this.TargetPos = TargetPos;
         // 추적상태일 경우
-        if (oEnemyNavMeshAgent.enabled && !IsAttack)
+        if (oEnemyNavMeshAgent.enabled)
         {
             // 도착할 목표 지정
             oEnemyNavMeshAgent.SetDestination(this.TargetPos.position);

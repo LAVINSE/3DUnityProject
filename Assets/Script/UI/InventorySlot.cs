@@ -13,9 +13,10 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     [SerializeField] private GameObject ItemCountImg;
     [SerializeField] private TMP_Text ItemCountText;
 
-    #endregion // 변수
     public ItemData PlusItem; // 획득한 아이템
     public int ItemCount;  // 획득한 아이템 수
+    #endregion // 변수
+
     #region 프로퍼티
     #endregion // 프로퍼티
 
@@ -149,6 +150,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("EndDrag");
+
+        // 아이템 버리기 추가예정
 
         // 투명도, 비우기
         DragSlot.Instance.SetColor(0);

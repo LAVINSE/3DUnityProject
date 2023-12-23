@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.AI;
 
 public class MainSceneManager : CSceneManager
 {
@@ -54,6 +55,7 @@ public class MainSceneManager : CSceneManager
     [SerializeField] private GameObject GameOverPanelObject;
     [SerializeField] private List<float> StageClearBattleTimer = new List<float>();
     [SerializeField] private bool IsEnemyDie;
+    [SerializeField] private float SpawnTime;
 
     private float SaveWaitTimer;
     private float SaveFarmingTimer;
@@ -245,10 +247,20 @@ public class MainSceneManager : CSceneManager
             int Rand = Random.Range(0, ZoneList.Count);
             int EnemyRand = Random.Range(0, StageData.StageArray[StageCount].EnemyPrefabList.Length);
             ZoneList[Rand].SetActive(true);
+
             GameObject EnemyObject = CFactory.CreateCloneObj("Enemy",
                                     StageData.StageArray[StageCount].EnemyPrefabList[EnemyRand],
                                     ZoneList[Rand], Vector3.zero, Vector3.one, Vector3.zero);
-            EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = false;
+
+            bool Ishit = NavMesh.SamplePosition(EnemyObject.transform.position, out NavMeshHit Hit, float.MaxValue / 2, 1);
+
+            if (Ishit)
+            {
+                EnemyObject.transform.position = Hit.position;
+                EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = true;
+            }
+
+            
             EnemyObject.GetComponent<Enemy>().oPlayerTarget = Player.transform;
             EnemyObject.GetComponent<Enemy>().oStoneStatueTarget = StoneStatueTargetPos.transform;
             EnemyCount++;
@@ -258,9 +270,7 @@ public class MainSceneManager : CSceneManager
             UIManager.Instance.EnemyCountTextUpdate();
 
             // 4초 마다 소환
-            yield return new WaitForSeconds(2f);
-            EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = true;
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(SpawnTime);
         }
 
         while (EnemyCount > 0)
@@ -278,11 +288,15 @@ public class MainSceneManager : CSceneManager
             GameObject EnemyObject = CFactory.CreateCloneObj("Enemy",
                                     StageData.StageArray[StageCount].EnemyBoss, BossZone
                                     , Vector3.zero, Vector3.one, Vector3.zero);
-
+            
             EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = false;
             EnemyObject.GetComponent<Enemy>().oPlayerTarget = Player.transform;
             EnemyObject.GetComponent<Enemy>().oStoneStatueTarget = StoneStatueTargetPos.transform;
             EnemyBossCount++;
+
+            yield return new WaitForSeconds(2);
+            //TODO: 보스 카운트 증가 함수 추가
+            EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = true;
         }
 
 
