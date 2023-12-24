@@ -137,7 +137,7 @@ NavMeshAgent:
   m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 1.2
-  m_Speed: 8
+  m_Speed: 10
   m_Acceleration: 30
   avoidancePriority: 50
   m_AngularSpeed: 500
@@ -173,11 +173,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21f6607132139c9448326a28a9590dcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DropTable: {fileID: 11400000, guid: 2e61289ffb893254ca8c104d4eedbd36, type: 2}
+  DropTable: {fileID: 11400000, guid: 3c50b59d6c762e74d9bd2563ef2ed7bb, type: 2}
   Type: 0
   MaxHealth: 100
   CurrentHealth: 100
-  Score: 100
   TrackingRange: 30
   AttackRange: 5
   CoinArray:
@@ -188,7 +187,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16512
   PlayerTarget: {fileID: 0}
-  StoneStatueTarget: {fileID: 0}
   IsAttack: 0
   EnemyAttackMeleeBoxCollider: {fileID: 3733971861356054134}
   TargetRadius: 1.5

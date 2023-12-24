@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: Heart
   m_EditorClassIdentifier: 
   Type: 0
-  ItemValue: 10
+  ItemValue: 30
   WeaponIndex: 0
   ItemName: "\uCCB4\uB825"
+  ItemDesc: "\uCCB4\uB825 \uD68C\uBCF5 30"
+  ItemDescUse: "\uC544\uC774\uD15C \uC0AC\uC6A9\uC2DC \uCCB4\uB825\uC774 30 \uD68C\uBCF5\uB41C\uB2E4"
   ItemImg: {fileID: 21300000, guid: 3cadcd247345c2649b0e8fbd9ee6e8db, type: 3}
   ItemPrefab: {fileID: 8416394977233805773, guid: 62ddf53f29249a34ea88ed771ef503a1, type: 3}

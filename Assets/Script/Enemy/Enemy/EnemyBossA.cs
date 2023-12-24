@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyBoss : Enemy
+public class EnemyBossA : Enemy
 {
     #region 변수
+    [SerializeField] private bool IsLook;
     [SerializeField] private GameObject EnemyBossMissilePrefab;
     [SerializeField] private GameObject EnemyBossRockPrefab;
     [SerializeField] private Transform EnemyBossMissilePortA;
@@ -13,7 +14,6 @@ public class EnemyBoss : Enemy
     [SerializeField] private BoxCollider EnemyBossTauntBoxCollider;
     [SerializeField] private Transform RockSpawnPos;
     [SerializeField] private float TargetRadius;
-    [SerializeField] private bool IsLook;
 
     private Vector3 LookVector; // 바라보는 방향 예측
     private Vector3 TauntVector;
@@ -52,6 +52,7 @@ public class EnemyBoss : Enemy
         }
     }
 
+    /** 타겟한다 */
     public override void Targeting()
     {
         base.Targeting();

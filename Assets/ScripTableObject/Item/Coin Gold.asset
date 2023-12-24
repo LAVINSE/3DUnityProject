@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: Coin Gold
   m_EditorClassIdentifier: 
   Type: 0
-  ItemValue: 50
+  ItemValue: 100
   WeaponIndex: 0
   ItemName: "\uACE8\uB4DC \uCF54\uC778"
-  ItemImg: {fileID: 0}
+  ItemDesc: "100\uACE8\uB4DC\uB97C \uC5BB\uB294\uB2E4"
+  ItemDescUse: "\uC544\uC774\uD15C \uC0AC\uC6A9\uC2DC 100\uACE8\uB4DC\uB97C \uC5BB\uB294\uB2E4"
+  ItemImg: {fileID: 21300000, guid: 771dc6d7f27969a4fb87ecdeab54ae71, type: 3}
   ItemPrefab: {fileID: 7209039954682850086, guid: 0d7bebf16c527a34ca847c463887a5f9, type: 3}

@@ -14,22 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StageArray:
   - StageName: Stage0
-    StageSpawnActiveCount: 7
-    StageEnemyCount: 7
+    StageSpawnActiveCount: 5
+    StageEnemyCount: 5
     EnemyPrefabList:
     - {fileID: 3989913478870399293, guid: 8ba1e53a9c41c534ca2a9d15cf1c2802, type: 3}
-    EnemyBoss: {fileID: 1080351297754816958, guid: deed93df84961f8498842b43ba6dd581, type: 3}
+    EnemyBoss: {fileID: 1080351297754816958, guid: 2c1d48b22111b494c845e15c6d142b09, type: 3}
   - StageName: Stage1
-    StageSpawnActiveCount: 5
-    StageEnemyCount: 7
+    StageSpawnActiveCount: 8
+    StageEnemyCount: 8
     EnemyPrefabList:
     - {fileID: 3989913478870399293, guid: 8ba1e53a9c41c534ca2a9d15cf1c2802, type: 3}
     - {fileID: 3459428222040369351, guid: 8a6b8c49529cbdd47aa71770ebaa76cc, type: 3}
-    EnemyBoss: {fileID: 0}
+    EnemyBoss: {fileID: 1080351297754816958, guid: deed93df84961f8498842b43ba6dd581, type: 3}
   - StageName: Stage2
-    StageSpawnActiveCount: 5
-    StageEnemyCount: 7
+    StageSpawnActiveCount: 11
+    StageEnemyCount: 11
     EnemyPrefabList:
     - {fileID: 3989913478870399293, guid: 8ba1e53a9c41c534ca2a9d15cf1c2802, type: 3}
     - {fileID: 3459428222040369351, guid: 8a6b8c49529cbdd47aa71770ebaa76cc, type: 3}
-    EnemyBoss: {fileID: 0}
+    - {fileID: 2859997369615576257, guid: d714e1db09f3b134a82726a29f8efd7f, type: 3}
+    EnemyBoss: {fileID: 1080351297754816958, guid: 485bb5440f17fa641832df28af447e56, type: 3}

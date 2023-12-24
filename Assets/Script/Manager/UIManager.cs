@@ -8,12 +8,15 @@ public class UIManager : MonoBehaviour
 {
     #region 변수
     [Header("=====> 메뉴 UI <=====")]
-    [SerializeField] private GameObject MenuPanelUI;
-    [SerializeField] private GameObject ScoreTextRootObject;
-    [SerializeField] private GameObject ScoreTextPrefab;
-
+    public GameObject MenuPanelUI;
+    public GameObject GameOverPanelUI;
+    public GameObject GameClearPanelUI;
+    [SerializeField] private GameObject MenuScoreTextRootObject;
+    [SerializeField] private GameObject MenuScoreTextPrefab;
+    [SerializeField] private GameObject ClearScoreTextRootObject;
+    [SerializeField] private GameObject ClearScoreTextPrefab;
     [Header("=====> 인게임 UI <=====")]
-    [SerializeField] private GameObject InGamePanelUI;
+    public GameObject InGamePanelUI;
 
     [Header("=====> 상태창 UI <=====")]
     [SerializeField] private TMP_Text PlayerHealthText;
@@ -63,7 +66,7 @@ public class UIManager : MonoBehaviour
     /** 초기화 */
     private void Start()
     {
-        ScoreTextSetting();
+        MenuScoreTextSetting();
     }
 
     /** 초기화 => 상태를 갱신한다 */
@@ -98,14 +101,14 @@ public class UIManager : MonoBehaviour
         + ":" + string.Format("{0:00}", Second);
     }
 
-    /** 시간을 나타내는 텍스트를 설정한다 */
-    public void ScoreTextSetting()
+    /** 메인메뉴 시간을 나타내는 텍스트를 설정한다 */
+    public void MenuScoreTextSetting()
     {
         List<GameObject> TextObjectList = new List<GameObject>();
 
         for (int i = 0; i < oMainSceneManager.StageData.StageArray.Length; i++)
         {
-            var Text = CFactory.CreateCloneObj("ScoreText", ScoreTextPrefab, ScoreTextRootObject,
+            var Text = CFactory.CreateCloneObj("ScoreText", MenuScoreTextPrefab, MenuScoreTextRootObject,
                 Vector3.zero, Vector3.one, Vector3.zero);
             TextObjectList.Add(Text);
         }
@@ -119,6 +122,25 @@ public class UIManager : MonoBehaviour
             int Second = (int)(Timer % 60);
 
             TextObjectList[i].GetComponent<TMP_Text>().text = $"{oMainSceneManager.StageData.StageArray[i].StageName}" + " " +
+                " | " + string.Format("{0:00}", Hour) + ":" + string.Format("{0:00}", Min) + ":" + string.Format("{0:00}", Second);
+        }
+    }
+
+    /** 클리어 시간을 나타내는 텍스트를 설정한다 */
+    public void ClearScoreText()
+    {
+        for(int i = 0; i < oMainSceneManager.StageClearBattleTimer.Count; i++)
+        {
+            var Text = CFactory.CreateCloneObj("ScoreText", MenuScoreTextPrefab, MenuScoreTextRootObject,
+                Vector3.zero, Vector3.one, Vector3.zero);
+
+            var Timer = oMainSceneManager.StageClearBattleTimer[i];
+
+            int Hour = (int)(Timer / 3600);
+            int Min = (int)((Timer - Hour * 3600) / 60);
+            int Second = (int)(Timer % 60);
+
+            Text.GetComponent<TMP_Text>().text = $"{oMainSceneManager.StageData.StageArray[i].StageName}" + " " +
                 " | " + string.Format("{0:00}", Hour) + ":" + string.Format("{0:00}", Min) + ":" + string.Format("{0:00}", Second);
         }
     }

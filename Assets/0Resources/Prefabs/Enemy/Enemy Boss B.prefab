@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 6928019074475139413}
   - component: {fileID: 6928019074475139414}
   - component: {fileID: 5935015226559378453}
-  - component: {fileID: 6928019074475139415}
+  - component: {fileID: 7623392637391641997}
   m_Layer: 11
-  m_Name: Enemy Boss A
+  m_Name: Enemy Boss B
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,10 +34,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6859838559461214502}
-  - {fileID: 6928019073972654825}
-  - {fileID: 6928019073542195250}
-  - {fileID: 6928019075048129330}
-  - {fileID: 8664615684501897333}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -104,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9bc337baec279a49a70aefe495f01b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6928019074475139415
+--- !u!114 &7623392637391641997
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -113,181 +109,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1080351297754816958}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0d67c3dadd0ae5459ba4a9fda0d04f4, type: 3}
+  m_Script: {fileID: 11500000, guid: 02146701f0c068f45b8ad60b638f1256, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   DropTable: {fileID: 11400000, guid: 2e61289ffb893254ca8c104d4eedbd36, type: 2}
   Type: 1
-  MaxHealth: 200
-  CurrentHealth: 200
+  MaxHealth: 240
+  CurrentHealth: 240
   TrackingRange: 50
   AttackRange: 30
   TargetLayer:
     serializedVersion: 2
-    m_Bits: 16512
+    m_Bits: 128
   PlayerTarget: {fileID: 0}
   IsAttack: 0
-  IsLook: 0
-  EnemyBossMissilePrefab: {fileID: 5633837067224874449, guid: b4fddee5117b9094880f1632b5313d02, type: 3}
-  EnemyBossRockPrefab: {fileID: 5795745227209732226, guid: 816f80432a2d3994d84865aaf6bc9fbc, type: 3}
-  EnemyBossMissilePortA: {fileID: 6928019073972654825}
-  EnemyBossMissilePortB: {fileID: 6928019073542195250}
-  EnemyBossTauntBoxCollider: {fileID: 6928019075048129331}
-  RockSpawnPos: {fileID: 8664615684501897333}
   TargetRadius: 2
---- !u!1 &6928019073542195249
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6928019073542195250}
-  m_Layer: 11
-  m_Name: MissilePortB
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6928019073542195250
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6928019073542195249}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 2, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2205237247046938974}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6928019073972654824
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6928019073972654825}
-  m_Layer: 11
-  m_Name: MissilePortA
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6928019073972654825
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6928019073972654824}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 2, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2205237247046938974}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6928019075048129329
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6928019075048129330}
-  - component: {fileID: 6928019075048129331}
-  - component: {fileID: 6928019075048129332}
-  m_Layer: 13
-  m_Name: MeleeTauntArea
-  m_TagString: EnemyAttack
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6928019075048129330
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6928019075048129329}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2205237247046938974}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6928019075048129331
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6928019075048129329}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 4, y: 0.5, z: 4}
-  m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &6928019075048129332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6928019075048129329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca08948b5bcae474b89ab232ca6c588f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AttackDamage: 25
-  IsMelee: 1
---- !u!1 &8614719755085867520
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8664615684501897333}
-  m_Layer: 11
-  m_Name: RockSpawnPos
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8664615684501897333
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8614719755085867520}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.19, z: 2.26}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2205237247046938974}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  IsLook: 0
 --- !u!1001 &6393338707403599565
 PrefabInstance:
   m_ObjectHideFlags: 0

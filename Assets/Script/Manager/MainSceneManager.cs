@@ -46,12 +46,10 @@ public class MainSceneManager : CSceneManager
     [SerializeField] private int EnemyCount;
     [SerializeField] private int EnemyBossCount;
     [SerializeField] private int StageCount;
+    [SerializeField] private int MaxStageCount;
     [SerializeField] private GameObject BossObject;
 
     [Header("=====> 설정 <=====")]
-    [SerializeField] private GameObject MenuPanelObject;
-    [SerializeField] private GameObject GamePanelObject;
-    [SerializeField] private GameObject GameOverPanelObject;
     public List<float> StageClearBattleTimer = new List<float>();
     [SerializeField] private bool IsEnemyDie;
     [SerializeField] private float SpawnTime;
@@ -142,8 +140,8 @@ public class MainSceneManager : CSceneManager
         MenuCamera.SetActive(false);
         PlayerCamera.SetActive(true);
 
-        MenuPanelObject.SetActive(false);
-        GamePanelObject.SetActive(true);
+        UIManager.Instance.MenuPanelUI.SetActive(false);
+        UIManager.Instance.InGamePanelUI.SetActive(true);
 
         Player.gameObject.SetActive(true);
 
@@ -154,8 +152,16 @@ public class MainSceneManager : CSceneManager
     /** 게임을 종료한다 */
     public void GameOver()
     {
-        GamePanelObject.SetActive(false);
-        GameOverPanelObject.SetActive(true);
+        UIManager.Instance.InGamePanelUI.SetActive(false);
+        UIManager.Instance.GameOverPanelUI.SetActive(true);
+    }
+
+    /** 게임을 클리어한다 */
+    public void GameClear()
+    {
+        UIManager.Instance.ClearScoreText();
+        UIManager.Instance.InGamePanelUI.SetActive(false);
+        UIManager.Instance.GameClearPanelUI.SetActive(true);
     }
 
     /** 게임 재시작 */
@@ -195,6 +201,8 @@ public class MainSceneManager : CSceneManager
 
         IsBattleTime = false;
 
+        Player.transform.position = PlayerSpawnPos.transform.position;
+
         // 문 올리기
         NextStageWallDoorUp();
 
@@ -206,6 +214,11 @@ public class MainSceneManager : CSceneManager
 
         // 스테이지 카운트 증가
         StageCount++;
+
+        if(StageCount == MaxStageCount)
+        {
+            GameClear();
+        }
     }
 
     /** 스테이지가 바뀌고 문이 올라간다 */

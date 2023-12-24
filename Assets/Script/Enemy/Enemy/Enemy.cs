@@ -23,7 +23,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int CurrentHealth;
     [SerializeField] private float TrackingRange;
     [SerializeField] private float AttackRange;
-    [SerializeField] private GameObject[] CoinArray;
 
     [Space]
     [Header("=====> 적 공통 <=====")]

@@ -75,8 +75,8 @@ NavMeshAgent:
   m_GameObject: {fileID: 2859997369615576257}
   m_Enabled: 0
   m_AgentTypeID: 0
-  m_Radius: 1
-  m_Speed: 5
+  m_Radius: 1.5
+  m_Speed: 7
   m_Acceleration: 30
   avoidancePriority: 50
   m_AngularSpeed: 500
@@ -84,7 +84,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 3
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -112,11 +112,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2190fa05cee20284bb2211328eb65116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DropTable: {fileID: 0}
+  DropTable: {fileID: 11400000, guid: 3c50b59d6c762e74d9bd2563ef2ed7bb, type: 2}
   Type: 0
   MaxHealth: 200
   CurrentHealth: 200
-  Score: 400
   TrackingRange: 40
   AttackRange: 10
   CoinArray:
@@ -127,7 +126,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16512
   PlayerTarget: {fileID: 0}
-  StoneStatueTarget: {fileID: 0}
   IsAttack: 0
   EnemyBullet: {fileID: 2574547400055179989, guid: c4d0a8c88b8bfe74b8ff03dc48259c63, type: 3}
   TargetRadius: 0.5

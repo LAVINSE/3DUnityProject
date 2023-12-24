@@ -16,5 +16,7 @@ MonoBehaviour:
   ItemValue: 20
   WeaponIndex: 0
   ItemName: "\uD0C4\uC57D"
+  ItemDesc: "20\uC758 \uD0C4\uC57D\uC744 \uBCF4\uCDA9\uD55C\uB2E4"
+  ItemDescUse: "\uC544\uC774\uD15C \uC0AC\uC6A9\uC2DC \uD0C4\uC57D \uC99D\uAC00"
   ItemImg: {fileID: 21300000, guid: f88cc66088c6e4042ae13a50dfbb3662, type: 3}
   ItemPrefab: {fileID: 3568837500092966625, guid: 06505bc77a860074a87c6d4883b25592, type: 3}
