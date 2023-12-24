@@ -159,6 +159,8 @@ public class Enemy : MonoBehaviour
     {
         ChageColor(Color.red);
 
+        UIManager.Instance.BossHealthBarUpdate();
+
         // 살아있을 경우
         if(CurrentHealth > 0)
         {

@@ -79,14 +79,12 @@ public class EnemyBoss : Enemy
             case 0:
             case 1:
                 // 미사일
-                //StartCoroutine(EnemyBossMissileShot());
-                IsAttack = false;
+                StartCoroutine(EnemyBossMissileShot());
                 break;
             case 2:
             case 3:
                 // 돌 굴리기
-                //StartCoroutine(EnemyBossRockShot());
-                IsAttack = false;
+                StartCoroutine(EnemyBossRockShot());
                 break;
             case 4:
                 // 점프 공격

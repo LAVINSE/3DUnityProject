@@ -9,12 +9,13 @@ public class UIManager : MonoBehaviour
     #region 변수
     [Header("=====> 메뉴 UI <=====")]
     [SerializeField] private GameObject MenuPanelUI;
+    [SerializeField] private GameObject ScoreTextRootObject;
+    [SerializeField] private GameObject ScoreTextPrefab;
 
     [Header("=====> 인게임 UI <=====")]
     [SerializeField] private GameObject InGamePanelUI;
 
     [Header("=====> 상태창 UI <=====")]
-    [SerializeField] private TMP_Text StoneHealthText;
     [SerializeField] private TMP_Text PlayerHealthText;
     [SerializeField] private TMP_Text PlayerAmmoText;
     [SerializeField] private TMP_Text PlayerCoinText;
@@ -59,6 +60,12 @@ public class UIManager : MonoBehaviour
         PlayerWeaponImgUpdate();
     }
 
+    /** 초기화 */
+    private void Start()
+    {
+        ScoreTextSetting();
+    }
+
     /** 초기화 => 상태를 갱신한다 */
     private void LateUpdate()
     {
@@ -88,7 +95,32 @@ public class UIManager : MonoBehaviour
         int Second = (int)(Timer % 60);
 
         TimerText.text = string.Format("{0:00}", Hour) + ":" + string.Format("{0:00}", Min)
-            + ":" + string.Format("{0:00}", Second);
+        + ":" + string.Format("{0:00}", Second);
+    }
+
+    /** 시간을 나타내는 텍스트를 설정한다 */
+    public void ScoreTextSetting()
+    {
+        List<GameObject> TextObjectList = new List<GameObject>();
+
+        for (int i = 0; i < oMainSceneManager.StageData.StageArray.Length; i++)
+        {
+            var Text = CFactory.CreateCloneObj("ScoreText", ScoreTextPrefab, ScoreTextRootObject,
+                Vector3.zero, Vector3.one, Vector3.zero);
+            TextObjectList.Add(Text);
+        }
+
+        for (int i = 0; i < oMainSceneManager.StageClearBattleTimer.Count; i++)
+        {
+            var Timer = oMainSceneManager.StageClearBattleTimer[i];
+
+            int Hour = (int)(Timer / 3600);
+            int Min = (int)((Timer - Hour * 3600) / 60);
+            int Second = (int)(Timer % 60);
+
+            TextObjectList[i].GetComponent<TMP_Text>().text = $"{oMainSceneManager.StageData.StageArray[i].StageName}" + " " +
+                " | " + string.Format("{0:00}", Hour) + ":" + string.Format("{0:00}", Min) + ":" + string.Format("{0:00}", Second);
+        }
     }
 
     /** 상태창을 갱신한다 */

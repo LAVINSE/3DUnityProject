@@ -15,18 +15,18 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
 
     public ItemData PlusItem; // 획득한 아이템
     public int ItemCount;  // 획득한 아이템 수
-
     #endregion // 변수
 
     #region 프로퍼티
     public InventorySlotToolTip ToolTip { get; set; }
+    public Inventory Inven { get; set; }
     #endregion // 프로퍼티
 
     #region 함수
     /** 초기화 */
     private void Awake()
     {
-        ToolTip = GetComponent<InventorySlotToolTip>();
+        
     }
 
     /** 아이템 이미지 투명도 조절 */
@@ -41,6 +41,9 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     public void AddItem(ItemData Item, int Count = 1)
     {
         this.PlusItem = Item;
+
+        Inven.InventoryItemList.Add(PlusItem);
+
         ItemCount = Count;
         ItemImg.sprite = Item.ItemImg;
 
@@ -113,6 +116,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
             {
                 // 아이템 타입에 따라 장착 , 사용 여부 if
                 PlusItem.Use();
+                Inven.InventoryItemList.Remove(PlusItem);
                 // 무기 이미지, 탄약 상태창 갱신
                 UIManager.Instance.PlayerWeaponImgUpdate();
                 UIManager.Instance.PlayerAmmoTextUpdate();

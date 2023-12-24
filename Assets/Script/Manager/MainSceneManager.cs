@@ -23,12 +23,13 @@ public class MainSceneManager : CSceneManager
     [Header("=====> 상호작용 오브젝트 <=====")]
     [SerializeField] private GameObject ItemShopObject;
     [SerializeField] private GameObject WeaponShopObject;
+    [SerializeField] private GameObject UpgradShopObject;
 
     [Header("=====> 스폰 위치 <=====")]
     [SerializeField] private Transform PlayerSpawnPos;
 
     [Header("=====> 게임 설정 <=====")]
-    [SerializeField] private StageDataTable StageData;
+    public StageDataTable StageData;
     [SerializeField] private List<GameObject> WallDoorList = new List<GameObject>();
     [SerializeField] private List<GameObject> EnemySpawnZoneList = new List<GameObject>();
     [SerializeField] private List<GameObject> EnemyBossSpawnZoneList = new List<GameObject>();
@@ -51,7 +52,7 @@ public class MainSceneManager : CSceneManager
     [SerializeField] private GameObject MenuPanelObject;
     [SerializeField] private GameObject GamePanelObject;
     [SerializeField] private GameObject GameOverPanelObject;
-    [SerializeField] private List<float> StageClearBattleTimer = new List<float>();
+    public List<float> StageClearBattleTimer = new List<float>();
     [SerializeField] private bool IsEnemyDie;
     [SerializeField] private float SpawnTime;
 
@@ -99,6 +100,12 @@ public class MainSceneManager : CSceneManager
 
         SaveWaitTimer = WaitTimer;
         SaveFarmingTimer = FarmingTimer;
+
+        // 배틀타이머 가져오기
+        for (int i = 0; i < StageData.StageArray.Length; i++)
+        {
+            StageClearBattleTimer.Add(PlayerPrefs.GetFloat($"ScoreText{i}"));
+        }
     }
 
     /** 초기화 => 상태를 갱신한다 */
@@ -125,12 +132,13 @@ public class MainSceneManager : CSceneManager
             BattleTimer += Time.deltaTime;
         }
 
-        WaitTimeWallDoorDown();
+        IsWating();
     }
 
     /** 버튼 >> 게임을 시작한다 */
     public void GameStart()
     {
+        // 카메라 활성 제어
         MenuCamera.SetActive(false);
         PlayerCamera.SetActive(true);
 
@@ -138,6 +146,9 @@ public class MainSceneManager : CSceneManager
         GamePanelObject.SetActive(true);
 
         Player.gameObject.SetActive(true);
+
+        GameManager.Inst.CursorLock();
+        IsWaitTime = true;
     }
     
     /** 게임을 종료한다 */
@@ -157,6 +168,11 @@ public class MainSceneManager : CSceneManager
     public void StageStart()
     {
         Debug.Log("스테이지 시작");
+
+        ItemShopObject.SetActive(false);
+        WeaponShopObject.SetActive(false);
+        UpgradShopObject.SetActive(false);
+
         StartCoroutine(StartBattelCo());
     }
 
@@ -164,8 +180,17 @@ public class MainSceneManager : CSceneManager
     public void StageEnd()
     {
         Debug.Log("스테이지 종료");
+        // 랜덤리스트 초기화
         NumList.Clear();
+
         StageClearBattleTimer.Add(BattleTimer);
+        
+        // 배틀타이머 저장, 초기화
+        for (int i = 0; i < StageClearBattleTimer.Count; i++)
+        {
+            PlayerPrefs.SetFloat($"ScoreText{i}", StageClearBattleTimer[i]);
+        }
+         
         BattleTimer = 0;
 
         IsBattleTime = false;
@@ -173,27 +198,14 @@ public class MainSceneManager : CSceneManager
         // 문 올리기
         NextStageWallDoorUp();
 
+        ItemShopObject.SetActive(true);
+        WeaponShopObject.SetActive(true);
+        UpgradShopObject.SetActive(true);
+
         IsWaitTime = true;
+
+        // 스테이지 카운트 증가
         StageCount++;
-    }
-
-    /** 대기시간이 끝났을경우 문을 닫는다 */
-    private void WaitTimeWallDoorDown()
-    {
-        // 0 초가 됐을 경우
-        if (WaitTimer <= 0 && IsWaitTime)
-        {
-            IsWaitTime = false;
-            WaitTimer = SaveWaitTimer;
-            for (int i = 0; i < WallDoorList.Count; i++)
-            {
-                WallDoorList[i].transform.DOMove(WallDoorList[i].transform.position + Vector3.down * 15f,
-                    2f);
-            }
-            IsFarmingTime = true;
-        }
-
-        IsFarming();
     }
 
     /** 스테이지가 바뀌고 문이 올라간다 */
@@ -206,6 +218,19 @@ public class MainSceneManager : CSceneManager
         }
     }
 
+    /** 대기시간이 끝났을경우 문을 닫는다 */
+    private void IsWating()
+    {
+        // 0 초가 됐을 경우
+        if (WaitTimer <= 0 && IsWaitTime)
+        {
+            IsWaitTime = false;
+            WaitTimer = SaveWaitTimer;
+            IsFarmingTime = true;
+        }
+        IsFarming();
+    }
+
     /** 파밍이 끝났는지 확인 */
     private void IsFarming()
     {
@@ -213,10 +238,16 @@ public class MainSceneManager : CSceneManager
         {
             IsFarmingTime = false;
             FarmingTimer = SaveFarmingTimer;
-            IsBattleTime = true;
-        }
 
-        StartBattle();
+            for (int i = 0; i < WallDoorList.Count; i++)
+            {
+                WallDoorList[i].transform.DOMove(WallDoorList[i].transform.position + Vector3.down * 15f,
+                    2f);
+            }
+
+            IsBattleTime = true;
+            StartBattle();
+        }  
     }
 
     /** 전투 시작 */
@@ -224,7 +255,7 @@ public class MainSceneManager : CSceneManager
     {
         if (IsBattleTime && BattleTimer == 0)
         {
-            Debug.Log("성공");
+            Debug.Log("전투 진입");
             StageStart();
         }
     }
@@ -282,7 +313,7 @@ public class MainSceneManager : CSceneManager
             yield return null;
         }
 
-        // 일반 몹을 다 잡았을 경우
+        // 일반 몹을 다 잡았을 경우, 보스소환
         if(EnemyCount == 0)
         {
             int ZoneRand = Random.Range(0, EnemyBossSpawnZoneList.Count);
@@ -290,7 +321,7 @@ public class MainSceneManager : CSceneManager
             BossZone.SetActive(true);
            
             GameObject EnemyObject = Instantiate(StageData.StageArray[StageCount].EnemyBoss, BossZone.transform);
-
+            BossObject = EnemyObject;
             EnemyObject.GetComponent<Enemy>().oSpawnPos = BossZone.transform;
             EnemyObject.GetComponent<Enemy>().oPlayerTarget = Player.transform;
             bool Ishit = NavMesh.SamplePosition(EnemyObject.transform.position, out NavMeshHit Hit, float.MaxValue / 2, 1);
@@ -303,6 +334,8 @@ public class MainSceneManager : CSceneManager
             
             EnemyBossCount++;
 
+            // 보스 체력 상태창 업데이트
+            UIManager.Instance.BossHealthBarUpdate();
             // 적 숫자 상태창 업데이트
             UIManager.Instance.EnemyCountTextUpdate();
         }

@@ -20,7 +20,6 @@ public class GameManager : CSingleton<GameManager>
         base.Awake();
         oPoolManager = CFactory.CreateObject<ObjectPoolManager>("ObjectPoolManager", this.gameObject,
             Vector3.zero, Vector3.one, Vector3.zero);
-        CursorLock();
     }
 
     /** 초기화 => 상태를 갱신한다 */

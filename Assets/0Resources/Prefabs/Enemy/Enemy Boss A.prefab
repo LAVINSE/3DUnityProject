@@ -116,10 +116,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0d67c3dadd0ae5459ba4a9fda0d04f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DropTable: {fileID: 0}
+  DropTable: {fileID: 11400000, guid: 2e61289ffb893254ca8c104d4eedbd36, type: 2}
   Type: 1
-  MaxHealth: 100
-  CurrentHealth: 100
+  MaxHealth: 300
+  CurrentHealth: 300
   TrackingRange: 50
   AttackRange: 15
   CoinArray:

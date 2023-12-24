@@ -15,6 +15,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Transform ContentArea;
     [SerializeField] private int SlotCount = 25;
 
+    public List<ItemData> InventoryItemList = new List<ItemData>();
     public InventorySlot[] SlotArray;
     #endregion // 변수
 
@@ -29,12 +30,13 @@ public class Inventory : MonoBehaviour
         for(int i = 0; i < SlotArray.Length; i++)
         {
             SlotArray[i].ToolTip = ToolTip;
+            SlotArray[i].Inven = this;
         }
     }
 
     public void InventorySlotCreate()
     {
-        for(int i = 0; i < 25; i++)
+        for(int i = 0; i < SlotCount; i++)
         {
             var Slot = Instantiate(SlotPrefab, ContentArea);
         }
