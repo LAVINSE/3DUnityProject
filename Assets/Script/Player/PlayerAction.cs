@@ -13,8 +13,8 @@ public partial class PlayerAction : MonoBehaviour
 {
     #region 변수
     [Header("=====> 플레이어 속도 <=====")]
-    [SerializeField] private float PlayerWalkSpeed = 0f;
-    [SerializeField] private float PlayerRunSpeed = 0f;
+    public float PlayerWalkSpeed = 0f;
+    public float PlayerRunSpeed = 0f;
     [SerializeField] private float PlayerJumpPower = 0f;
 
     [Space]
@@ -253,8 +253,6 @@ public partial class PlayerAction : MonoBehaviour
         IsAddItemDown = Input.GetKeyDown(KeyCode.Z);
         // 공격
         IsAttackDown = Input.GetKey(KeyCode.Mouse0);
-        // 마법공격 망치
-        IsRightAttackDown = Input.GetKey(KeyCode.Mouse1);
         // 재장전
         IsReloadDown = Input.GetKeyDown(KeyCode.R);
         // 수류탄
@@ -497,18 +495,21 @@ public partial class PlayerAction : MonoBehaviour
         if(HasGrenades == 0) { return; }
 
         // 수류탄키를 눌렀을 경우, 재장전X, 무기교체X, 회피X
-        if(IsGrenadeDown && !IsReloadReady && !IsSwap && !IsDodge && !IsShop & !IsDead)
+        if(IsGrenadeDown && !IsReloadReady && !IsSwap && !IsDodge && !IsShop & !IsDead && !Inven.gameObject.activeSelf)
         {
             // 수류탄 생성
             GameObject GrenadeObj = Instantiate(GrenadePrefab, transform.position, transform.rotation);
             Rigidbody RigidGrenade = GrenadeObj.GetComponent<Rigidbody>();
             // TODO : 던지는 방향 살짝 수정필요
             // 수류탄 던지기, 회전주기
-            RigidGrenade.AddForce(this.transform.forward * 10, ForceMode.Impulse);
+
+            RigidGrenade.AddForce(this.transform.forward * 20 + Vector3.up * 2f, ForceMode.Impulse);
             RigidGrenade.AddTorque(Vector3.back * 10, ForceMode.Impulse);
 
             // 가지고 있는 수류탄개수 하나 제거
             HasGrenades--;
+
+            UIManager.Instance.PlayerWeaponImgUpdate();
         }
     }
 
@@ -536,7 +537,7 @@ public partial class PlayerAction : MonoBehaviour
         }
 
         // 체력 상태창 갱신
-        UIManager.Instance.PlayerHealthTextUpdate();
+        UIManager.Instance.PlayerStatusTextUpdate();
 
         // 피격 후 0.5초 무적
         yield return new WaitForSeconds(0.5f);
@@ -583,6 +584,15 @@ public partial class PlayerAction : MonoBehaviour
         }
 
         Callback?.Invoke();
+    }
+
+    public void ChangeColor(Color Color)
+    {
+        // 피격 색상
+        foreach (MeshRenderer Mesh in PlayerMeshRenderArray)
+        {
+            Mesh.material.color = Color;
+        }
     }
     #endregion // 함수
 }

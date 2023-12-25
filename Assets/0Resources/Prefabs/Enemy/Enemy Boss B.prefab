@@ -123,8 +123,10 @@ MonoBehaviour:
     m_Bits: 128
   PlayerTarget: {fileID: 0}
   IsAttack: 0
-  TargetRadius: 2
   IsLook: 0
+  TargetRadius: 2
+  SlowPercent: 0.25
+  PoisonPrefab: {fileID: 6064245850986313282, guid: d5499fc321e15984288ceefabde8b0a1, type: 3}
 --- !u!1001 &6393338707403599565
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -105,6 +105,7 @@ public class ShopZone : MonoBehaviour
         {
             // 아이템 가격만큼 차감
             Player.oCoin -= ItemPrice;
+            UIManager.Instance.PlayerStatusTextUpdate();
 
             // 아이템 생성
             CFactory.CreateCloneObj(ItemName, ItemPrefab, ItemSpawnPos,

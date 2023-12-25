@@ -93,6 +93,16 @@ public class Enemy : MonoBehaviour
         IsTracking = true;
     }
 
+    protected virtual void Update()
+    {
+        // 적이 죽었을 경우
+        if (IsEnemyDead)
+        {
+            StopAllCoroutines();
+            return;
+        }
+    }
+
     /** 초기화 => 상태를 갱신한다 */
     protected virtual void FixedUpdate()
     {
@@ -183,6 +193,10 @@ public class Enemy : MonoBehaviour
 
             // 애니메이션
             EnemyAnimator.SetTrigger("TriggerDie");
+            PlayerTarget.GetComponent<PlayerAction>().PlayerRunSpeed = 40;
+            PlayerTarget.GetComponent<PlayerAction>().PlayerWalkSpeed = 18;
+            PlayerTarget.GetComponent<PlayerAction>().ChangeColor(Color.white);
+            UIManager.Instance.PlayerStatusTextUpdate();
 
             // 드랍 아이템
             EnemyDropItem();

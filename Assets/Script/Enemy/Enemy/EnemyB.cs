@@ -49,7 +49,7 @@ public class EnemyB : Enemy
         EnemyAnimator.SetBool("IsAttack", true);
 
         yield return new WaitForSeconds(0.1f);
-        EnemyRigid.AddForce(transform.forward * 20, ForceMode.Impulse);
+        EnemyRigid.AddForce(transform.forward * 23, ForceMode.Impulse);
         EnemyAttackMeleeBoxCollider.enabled = true;
 
         yield return new WaitForSeconds(0.5f);

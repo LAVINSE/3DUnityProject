@@ -29,14 +29,9 @@ public class EnemyBossA : Enemy
     }
 
     /** 초기화 => 상태를 갱신한다 */
-    private void Update()
+    protected override void Update()
     {
-        // 적이 죽었을 경우
-        if (IsEnemyDead)
-        {
-            StopAllCoroutines();
-            return;
-        }
+        base.Update();
 
         // 바라보기가 true일때
         if (IsLook)
@@ -72,6 +67,7 @@ public class EnemyBossA : Enemy
     {
         IsAttack = true;
         yield return new WaitForSeconds(0.1f);
+        IsTracking = false;
 
         int RandomAction = Random.Range(0, 5);
 
@@ -97,7 +93,6 @@ public class EnemyBossA : Enemy
     /** 적 보스 미사일 공격 */
     private IEnumerator EnemyBossMissileShot()
     {
-        IsTracking = false;
         EnemyAnimator.SetTrigger("TriggerShot");
         yield return new WaitForSeconds(0.2f);
         GameObject EnemyBossMissileObjectA = Instantiate(EnemyBossMissilePrefab, EnemyBossMissilePortA.position,
@@ -115,37 +110,26 @@ public class EnemyBossA : Enemy
 
         IsTracking = true;
         IsAttack = false;
-
-        StartCoroutine(Select());
     }
 
     /** 적 보스 돌 굴리기 공격 */
     private IEnumerator EnemyBossRockShot()
     {
-        IsTracking = false;
-        IsLook = false;
-        
         yield return new WaitForSeconds(1.5f);
         EnemyAnimator.SetTrigger("TriggerBigShot");
 
         var Rock = Instantiate(EnemyBossRockPrefab, RockSpawnPos.position, transform.rotation);
 
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(2f);
 
-        Destroy(Rock);
-
-        yield return new WaitForSeconds(1f);
         IsLook = true;
         IsTracking = true;
         IsAttack = false;
-        StartCoroutine(Select());
     }
 
     /** 적 보스 점프 찍기 공격 */
     private IEnumerator EnemyBossTaunt()
     {
-        IsTracking = false;
-
         TauntVector = PlayerTarget.position + LookVector;
 
         EnemyBoxCollider.enabled = false;
@@ -166,7 +150,6 @@ public class EnemyBossA : Enemy
         IsAttack = false;
 
         EnemyBoxCollider.enabled = true;  
-        StartCoroutine(Select());
     }
     #endregion // 함수
 }

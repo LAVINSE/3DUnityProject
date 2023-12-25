@@ -7,6 +7,9 @@ public class EnemyBossC : Enemy
     #region 변수
     [SerializeField] private bool IsLook;
     [SerializeField] private float TargetRadius;
+    [SerializeField] private GameObject BreathPrefab;
+    [SerializeField] private GameObject BreathRoot;
+    [SerializeField] private GameObject BurnPrefab;
 
     private Vector3 LookVector; // 바라보는 방향 예측
     #endregion // 변수
@@ -21,14 +24,9 @@ public class EnemyBossC : Enemy
     }
 
     /** 초기화 => 상태를 갱신한다 */
-    private void Update()
+    protected override void Update()
     {
-        // 적이 죽었을 경우
-        if (IsEnemyDead)
-        {
-            StopAllCoroutines();
-            return;
-        }
+        base.Update();
 
         // 바라보기가 true일때
         if (IsLook)
@@ -60,17 +58,49 @@ public class EnemyBossC : Enemy
     {
         IsAttack = true;
         yield return new WaitForSeconds(0.1f);
+        IsTracking = false;
 
-        int RandomAction = Random.Range(0, 3);
+        int RandomAction = Random.Range(0, 2);
 
         switch (RandomAction)
         {
             case 0:
-            case 1:
+                StartCoroutine(Burn());
                 break;
-            case 2:
+            case 1:
+                StartCoroutine(Breath());
                 break;
         }
+    }
+
+    private IEnumerator Breath()
+    {
+        EnemyAnimator.SetTrigger("TriggerShot");
+        yield return new WaitForSeconds(1f);
+        var BreathObject = Instantiate(BreathPrefab, BreathRoot.transform);
+        yield return new WaitForSeconds(3f);
+        Destroy(BreathObject);
+        UIManager.Instance.PlayerStatusTextUpdate();
+        PlayerTarget.GetComponent<PlayerAction>().ChangeColor(Color.white);
+        yield return new WaitForSeconds(3f);
+
+        IsTracking = true;
+        IsAttack = false;
+    }
+
+    private IEnumerator Burn()
+    {
+        EnemyAnimator.SetTrigger("TriggerBigShot");
+        yield return new WaitForSeconds(1f);
+        var BurnObject = Instantiate(BurnPrefab, this.transform);
+        yield return new WaitForSeconds(5f);
+        Destroy(BurnObject);
+        UIManager.Instance.PlayerStatusTextUpdate();
+        PlayerTarget.GetComponent<PlayerAction>().ChangeColor(Color.white);
+        yield return new WaitForSeconds(2f);
+
+        IsTracking = true;
+        IsAttack = false;
     }
     #endregion // 함수
 }

@@ -43,7 +43,7 @@ public class StoneStatue : MonoBehaviour
     private IEnumerator OnHit()
     {
         StoneMesh.material.color = Color.red;
-        UIManager.Instance.PlayerHealthTextUpdate();
+        UIManager.Instance.PlayerStatusTextUpdate();
         yield return new WaitForSeconds(0.1f);
 
         // 살아있을 경우

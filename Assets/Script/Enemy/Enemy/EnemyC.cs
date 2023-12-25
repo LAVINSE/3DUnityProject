@@ -52,7 +52,7 @@ public class EnemyC : Enemy
         GameObject EnemyBulletObject = Instantiate(EnemyBullet, transform.position, transform.rotation);
         Rigidbody EnemyBulletRigid = EnemyBulletObject.GetComponent<Rigidbody>();
         EnemyBulletRigid.velocity = transform.forward * 20;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         IsTracking = true;
         IsAttack = false;

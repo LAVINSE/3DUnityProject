@@ -23,7 +23,6 @@ public class MainSceneManager : CSceneManager
     [Header("=====> 상호작용 오브젝트 <=====")]
     [SerializeField] private GameObject ItemShopObject;
     [SerializeField] private GameObject WeaponShopObject;
-    [SerializeField] private GameObject UpgradShopObject;
 
     [Header("=====> 스폰 위치 <=====")]
     [SerializeField] private Transform PlayerSpawnPos;
@@ -51,6 +50,7 @@ public class MainSceneManager : CSceneManager
 
     [Header("=====> 설정 <=====")]
     public List<float> StageClearBattleTimer = new List<float>();
+    public List<float> MenuClearBattleTimer = new List<float>();
     [SerializeField] private bool IsEnemyDie;
     [SerializeField] private float SpawnTime;
 
@@ -102,7 +102,7 @@ public class MainSceneManager : CSceneManager
         // 배틀타이머 가져오기
         for (int i = 0; i < StageData.StageArray.Length; i++)
         {
-            StageClearBattleTimer.Add(PlayerPrefs.GetFloat($"ScoreText{i}"));
+            MenuClearBattleTimer.Add(PlayerPrefs.GetFloat($"ScoreText{i}"));
         }
     }
 
@@ -177,7 +177,6 @@ public class MainSceneManager : CSceneManager
 
         ItemShopObject.SetActive(false);
         WeaponShopObject.SetActive(false);
-        UpgradShopObject.SetActive(false);
 
         StartCoroutine(StartBattelCo());
     }
@@ -200,15 +199,25 @@ public class MainSceneManager : CSceneManager
         BattleTimer = 0;
 
         IsBattleTime = false;
-
+        UIManager.Instance.BossHealthBarUpdate();
         Player.transform.position = PlayerSpawnPos.transform.position;
+        PlayerCamera.transform.position = Player.transform.position;
+
+        // 적 스폰존 비활성화
+        for (int i = 0; i < EnemySpawnZoneList.Count; i++)
+        {
+            EnemySpawnZoneList[i].SetActive(false);
+        }
+        for(int i = 0; i < EnemyBossSpawnZoneList.Count; i++)
+        {
+            EnemyBossSpawnZoneList[i].SetActive(false);
+        }
 
         // 문 올리기
         NextStageWallDoorUp();
 
         ItemShopObject.SetActive(true);
         WeaponShopObject.SetActive(true);
-        UpgradShopObject.SetActive(true);
 
         IsWaitTime = true;
 
@@ -360,7 +369,7 @@ public class MainSceneManager : CSceneManager
             yield return null;
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(6f);
 
         StageEnd();
     }

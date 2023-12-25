@@ -120,6 +120,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
                 ToolTip.HideToolTip();
 
                 // 무기 이미지, 탄약 상태창 갱신
+                UIManager.Instance.PlayerStatusTextUpdate();
                 UIManager.Instance.PlayerWeaponImgUpdate();
                 UIManager.Instance.PlayerAmmoTextUpdate();
                 Debug.Log(PlusItem.ItemName + "를 사용했습니다");

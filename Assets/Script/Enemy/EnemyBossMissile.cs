@@ -7,6 +7,7 @@ public class EnemyBossMissile : EnemyAttack
 {
     #region 변수
     [SerializeField] private Transform Target;
+    private float Timer = 5f;
 
     private NavMeshAgent EnemyBossMissileNavMeshAgent;
     #endregion // 변수
@@ -30,6 +31,13 @@ public class EnemyBossMissile : EnemyAttack
     private void Update()
     {
         EnemyBossMissileNavMeshAgent.SetDestination(Target.position);
+
+        Timer -= Time.deltaTime;
+
+        if (Timer <= 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
     #endregion // 함수
 }

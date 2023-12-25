@@ -58,7 +58,7 @@ public class UIManager : MonoBehaviour
         oPlayer = oMainSceneManager.PlayerObj.GetComponent<PlayerAction>();
 
         // 상태창 갱신
-        PlayerHealthTextUpdate();
+        PlayerStatusTextUpdate();
         PlayerAmmoTextUpdate();
         PlayerWeaponImgUpdate();
     }
@@ -113,9 +113,9 @@ public class UIManager : MonoBehaviour
             TextObjectList.Add(Text);
         }
 
-        for (int i = 0; i < oMainSceneManager.StageClearBattleTimer.Count; i++)
+        for (int i = 0; i < oMainSceneManager.MenuClearBattleTimer.Count; i++)
         {
-            var Timer = oMainSceneManager.StageClearBattleTimer[i];
+            var Timer = oMainSceneManager.MenuClearBattleTimer[i];
 
             int Hour = (int)(Timer / 3600);
             int Min = (int)((Timer - Hour * 3600) / 60);
@@ -146,7 +146,7 @@ public class UIManager : MonoBehaviour
     }
 
     /** 상태창을 갱신한다 */
-    public void PlayerHealthTextUpdate()
+    public void PlayerStatusTextUpdate()
     {
         PlayerHealthText.text = oPlayer.oHealth + " / " + oPlayer.oMaxHealth;
         PlayerAmmoText.text = oPlayer.oAmmo + " / " + oPlayer.oMaxAmmo;
