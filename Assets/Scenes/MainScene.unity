@@ -6371,8 +6371,8 @@ MonoBehaviour:
   - {fileID: 726862194}
   - {fileID: 1177430527}
   - {fileID: 58107054}
-  WaitTimer: 3
-  FarmingTimer: 8
+  WaitTimer: 5
+  FarmingTimer: 20
   BattleTimer: 0
   IsWaitTime: 0
   IsFarmingTime: 0
@@ -6383,6 +6383,7 @@ MonoBehaviour:
   MaxStageCount: 3
   BossObject: {fileID: 0}
   StageClearBattleTimer: []
+  MenuClearBattleTimer: []
   IsEnemyDie: 0
   SpawnTime: 0.1
 --- !u!1 &201321983

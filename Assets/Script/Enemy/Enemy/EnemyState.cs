@@ -120,23 +120,19 @@ public class EnemyState : MonoBehaviour
             // 플레이어와 적 거리
             var PlayerDistance = Enemy.oPlayerTarget.transform.position - Enemy.transform.position;
 
-            if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oTrackingRange))
+            if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oTrackingRange) &&
+                PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange))
             {
                 Enemy.Tracking(Enemy.oPlayerTarget);
-
-                if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
-                {
-                    Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Attack);
-                }
             }
             else if(PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
             {
                 Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Attack);
             }
-            else if (PlayerDistance.magnitude.ExIsGreat(Enemy.oTrackingRange))
+            else if (PlayerDistance.magnitude.ExIsGreat(Enemy.oTrackingRange) &&
+                PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange))
             {
                 Enemy.Tracking(Enemy.oSpawnPos);
-                Debug.Log("123");
             }
         }
 
@@ -159,14 +155,15 @@ public class EnemyState : MonoBehaviour
             Debug.Log("공격상태");
             var PlayerDistance = Enemy.oPlayerTarget.transform.position - Enemy.transform.position;
 
-            // 플레이어 or 석상 공격범위 밖에 있을경우, 추적준비 완료일 경우
+            // 플레이어 공격범위 밖에 있을경우, 추적준비 완료일 경우
             if (PlayerDistance.magnitude.ExIsGreat(Enemy.oAttackRange) && Enemy.IsTracking)
             {
                 Enemy.EnemyStateMachine.ChangeState(EnemyStateType.Tracking);
             }
-            // 플레이어 or 석상 공격범위 안에 있을경우
-            else if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange))
+            // 플레이어 공격범위 안에 있을경우
+            else if (PlayerDistance.magnitude.ExIsLessEquals(Enemy.oAttackRange) && !Enemy.IsAttack)
             {
+                Enemy.Tracking(Enemy.oPlayerTarget);
                 Enemy.Targeting();
             }
         }

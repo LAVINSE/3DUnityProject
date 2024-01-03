@@ -122,7 +122,6 @@ public class EnemyBossA : Enemy
 
         yield return new WaitForSeconds(2f);
 
-        IsLook = true;
         IsTracking = true;
         IsAttack = false;
     }
@@ -143,9 +142,9 @@ public class EnemyBossA : Enemy
         yield return new WaitForSeconds(0.5f);
         EnemyBossTauntBoxCollider.enabled = false;
 
-        yield return new WaitForSeconds(1f);
-        IsLook = true;
+        yield return new WaitForSeconds(3f);
 
+        IsLook = true;
         IsTracking = true;
         IsAttack = false;
 

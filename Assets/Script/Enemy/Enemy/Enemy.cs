@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
     [Header("=====> 적 공통 <=====")]
     [SerializeField] protected LayerMask TargetLayer;
     [SerializeField] protected Transform PlayerTarget;
-    [SerializeField] protected bool IsAttack;
+    [SerializeField] public bool IsAttack;
     
     protected Rigidbody EnemyRigid;
     protected BoxCollider EnemyBoxCollider;
