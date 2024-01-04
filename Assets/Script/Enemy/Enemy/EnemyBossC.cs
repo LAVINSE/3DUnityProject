@@ -54,6 +54,7 @@ public class EnemyBossC : Enemy
 
     }
 
+    // 패턴을 선택한다
     private IEnumerator Select()
     {
         IsAttack = true;

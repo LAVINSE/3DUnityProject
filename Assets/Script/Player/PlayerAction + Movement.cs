@@ -33,15 +33,15 @@ public partial class PlayerAction : MonoBehaviour
         // 입력이 들어왔을경우
         if (IsMove)
         {
-            // 방향
+            // 방향, 정면과 오른쪽 방향 추출
             Vector3 LookForward = new Vector3(CameraArm.forward.x, 0f, CameraArm.forward.z).normalized;
             Vector3 LookRight = new Vector3(CameraArm.right.x, 0f, CameraArm.right.z).normalized;
+
             // 바라보고있는 방향기준으로 이동방향 구하기
+            // 좌우 입력 값의 크기와, 오른쪽 방향을 곱해서 좌우 움직임을 얼마나 보이게 만들지 결정
             Vector3 MoveDirect = LookForward * MoveInput.y + LookRight * MoveInput.x;
 
             // 이동방향 적용
-            //MoveVector = MoveDirect;
-
             MoveVector = MoveDirect;
             // 캐릭터 방향
             this.transform.forward = MoveDirect;
@@ -50,7 +50,8 @@ public partial class PlayerAction : MonoBehaviour
         // 움직임 제한
         PlayerMoveLimit();
 
-        bool IsHit = Physics.Raycast(this.transform.position, MoveVector.normalized, MoveVector.magnitude + 1f, Layer);
+        bool IsHit = Physics.Raycast(this.transform.position, MoveVector.normalized,
+                                    MoveVector.magnitude + 1f, Layer);
 
         // 플레이어 움직임
         if (!IsHit)

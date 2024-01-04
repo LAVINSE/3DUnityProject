@@ -57,6 +57,7 @@ public class MainSceneManager : CSceneManager
     private float SaveWaitTimer;
     private float SaveFarmingTimer;
     private List<int> NumList = new List<int>();
+    private List<GameObject> ZoneList = new List<GameObject>();
     #endregion // 변수
 
     #region 프로퍼티
@@ -282,11 +283,9 @@ public class MainSceneManager : CSceneManager
         }
     }
 
-    // 전투 시작
+    // 전투를 시작한다
     private IEnumerator StartBattelCo()
     {
-        List<GameObject> ZoneList = new List<GameObject>();
-
         // 적 스폰존 활성화
         for(int i =0; i < StageData.StageArray[StageCount].StageSpawnActiveCount; i++)
         {
@@ -295,31 +294,16 @@ public class MainSceneManager : CSceneManager
             ZoneList.Add(EnemyZone);
         }
 
+        // 랜덤 숫자 초기화
         NumList.Clear();
 
         // 적 소환
         int Count = 0;
+
         while (Count < StageData.StageArray[StageCount].StageEnemyCount)
         {
-            int Number = RandomNumber(0, ZoneList.Count);
-            int EnemyRand = Random.Range(0, StageData.StageArray[StageCount].EnemyPrefabList.Length);
-            ZoneList[Number].SetActive(true);
-
-            GameObject EnemyObject = CFactory.CreateCloneObj("Enemy",
-                                    StageData.StageArray[StageCount].EnemyPrefabList[EnemyRand],
-                                    ZoneList[Number], Vector3.zero, Vector3.one, Vector3.zero);
-
-            EnemyObject.GetComponent<Enemy>().oSpawnPos = ZoneList[Number].transform;
-            EnemyObject.GetComponent<Enemy>().oPlayerTarget = Player.transform;
-            bool Ishit = NavMesh.SamplePosition(EnemyObject.transform.position, out NavMeshHit Hit, float.MaxValue / 2, 1);
-            
-            if (Ishit)
-            {
-                EnemyObject.transform.position = Hit.position;
-                EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = true;
-            }
-
-            EnemyCount++;
+            // 적 스폰
+            SpawnEnemy();
             Count++;
 
             // 적 숫자 상태창 업데이트
@@ -335,13 +319,52 @@ public class MainSceneManager : CSceneManager
             yield return null;
         }
 
+        // 보스 소환
+        SpawnBoss();
+
+        while (EnemyBossCount > 0)
+        {
+            Debug.Log($"보스가 {EnemyBossCount} 만큼 남았습니다");
+            yield return null;
+        }
+
+        // 스테이지 종료
+        yield return new WaitForSeconds(6f);
+        StageEnd();
+    }
+
+    private void SpawnEnemy()
+    {
+        int Number = RandomNumber(0, ZoneList.Count);
+        int EnemyRand = Random.Range(0, StageData.StageArray[StageCount].EnemyPrefabList.Length);
+        ZoneList[Number].SetActive(true);
+
+        GameObject EnemyObject = CFactory.CreateCloneObj("Enemy",
+                                StageData.StageArray[StageCount].EnemyPrefabList[EnemyRand],
+                                ZoneList[Number], Vector3.zero, Vector3.one, Vector3.zero);
+
+        EnemyObject.GetComponent<Enemy>().oSpawnPos = ZoneList[Number].transform;
+        EnemyObject.GetComponent<Enemy>().oPlayerTarget = Player.transform;
+        bool Ishit = NavMesh.SamplePosition(EnemyObject.transform.position, out NavMeshHit Hit, float.MaxValue / 2, 1);
+
+        if (Ishit)
+        {
+            EnemyObject.transform.position = Hit.position;
+            EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = true;
+        }
+
+        EnemyCount++;
+    }
+
+    private void SpawnBoss()
+    {
         // 일반 몹을 다 잡았을 경우, 보스소환
-        if(EnemyCount == 0)
+        if (EnemyCount == 0)
         {
             int ZoneRand = Random.Range(0, EnemyBossSpawnZoneList.Count);
             var BossZone = EnemyBossSpawnZoneList[ZoneRand];
             BossZone.SetActive(true);
-           
+
             GameObject EnemyObject = Instantiate(StageData.StageArray[StageCount].EnemyBoss, BossZone.transform);
             BossObject = EnemyObject;
             EnemyObject.GetComponent<Enemy>().oSpawnPos = BossZone.transform;
@@ -353,7 +376,7 @@ public class MainSceneManager : CSceneManager
                 EnemyObject.transform.position = Hit.position;
                 EnemyObject.GetComponent<Enemy>().oEnemyNavMeshAgent.enabled = true;
             }
-            
+
             EnemyBossCount++;
 
             // 보스 체력 상태창 업데이트
@@ -361,17 +384,6 @@ public class MainSceneManager : CSceneManager
             // 적 숫자 상태창 업데이트
             UIManager.Instance.EnemyCountTextUpdate();
         }
-
-
-        while (EnemyBossCount > 0)
-        {
-            Debug.Log($"보스가 {EnemyBossCount} 만큼 남았습니다");
-            yield return null;
-        }
-
-        yield return new WaitForSeconds(6f);
-
-        StageEnd();
     }
 
     /** 랜덤숫자중 중복 숫자를 뽑지 않는다 */
