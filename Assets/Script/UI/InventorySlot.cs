@@ -23,12 +23,6 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     #endregion // 프로퍼티
 
     #region 함수
-    /** 초기화 */
-    private void Awake()
-    {
-        
-    }
-
     /** 아이템 이미지 투명도 조절 */
     private void SetColor(float Alpha)
     {
@@ -58,6 +52,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     /** 아이템 개수 조정 */
     public void SetSlotCount(int Count)
     {
+        // 개수 조정, 표시
         ItemCount += Count;
         ItemCountText.text = ItemCount.ToString();
 
@@ -101,6 +96,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         // 투명도
         SetColor(0);
 
+        // 개수 표시 X
         ItemCountText.text = string.Empty;
         ItemCountImg.SetActive(false);
     }
@@ -183,6 +179,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     {
         if(PlusItem != null)
         {
+            // 툴팁 보여주기
             ToolTip.ShowToolTip(PlusItem);
         }
     }

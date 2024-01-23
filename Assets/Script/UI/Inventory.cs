@@ -34,6 +34,13 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    /** 인벤토리 활성화 */
+    public void OpenInventory() => InventoryObject.SetActive(true);
+
+    /** 인벤토리 비활성화 */
+    public void CloseInventory() => InventoryObject.SetActive(false);
+
+    /** 슬롯 생성 */
     public void InventorySlotCreate()
     {
         for(int i = 0; i < SlotCount; i++)
@@ -42,22 +49,18 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    /** 인벤토리 활성화 */
-    public void OpenInventory() => InventoryObject.SetActive(true);
-
-    /** 인벤토리 비활성화 */
-    public void CloseInventory() => InventoryObject.SetActive(false);
-
     /** 아이템을 습득한다 */
     public void AcquireItem(ItemData Item, int Count = 1)
     {
-        // 아이템 타입에 따라 세팅 if
         for (int i = 0; i < SlotArray.Length; i++)
         {
+            // 해당 슬롯에 아이템이 있을 경우
             if (SlotArray[i].PlusItem != null)
             {
+                // 해당 슬롯의 아이템 이름을 가져와 습득한 아이템이름과 같은지 확인
                 if (SlotArray[i].PlusItem.ItemName == Item.ItemName)
                 {
+                    // 개수 증가
                     SlotArray[i].SetSlotCount(Count);
                     return;
                 }
@@ -66,8 +69,10 @@ public class Inventory : MonoBehaviour
 
         for (int i = 0; i < SlotArray.Length; i++)
         {
+            // 해당 슬롯에 아이템이 없을 경우
             if (SlotArray[i].PlusItem == null)
             {
+                // 아이템 추가
                 SlotArray[i].AddItem(Item, Count);
                 return;
             }
