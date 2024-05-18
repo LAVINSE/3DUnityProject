@@ -51,6 +51,7 @@ public class EnemyBossA : Enemy
     public override void Targeting()
     {
         base.Targeting();
+
         // 구체모양의 레이캐스트 (모든오브젝트)
         RaycastHit[] RayHitArray = Physics.SphereCastAll(this.transform.position, TargetRadius,
             transform.forward, oAttackRange, TargetLayer);
@@ -63,6 +64,7 @@ public class EnemyBossA : Enemy
         
     }
 
+    /** 패턴 선택 */
     private IEnumerator Select()
     {
         IsAttack = true;

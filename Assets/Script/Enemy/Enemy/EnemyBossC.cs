@@ -74,13 +74,17 @@ public class EnemyBossC : Enemy
         }
     }
 
+    /** 브레스 공격 */
     private IEnumerator Breath()
     {
         EnemyAnimator.SetTrigger("TriggerShot");
+
         yield return new WaitForSeconds(1f);
         var BreathObject = Instantiate(BreathPrefab, BreathRoot.transform);
         yield return new WaitForSeconds(3f);
+
         Destroy(BreathObject);
+
         UIManager.Instance.PlayerStatusTextUpdate();
         PlayerTarget.GetComponent<PlayerAction>().ChangeColor(Color.white);
         yield return new WaitForSeconds(3f);
@@ -89,12 +93,15 @@ public class EnemyBossC : Enemy
         IsAttack = false;
     }
 
+    /** 불꽃망토 공격 */
     private IEnumerator Burn()
     {
         EnemyAnimator.SetTrigger("TriggerBigShot");
+
         yield return new WaitForSeconds(1f);
         var BurnObject = Instantiate(BurnPrefab, this.transform);
         yield return new WaitForSeconds(5f);
+
         Destroy(BurnObject);
         UIManager.Instance.PlayerStatusTextUpdate();
         PlayerTarget.GetComponent<PlayerAction>().ChangeColor(Color.white);

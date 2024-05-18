@@ -67,7 +67,6 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     /** 슬롯을 교환한다 */
     private void ChangeSlot()
     {
-        // 데이터 덮어쓰기전 저장
         ItemData ItemTemp = PlusItem;
         int ItemCountTemp = ItemCount;
 
